@@ -1,0 +1,453 @@
+{
+  "project": {
+    "name": "AI TODO App - Time Wealth Productivity System",
+    "version": "1.0.0-MVP",
+    "current_task": 1,
+    "total_tasks": 22,
+    "completion_percentage": 0
+  },
+  "tasks": [
+    {
+      "id": 1,
+      "name": "Project Setup & Initialization",
+      "file": "implementation-tasks/01-foundation/task-01-project-setup.md",
+      "status": "not_done",
+      "priority": "critical",
+      "dependencies": [],
+      "acceptance_criteria": [
+        "Next.js project initialized with TypeScript",
+        "All dependencies installed",
+        "Folder structure created",
+        "Tailwind CSS configured and working",
+        "Basic UI components (Button) created",
+        "Landing page displays correctly",
+        "Development server runs without errors"
+      ],
+      "notes": "",
+      "blockers": []
+    },
+    {
+      "id": 2,
+      "name": "Supabase Database Setup",
+      "file": "implementation-tasks/01-foundation/task-02-database-setup.md",
+      "status": "not_done",
+      "priority": "critical",
+      "dependencies": [1],
+      "acceptance_criteria": [
+        "Supabase project created",
+        "All database tables created",
+        "Indexes added for performance",
+        "Helper functions created",
+        "Triggers set up for auto-updates",
+        "Row Level Security enabled on all tables",
+        "RLS policies created for all tables",
+        "Supabase clients configured in Next.js",
+        "TypeScript types generated",
+        "Database connection test passes"
+      ],
+      "notes": "",
+      "blockers": []
+    },
+    {
+      "id": 3,
+      "name": "Clerk Authentication Setup",
+      "file": "implementation-tasks/01-foundation/task-03-clerk-auth.md",
+      "status": "not_done",
+      "priority": "critical",
+      "dependencies": [1, 2],
+      "acceptance_criteria": [
+        "Clerk configured in Next.js",
+        "Sign-in and sign-up pages working",
+        "Middleware protects routes",
+        "Webhook syncs users to Supabase",
+        "Auth utilities created",
+        "Test user can sign up and appears in Supabase"
+      ],
+      "notes": "",
+      "blockers": []
+    },
+    {
+      "id": 4,
+      "name": "Basic Layout & Navigation",
+      "file": "implementation-tasks/01-foundation/task-04-basic-layout-and-navigation.md",
+      "status": "not_done",
+      "priority": "high",
+      "dependencies": [3],
+      "acceptance_criteria": [
+        "Dashboard layout renders correctly",
+        "Sidebar navigation functional",
+        "All route pages accessible",
+        "Mobile responsive design works",
+        "Active nav item highlights",
+        "User profile button in header",
+        "Onboarding redirect logic works",
+        "Protected routes require auth"
+      ],
+      "notes": "",
+      "blockers": []
+    },
+    {
+      "id": 5,
+      "name": "User Profile & Preferences",
+      "file": "implementation-tasks/02-core-features/task-05-user-profile-and-preferences.md",
+      "status": "not_done",
+      "priority": "high",
+      "dependencies": [4],
+      "acceptance_criteria": [
+        "User profile page displays correctly",
+        "Preferences can be updated",
+        "Timezone handling works",
+        "Work hours configuration functional",
+        "Data persists in Supabase"
+      ],
+      "notes": "Reference main spec Section 3.1 for detailed requirements",
+      "blockers": []
+    },
+    {
+      "id": 6,
+      "name": "Goal Management (CRUD)",
+      "file": "implementation-tasks/02-core-features/task-06-goal-management-crud.md",
+      "status": "not_done",
+      "priority": "critical",
+      "dependencies": [5],
+      "acceptance_criteria": [
+        "Create goal functionality works",
+        "Read/list goals displays correctly",
+        "Update goal saves changes",
+        "Delete/archive goal works",
+        "Goal hierarchy supported",
+        "Milestones can be added",
+        "Progress tracking calculates correctly"
+      ],
+      "notes": "Reference main spec Section 3.2 for detailed requirements",
+      "blockers": []
+    },
+    {
+      "id": 7,
+      "name": "Task Management (CRUD)",
+      "file": "implementation-tasks/02-core-features/task-07-task-management-crud.md",
+      "status": "not_done",
+      "priority": "critical",
+      "dependencies": [6],
+      "acceptance_criteria": [
+        "Create task functionality works",
+        "Task list displays with filters",
+        "Update task saves changes",
+        "Complete task updates status",
+        "Delete task works",
+        "Task properties editable",
+        "Subtasks supported"
+      ],
+      "notes": "Reference main spec Section 3.3 for detailed requirements",
+      "blockers": []
+    },
+    {
+      "id": 8,
+      "name": "AI Integration Setup (Vercel AI SDK)",
+      "file": "implementation-tasks/02-core-features/task-08-ai-integration-setup.md",
+      "status": "not_done",
+      "priority": "critical",
+      "dependencies": [7],
+      "acceptance_criteria": [
+        "Vercel AI SDK installed and configured",
+        "Claude Sonnet connection works",
+        "Claude Haiku connection works",
+        "Test API route returns AI response",
+        "Error handling implemented",
+        "Cost tracking in place"
+      ],
+      "notes": "Reference main spec Section 6 for AI integration strategy",
+      "blockers": []
+    },
+    {
+      "id": 9,
+      "name": "Onboarding AI Interview",
+      "file": "implementation-tasks/02-core-features/task-09-onboarding-ai-interview.md",
+      "status": "not_done",
+      "priority": "high",
+      "dependencies": [8],
+      "acceptance_criteria": [
+        "Interview flow works (Quick Start mode)",
+        "AI asks questions conversationally",
+        "SMART goal validation works",
+        "User responses saved",
+        "Initial goal created from interview",
+        "Onboarding completion flag set",
+        "Redirect to dashboard after completion"
+      ],
+      "notes": "Reference main spec Section 3.1 and 6.2.1 for prompts",
+      "blockers": []
+    },
+    {
+      "id": 10,
+      "name": "Daily Task Generation AI",
+      "file": "implementation-tasks/02-core-features/task-10-daily-task-generation-ai.md",
+      "status": "not_done",
+      "priority": "critical",
+      "dependencies": [9],
+      "acceptance_criteria": [
+        "AI generates 3-5 tasks daily",
+        "Tasks match user's goals",
+        "Energy levels considered",
+        "Eisenhower categorization works",
+        "User can accept/modify suggestions",
+        "Tasks saved to database"
+      ],
+      "notes": "Reference main spec Section 6.2.2 for task generation logic",
+      "blockers": []
+    },
+    {
+      "id": 11,
+      "name": "Backlog Management",
+      "file": "implementation-tasks/03-planning-analytics/task-11-backlog-management.md",
+      "status": "not_done",
+      "priority": "medium",
+      "dependencies": [7],
+      "acceptance_criteria": [
+        "Add items to backlog works",
+        "List backlog items displays",
+        "Categorization functional",
+        "Promote to task works",
+        "AI prioritization suggestions shown",
+        "Archive/delete works"
+      ],
+      "notes": "Reference main spec Section 3.4",
+      "blockers": []
+    },
+    {
+      "id": 12,
+      "name": "Morning Planning Session",
+      "file": "implementation-tasks/03-planning-analytics/task-12-morning-planning-session.md",
+      "status": "not_done",
+      "priority": "high",
+      "dependencies": [10],
+      "acceptance_criteria": [
+        "Morning greeting displays",
+        "Daily plan shows AI-generated tasks",
+        "User can review and adjust",
+        "Plan confirmation saves",
+        "Focus mode accessible"
+      ],
+      "notes": "Reference main spec Section 3.5.1",
+      "blockers": []
+    },
+    {
+      "id": 13,
+      "name": "Evening Reflection",
+      "file": "implementation-tasks/03-planning-analytics/task-13-evening-reflection.md",
+      "status": "not_done",
+      "priority": "high",
+      "dependencies": [10],
+      "acceptance_criteria": [
+        "Evening prompt triggers",
+        "Completion summary shows",
+        "Reflection questions display",
+        "User responses saved",
+        "AI analysis generates insights",
+        "Tomorrow preview shown"
+      ],
+      "notes": "Reference main spec Section 3.5.3 and 6.2.6",
+      "blockers": []
+    },
+    {
+      "id": 14,
+      "name": "Weekly Summary Generation",
+      "file": "implementation-tasks/03-planning-analytics/task-14-weekly-summary-generation.md",
+      "status": "not_done",
+      "priority": "high",
+      "dependencies": [13],
+      "acceptance_criteria": [
+        "Weekly stats calculated correctly",
+        "AI insights generated",
+        "Goal progress shown",
+        "Patterns detected",
+        "Suggestions for next week provided",
+        "Summary saved to database"
+      ],
+      "notes": "Reference main spec Section 3.6 and 6.2.7",
+      "blockers": []
+    },
+    {
+      "id": 15,
+      "name": "Progress Tracking & Analytics Dashboard",
+      "file": "implementation-tasks/03-planning-analytics/task-15-progress-tracking-and-analytics.md",
+      "status": "not_done",
+      "priority": "medium",
+      "dependencies": [14],
+      "acceptance_criteria": [
+        "Analytics dashboard displays",
+        "Completion metrics shown",
+        "Charts render correctly",
+        "Goal progress visualized",
+        "Time tracking displayed",
+        "Patterns highlighted"
+      ],
+      "notes": "Reference main spec Section 3.11",
+      "blockers": []
+    },
+    {
+      "id": 16,
+      "name": "Calendar View",
+      "file": "implementation-tasks/04-ui-advanced/task-16-calendar-view.md",
+      "status": "not_done",
+      "priority": "medium",
+      "dependencies": [7],
+      "acceptance_criteria": [
+        "Week view displays tasks",
+        "Month view shows overview",
+        "Drag-and-drop scheduling works",
+        "Time blocks displayed",
+        "Task details shown on click"
+      ],
+      "notes": "Reference main spec Section 3.9",
+      "blockers": []
+    },
+    {
+      "id": 17,
+      "name": "Main Dashboard",
+      "file": "implementation-tasks/04-ui-advanced/task-17-main-dashboard.md",
+      "status": "not_done",
+      "priority": "high",
+      "dependencies": [15, 16],
+      "acceptance_criteria": [
+        "Today's tasks widget works",
+        "Goal progress cards display",
+        "Quick actions functional",
+        "Energy indicator shows",
+        "Upcoming tasks visible",
+        "Dashboard responsive"
+      ],
+      "notes": "Reference main spec Section 3.11.3",
+      "blockers": []
+    },
+    {
+      "id": 18,
+      "name": "AI Chat Interface",
+      "file": "implementation-tasks/04-ui-advanced/task-18-ai-chat-interface.md",
+      "status": "not_done",
+      "priority": "medium",
+      "dependencies": [8],
+      "acceptance_criteria": [
+        "Chat interface displays",
+        "Messages send and receive",
+        "AI responds contextually",
+        "Chat history saved",
+        "Loading states work",
+        "Error handling implemented"
+      ],
+      "notes": "Reference main spec Section 3.10 and 6.2.9",
+      "blockers": []
+    },
+    {
+      "id": 19,
+      "name": "Energy Tracking System",
+      "file": "implementation-tasks/04-ui-advanced/task-19-energy-tracking-system.md",
+      "status": "not_done",
+      "priority": "medium",
+      "dependencies": [7],
+      "acceptance_criteria": [
+        "Energy log entry works",
+        "Energy patterns detected",
+        "Energy calendar displays",
+        "Task-energy matching shown",
+        "Creators/drainers identified"
+      ],
+      "notes": "Reference main spec Section 3.7",
+      "blockers": []
+    },
+    {
+      "id": 20,
+      "name": "Settings Page",
+      "file": "implementation-tasks/05-finalization/task-20-settings-page.md",
+      "status": "not_done",
+      "priority": "medium",
+      "dependencies": [5],
+      "acceptance_criteria": [
+        "Settings page displays all options",
+        "Account settings editable",
+        "Preferences save correctly",
+        "Data export works",
+        "Data delete confirmation works",
+        "Theme toggle functional"
+      ],
+      "notes": "Reference main spec Section 8",
+      "blockers": []
+    },
+    {
+      "id": 21,
+      "name": "Privacy Policy & Terms",
+      "file": "implementation-tasks/05-finalization/task-21-privacy-policy-and-terms.md",
+      "status": "not_done",
+      "priority": "low",
+      "dependencies": [],
+      "acceptance_criteria": [
+        "Privacy policy page created",
+        "Terms of service page created",
+        "GDPR compliance documented",
+        "Pages accessible from footer",
+        "Content is clear and comprehensive"
+      ],
+      "notes": "Reference main spec Section 8.2 and 8.4",
+      "blockers": []
+    },
+    {
+      "id": 22,
+      "name": "Email Notifications & Final Polish",
+      "file": "implementation-tasks/05-finalization/task-22-email-notifications-and-polish.md",
+      "status": "not_done",
+      "priority": "medium",
+      "dependencies": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21],
+      "acceptance_criteria": [
+        "Resend configured",
+        "Welcome email sends",
+        "Daily summary emails work",
+        "Weekly summary emails work",
+        "Notification preferences respected",
+        "All pages polished",
+        "No console errors",
+        "Mobile responsive throughout",
+        "Performance optimized",
+        "Ready for production deployment"
+      ],
+      "notes": "Final testing and polish phase",
+      "blockers": []
+    }
+  ],
+  "milestones": [
+    {
+      "name": "01-foundation Complete",
+      "tasks": [1, 2, 3, 4],
+      "status": "not_done"
+    },
+    {
+      "name": "Core Features Complete", 
+      "tasks": [5, 6, 7, 8, 9, 10],
+      "status": "not_done"
+    },
+    {
+      "name": "Planning & Analytics Complete",
+      "tasks": [11, 12, 13, 14, 15],
+      "status": "not_done"
+    },
+    {
+      "name": "UI & Advanced Complete",
+      "tasks": [16, 17, 18, 19],
+      "status": "not_done"
+    },
+    {
+      "name": "MVP Complete",
+      "tasks": [20, 21, 22],
+      "status": "not_done"
+    }
+  ],
+  "metadata": {
+    "last_updated": "2025-11-08",
+    "notes": "Task statuses: not_done | done | blocked - Simplified for AI agent usage",
+    "version": "2.0.0",
+    "ai_agent_instructions": {
+      "next_task_logic": "Find the first task with status 'not_done' where all dependencies are 'done'",
+      "status_values": ["not_done", "done", "blocked"],
+      "completion_tracking": "Update completion_percentage based on done tasks / total tasks * 100"
+    }
+  }
+}
