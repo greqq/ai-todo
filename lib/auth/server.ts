@@ -1,5 +1,6 @@
 import { auth, currentUser } from '@clerk/nextjs/server';
 import { createClient } from '@/lib/supabase/server';
+import { createClient as createAdminClient } from '@supabase/supabase-js';
 
 export async function getCurrentUser() {
   const { userId } = await auth();
@@ -25,8 +26,14 @@ export async function getCurrentUser() {
       return null;
     }
 
-    // Create user in Supabase
-    const { data: newUser, error: createError } = await supabase
+    // Use admin client to bypass RLS for user creation
+    const supabaseAdmin = createAdminClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    );
+
+    // Create user in Supabase with admin privileges
+    const { data: newUser, error: createError } = await supabaseAdmin
       .from('users')
       .insert({
         clerk_user_id: clerkUser.id,
