@@ -70,6 +70,7 @@ export default function TasksPage() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [goals, setGoals] = useState<Goal[]>([]);
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
@@ -141,6 +142,7 @@ export default function TasksPage() {
   };
 
   const handleCreateTask = async () => {
+    setSaving(true);
     try {
       const response = await fetch('/api/tasks', {
         method: 'POST',
@@ -153,18 +155,23 @@ export default function TasksPage() {
       });
 
       if (response.ok) {
-        await fetchTasks();
+        const newTask = await response.json();
+        // Optimistic update - add task to state immediately
+        setTasks(prev => [newTask, ...prev]);
         setCreateDialogOpen(false);
         resetForm();
       }
     } catch (error) {
       console.error('Error creating task:', error);
+    } finally {
+      setSaving(false);
     }
   };
 
   const handleUpdateTask = async () => {
     if (!selectedTask) return;
 
+    setSaving(true);
     try {
       const response = await fetch(`/api/tasks/${selectedTask.id}`, {
         method: 'PATCH',
@@ -176,36 +183,52 @@ export default function TasksPage() {
       });
 
       if (response.ok) {
-        await fetchTasks();
+        const updatedTask = await response.json();
+        // Optimistic update - update task in state immediately
+        setTasks(prev => prev.map(t => t.id === updatedTask.id ? updatedTask : t));
         setEditDialogOpen(false);
         setSelectedTask(null);
         resetForm();
       }
     } catch (error) {
       console.error('Error updating task:', error);
+    } finally {
+      setSaving(false);
     }
   };
 
   const handleDeleteTask = async (taskId: string) => {
     if (!confirm('Are you sure you want to delete this task?')) return;
 
+    // Optimistic update - remove from UI immediately
+    setTasks(prev => prev.filter(t => t.id !== taskId));
+
     try {
       const response = await fetch(`/api/tasks/${taskId}`, {
         method: 'DELETE',
       });
 
-      if (response.ok) {
+      if (!response.ok) {
+        // Rollback on error
         await fetchTasks();
-      } else {
         const error = await response.json();
         alert(error.error || 'Failed to delete task');
       }
     } catch (error) {
       console.error('Error deleting task:', error);
+      // Rollback on error
+      await fetchTasks();
     }
   };
 
   const handleCompleteTask = async (taskId: string) => {
+    // Optimistic update
+    setTasks(prev => prev.map(t =>
+      t.id === taskId
+        ? { ...t, status: 'completed' as Task['status'], completed_at: new Date().toISOString() }
+        : t
+    ));
+
     try {
       const response = await fetch(`/api/tasks/${taskId}/complete`, {
         method: 'POST',
@@ -214,35 +237,34 @@ export default function TasksPage() {
       });
 
       if (response.ok) {
+        const updatedTask = await response.json();
+        setTasks(prev => prev.map(t => t.id === updatedTask.id ? updatedTask : t));
+      } else {
+        // Rollback on error
         await fetchTasks();
       }
     } catch (error) {
       console.error('Error completing task:', error);
+      // Rollback on error
+      await fetchTasks();
     }
   };
 
   const handleToggleStatus = async (task: Task) => {
     if (task.status === 'completed') {
       // Reopen task
-      try {
-        const response = await fetch(`/api/tasks/${task.id}`, {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ status: 'todo' }),
-        });
-
-        if (response.ok) {
-          await fetchTasks();
-        }
-      } catch (error) {
-        console.error('Error reopening task:', error);
-      }
+      handleChangeStatus(task.id, 'todo');
     } else {
       await handleCompleteTask(task.id);
     }
   };
 
   const handleChangeStatus = async (taskId: string, newStatus: Task['status']) => {
+    // Optimistic update
+    setTasks(prev => prev.map(t =>
+      t.id === taskId ? { ...t, status: newStatus } : t
+    ));
+
     try {
       const response = await fetch(`/api/tasks/${taskId}`, {
         method: 'PATCH',
@@ -251,10 +273,16 @@ export default function TasksPage() {
       });
 
       if (response.ok) {
+        const updatedTask = await response.json();
+        setTasks(prev => prev.map(t => t.id === updatedTask.id ? updatedTask : t));
+      } else {
+        // Rollback on error
         await fetchTasks();
       }
     } catch (error) {
       console.error('Error changing task status:', error);
+      // Rollback on error
+      await fetchTasks();
     }
   };
 
@@ -796,11 +824,11 @@ export default function TasksPage() {
               setEditDialogOpen(false);
               setSelectedTask(null);
               resetForm();
-            }}>
+            }} disabled={saving}>
               Cancel
             </Button>
-            <Button onClick={selectedTask ? handleUpdateTask : handleCreateTask}>
-              {selectedTask ? 'Update Task' : 'Create Task'}
+            <Button onClick={selectedTask ? handleUpdateTask : handleCreateTask} disabled={saving}>
+              {saving ? 'Saving...' : (selectedTask ? 'Update Task' : 'Create Task')}
             </Button>
           </DialogFooter>
         </DialogContent>
