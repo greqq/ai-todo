@@ -19,11 +19,11 @@ export async function generateWithTracking(params: {
   userId: string;
   operationType: AIOperationType;
   prompt: string;
-  modelOverride?: 'claude-3-5-sonnet-20241022' | 'claude-3-5-haiku-20241022';
+  modelOverride?: 'claude-sonnet-4-20250514' | 'claude-haiku-4-20250219';
   temperature?: number;
 }) {
   const modelName = params.modelOverride || getRecommendedModel(params.operationType);
-  const model = modelName === 'claude-3-5-haiku-20241022' ? haiku : sonnet;
+  const model = modelName === 'claude-haiku-4-20250219' ? haiku : sonnet;
 
   try {
     const result = await generateText({
@@ -61,11 +61,11 @@ export async function streamWithTracking(params: {
   userId: string;
   operationType: AIOperationType;
   prompt: string;
-  modelOverride?: 'claude-3-5-sonnet-20241022' | 'claude-3-5-haiku-20241022';
+  modelOverride?: 'claude-sonnet-4-20250514' | 'claude-haiku-4-20250219';
   temperature?: number;
 }) {
   const modelName = params.modelOverride || getRecommendedModel(params.operationType);
-  const model = modelName === 'claude-3-5-haiku-20241022' ? haiku : sonnet;
+  const model = modelName === 'claude-haiku-4-20250219' ? haiku : sonnet;
 
   try {
     const result = await streamText({

@@ -6,17 +6,17 @@
  */
 
 /**
- * Pricing for Claude models (as of Nov 2024)
+ * Pricing for Claude 4.5 models (as of 2025)
  * Prices per million tokens
  */
 const PRICING = {
-  'claude-3-5-sonnet-20241022': {
-    input: 3.0, // $3 per million input tokens
+  'claude-sonnet-4-20250514': {
+    input: 3.0, // $3 per million input tokens (Sonnet 4.5)
     output: 15.0, // $15 per million output tokens
   },
-  'claude-3-5-haiku-20241022': {
-    input: 0.8, // $0.80 per million input tokens
-    output: 4.0, // $4 per million output tokens
+  'claude-haiku-4-20250219': {
+    input: 1.0, // $1 per million input tokens (Haiku 4.5)
+    output: 5.0, // $5 per million output tokens
   },
 } as const;
 
@@ -43,7 +43,7 @@ export interface AIUsageRecord {
   id?: string;
   user_id: string;
   operation_type: AIOperationType;
-  model_used: 'claude-3-5-sonnet-20241022' | 'claude-3-5-haiku-20241022';
+  model_used: 'claude-sonnet-4-20250514' | 'claude-haiku-4-20250219';
   input_tokens: number;
   output_tokens: number;
   estimated_cost: number;
@@ -61,7 +61,7 @@ export function calculateCost(
   const pricing = PRICING[modelName];
   if (!pricing) {
     console.warn(`Unknown model: ${modelName}. Using Sonnet pricing as fallback.`);
-    return calculateCost('claude-3-5-sonnet-20241022', inputTokens, outputTokens);
+    return calculateCost('claude-sonnet-4-20250514', inputTokens, outputTokens);
   }
 
   const inputCost = (inputTokens / 1_000_000) * pricing.input;
@@ -76,7 +76,7 @@ export function calculateCost(
 export function createUsageRecord(params: {
   userId: string;
   operationType: AIOperationType;
-  modelUsed: 'claude-3-5-sonnet-20241022' | 'claude-3-5-haiku-20241022';
+  modelUsed: 'claude-sonnet-4-20250514' | 'claude-haiku-4-20250219';
   inputTokens: number;
   outputTokens: number;
 }): AIUsageRecord {
@@ -156,12 +156,12 @@ export const COST_OPTIMIZATION_TIPS = {
  */
 export function getRecommendedModel(
   operationType: AIOperationType
-): 'claude-3-5-sonnet-20241022' | 'claude-3-5-haiku-20241022' {
+): 'claude-sonnet-4-20250514' | 'claude-haiku-4-20250219' {
   // Operations that should use Haiku (simple, fast)
   const haikuOperations: AIOperationType[] = ['eisenhowerCategorization'];
 
   // All other operations use Sonnet for quality
   return haikuOperations.includes(operationType)
-    ? 'claude-3-5-haiku-20241022'
-    : 'claude-3-5-sonnet-20241022';
+    ? 'claude-haiku-4-20250219'
+    : 'claude-sonnet-4-20250514';
 }

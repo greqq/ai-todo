@@ -24,22 +24,22 @@ export async function GET() {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Test Sonnet (complex reasoning)
+    // Test Sonnet 4.5 (complex reasoning)
     const sonnetResult = await generateWithTracking({
       userId,
       operationType: 'chatMessage',
       prompt:
         'You are a productivity coach. In one sentence, explain why setting goals is important.',
-      modelOverride: 'claude-3-5-sonnet-20241022',
+      modelOverride: 'claude-sonnet-4-20250514',
     });
 
-    // Test Haiku (simple categorization)
+    // Test Haiku 4.5 (simple categorization)
     const haikuResult = await generateWithTracking({
       userId,
       operationType: 'eisenhowerCategorization',
       prompt:
         'Categorize this task: "Check email". Is it urgent and important? Answer in 5 words or less.',
-      modelOverride: 'claude-3-5-haiku-20241022',
+      modelOverride: 'claude-haiku-4-20250219',
     });
 
     // Calculate estimated monthly cost
@@ -51,13 +51,15 @@ export async function GET() {
         message: 'AI integration is working correctly',
         tests: {
           sonnet: {
-            model: 'claude-3-5-sonnet-20241022',
+            model: 'claude-sonnet-4-20250514',
+            modelName: 'Claude Sonnet 4.5',
             response: sonnetResult.text,
             cost: sonnetResult.cost,
             tokens: sonnetResult.usage,
           },
           haiku: {
-            model: 'claude-3-5-haiku-20241022',
+            model: 'claude-haiku-4-20250219',
+            modelName: 'Claude Haiku 4.5',
             response: haikuResult.text,
             cost: haikuResult.cost,
             tokens: haikuResult.usage,
@@ -108,7 +110,7 @@ export async function POST(request: Request) {
       userId,
       operationType: 'chatMessage',
       prompt,
-      modelOverride: model || 'claude-3-5-sonnet-20241022',
+      modelOverride: model || 'claude-sonnet-4-20250514',
     });
 
     return NextResponse.json(

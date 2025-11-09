@@ -14,18 +14,20 @@ if (!process.env.ANTHROPIC_API_KEY) {
 }
 
 /**
- * Claude Sonnet Model Configuration
+ * Claude Sonnet 4.5 Model Configuration
  * Use for: Complex reasoning, goal analysis, coaching conversations,
  * weekly summaries, task breakdown, procrastination analysis
+ * Pricing: $3/MTok input, $15/MTok output
  */
-export const sonnet = anthropic('claude-3-5-sonnet-20241022');
+export const sonnet = anthropic('claude-sonnet-4-20250514');
 
 /**
- * Claude Haiku Model Configuration
+ * Claude Haiku 4.5 Model Configuration
  * Use for: Quick categorizations, simple yes/no decisions,
  * task duration estimates, context tag suggestions, simple formatting
+ * Pricing: $1/MTok input, $5/MTok output
  */
-export const haiku = anthropic('claude-3-5-haiku-20241022');
+export const haiku = anthropic('claude-haiku-4-20250219');
 
 /**
  * Model selection helper
