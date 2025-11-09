@@ -198,7 +198,19 @@ Each task includes:
 - Troubleshooting tips
 - Links to documentation
 
-## 🎓 Learning Path
+## � Design System
+
+**Important:** All UI implementation must follow the design system guidelines.
+
+📖 **[View Design System](./DESIGN-SYSTEM.md)**
+
+Before implementing any task that involves UI:
+1. Review the design system document
+2. Use defined colors, spacing, and typography
+3. Follow component patterns
+4. Maintain visual consistency
+
+## �🎓 Learning Path
 
 These tasks are excellent for:
 - Building production-grade Next.js apps
