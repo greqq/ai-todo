@@ -30,7 +30,7 @@ export async function GET() {
       operationType: 'chatMessage',
       prompt:
         'You are a productivity coach. In one sentence, explain why setting goals is important.',
-      modelOverride: 'claude-sonnet-4-20250514',
+      modelOverride: 'claude-3-5-sonnet-20241022',
     });
 
     // Test Haiku (simple categorization)
@@ -39,7 +39,7 @@ export async function GET() {
       operationType: 'eisenhowerCategorization',
       prompt:
         'Categorize this task: "Check email". Is it urgent and important? Answer in 5 words or less.',
-      modelOverride: 'claude-haiku-3-5-20250101',
+      modelOverride: 'claude-3-5-haiku-20241022',
     });
 
     // Calculate estimated monthly cost
@@ -51,13 +51,13 @@ export async function GET() {
         message: 'AI integration is working correctly',
         tests: {
           sonnet: {
-            model: 'claude-sonnet-4-20250514',
+            model: 'claude-3-5-sonnet-20241022',
             response: sonnetResult.text,
             cost: sonnetResult.cost,
             tokens: sonnetResult.usage,
           },
           haiku: {
-            model: 'claude-haiku-3-5-20250101',
+            model: 'claude-3-5-haiku-20241022',
             response: haikuResult.text,
             cost: haikuResult.cost,
             tokens: haikuResult.usage,
@@ -108,7 +108,7 @@ export async function POST(request: Request) {
       userId,
       operationType: 'chatMessage',
       prompt,
-      modelOverride: model || 'claude-sonnet-4-20250514',
+      modelOverride: model || 'claude-3-5-sonnet-20241022',
     });
 
     return NextResponse.json(

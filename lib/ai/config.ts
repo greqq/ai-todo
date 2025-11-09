@@ -18,14 +18,14 @@ if (!process.env.ANTHROPIC_API_KEY) {
  * Use for: Complex reasoning, goal analysis, coaching conversations,
  * weekly summaries, task breakdown, procrastination analysis
  */
-export const sonnet = anthropic('claude-sonnet-4-20250514');
+export const sonnet = anthropic('claude-3-5-sonnet-20241022');
 
 /**
  * Claude Haiku Model Configuration
  * Use for: Quick categorizations, simple yes/no decisions,
  * task duration estimates, context tag suggestions, simple formatting
  */
-export const haiku = anthropic('claude-haiku-3-5-20250101');
+export const haiku = anthropic('claude-3-5-haiku-20241022');
 
 /**
  * Model selection helper
