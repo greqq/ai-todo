@@ -1,4 +1,4 @@
-import { auth } from '@clerk/nextjs/server';
+import { auth, currentUser } from '@clerk/nextjs/server';
 import { createClient } from '@/lib/supabase/server';
 
 export async function getCurrentUser() {
@@ -10,14 +10,38 @@ export async function getCurrentUser() {
 
   const supabase = await createClient();
 
-  const { data: user, error } = await supabase
+  // Try to get user from Supabase
+  let { data: user, error } = await supabase
     .from('users')
     .select('*')
     .eq('clerk_user_id', userId)
     .single();
 
+  // If user doesn't exist in Supabase, create them (webhook fallback)
   if (error || !user) {
-    return null;
+    const clerkUser = await currentUser();
+
+    if (!clerkUser) {
+      return null;
+    }
+
+    // Create user in Supabase
+    const { data: newUser, error: createError } = await supabase
+      .from('users')
+      .insert({
+        clerk_user_id: clerkUser.id,
+        email: clerkUser.emailAddresses[0]?.emailAddress || '',
+        full_name: `${clerkUser.firstName || ''} ${clerkUser.lastName || ''}`.trim() || null,
+      })
+      .select()
+      .single();
+
+    if (createError) {
+      console.error('Error creating user in Supabase:', createError);
+      return null;
+    }
+
+    user = newUser;
   }
 
   return user;
