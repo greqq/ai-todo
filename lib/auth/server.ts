@@ -11,26 +11,38 @@ export async function getCurrentUser() {
 
   const supabase = await createClient();
 
-  // Try to get user from Supabase
+  // Try to get user from Supabase with regular client
   let { data: user, error } = await supabase
     .from('users')
     .select('*')
     .eq('clerk_user_id', userId)
     .single();
 
-  // If user doesn't exist in Supabase, create them (webhook fallback)
+  // If user not found with regular client, try with admin client (bypasses RLS)
   if (error || !user) {
+    const supabaseAdmin = createAdminClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    );
+
+    // Try to fetch with admin client first (user might exist but RLS blocks it)
+    const { data: existingUser } = await supabaseAdmin
+      .from('users')
+      .select('*')
+      .eq('clerk_user_id', userId)
+      .single();
+
+    if (existingUser) {
+      // User exists, just couldn't be read due to RLS
+      return existingUser;
+    }
+
+    // User truly doesn't exist, create them
     const clerkUser = await currentUser();
 
     if (!clerkUser) {
       return null;
     }
-
-    // Use admin client to bypass RLS for user creation
-    const supabaseAdmin = createAdminClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
-    );
 
     // Create user in Supabase with admin privileges
     const { data: newUser, error: createError } = await supabaseAdmin
