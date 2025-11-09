@@ -2,9 +2,9 @@
   "project": {
     "name": "AI TODO App - Time Wealth Productivity System",
     "version": "1.0.0-MVP",
-    "current_task": 5,
+    "current_task": 6,
     "total_tasks": 22,
-    "completion_percentage": 18.2
+    "completion_percentage": 22.7
   },
   "tasks": [
     {
@@ -90,7 +90,7 @@
       "id": 5,
       "name": "User Profile & Preferences",
       "file": "implementation-tasks/02-core-features/task-05-user-profile-and-preferences.md",
-      "status": "not_done",
+      "status": "done",
       "priority": "high",
       "dependencies": [4],
       "acceptance_criteria": [
@@ -100,7 +100,7 @@
         "Work hours configuration functional",
         "Data persists in Supabase"
       ],
-      "notes": "Reference main spec Section 3.1 for detailed requirements",
+      "notes": "Completed: User profile page, preferences API routes, timezone handling, work hours config. Built with design system standards.",
       "blockers": []
     },
     {
