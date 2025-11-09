@@ -2,9 +2,9 @@
   "project": {
     "name": "AI TODO App - Time Wealth Productivity System",
     "version": "1.0.0-MVP",
-    "current_task": 7,
+    "current_task": 8,
     "total_tasks": 22,
-    "completion_percentage": 27.3
+    "completion_percentage": 31.8
   },
   "tasks": [
     {
@@ -126,7 +126,7 @@
       "id": 7,
       "name": "Task Management (CRUD)",
       "file": "implementation-tasks/02-core-features/task-07-task-management-crud.md",
-      "status": "not_done",
+      "status": "done",
       "priority": "critical",
       "dependencies": [6],
       "acceptance_criteria": [
@@ -138,7 +138,7 @@
         "Task properties editable",
         "Subtasks supported"
       ],
-      "notes": "Reference main spec Section 3.3 for detailed requirements",
+      "notes": "Completed: Full CRUD API routes for tasks with filtering, subtask support, completion tracking with duration/energy logging, procrastination detection. Comprehensive UI with tabs, filters, expand/collapse subtasks, Eisenhower quadrant badges. Build passes successfully.",
       "blockers": []
     },
     {

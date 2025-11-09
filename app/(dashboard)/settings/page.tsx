@@ -5,7 +5,7 @@ import { useUser } from '@clerk/nextjs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select } from '@/components/ui/select';
+import { Select } from '@/components/ui/select-old';
 import { Button } from '@/components/ui/button';
 
 // Timezone list (common timezones)
