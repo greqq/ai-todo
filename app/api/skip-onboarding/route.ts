@@ -18,6 +18,7 @@ export async function POST() {
 
     const { data, error } = await supabase
       .from('users')
+      // @ts-expect-error - Update type inference issue
       .update({ onboarding_completed: true })
       .eq('clerk_user_id', userId)
       .select()
