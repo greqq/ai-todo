@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import {
   Plus, CheckCircle, Circle, Clock, Calendar, Zap, Target,
-  MoreVertical, Edit, Trash2, ChevronDown, ChevronRight, Flag
+  MoreVertical, Edit, Trash2, ChevronDown, ChevronRight, Flag, PlayCircle
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -242,6 +242,22 @@ export default function TasksPage() {
     }
   };
 
+  const handleChangeStatus = async (taskId: string, newStatus: Task['status']) => {
+    try {
+      const response = await fetch(`/api/tasks/${taskId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: newStatus }),
+      });
+
+      if (response.ok) {
+        await fetchTasks();
+      }
+    } catch (error) {
+      console.error('Error changing task status:', error);
+    }
+  };
+
   const openEditDialog = (task: Task) => {
     setSelectedTask(task);
     setFormData({
@@ -389,6 +405,8 @@ export default function TasksPage() {
                 >
                   {task.status === 'completed' ? (
                     <CheckCircle className="h-5 w-5 text-green-600" />
+                  ) : task.status === 'in_progress' ? (
+                    <PlayCircle className="h-5 w-5 text-blue-600 fill-blue-100" />
                   ) : (
                     <Circle className="h-5 w-5 text-gray-400" />
                   )}
@@ -455,6 +473,24 @@ export default function TasksPage() {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
+                  {task.status !== 'in_progress' && task.status !== 'completed' && (
+                    <DropdownMenuItem onClick={() => handleChangeStatus(task.id, 'in_progress')}>
+                      <PlayCircle className="h-4 w-4 mr-2" />
+                      Start Task
+                    </DropdownMenuItem>
+                  )}
+                  {task.status === 'in_progress' && (
+                    <DropdownMenuItem onClick={() => handleChangeStatus(task.id, 'todo')}>
+                      <Circle className="h-4 w-4 mr-2" />
+                      Mark as To Do
+                    </DropdownMenuItem>
+                  )}
+                  {task.status !== 'completed' && (
+                    <DropdownMenuItem onClick={() => handleCompleteTask(task.id)}>
+                      <CheckCircle className="h-4 w-4 mr-2" />
+                      Mark as Complete
+                    </DropdownMenuItem>
+                  )}
                   <DropdownMenuItem onClick={() => openEditDialog(task)}>
                     <Edit className="h-4 w-4 mr-2" />
                     Edit
