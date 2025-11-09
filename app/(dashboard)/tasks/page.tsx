@@ -83,7 +83,7 @@ export default function TasksPage() {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
-    goal_id: '',
+    goal_id: 'none',
     parent_task_id: '',
     due_date: '',
     scheduled_start: '',
@@ -147,7 +147,7 @@ export default function TasksPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...formData,
-          goal_id: formData.goal_id || null,
+          goal_id: formData.goal_id && formData.goal_id !== 'none' ? formData.goal_id : null,
           parent_task_id: formData.parent_task_id || null,
         }),
       });
@@ -171,7 +171,7 @@ export default function TasksPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...formData,
-          goal_id: formData.goal_id || null,
+          goal_id: formData.goal_id && formData.goal_id !== 'none' ? formData.goal_id : null,
         }),
       });
 
@@ -247,7 +247,7 @@ export default function TasksPage() {
     setFormData({
       title: task.title,
       description: task.description || '',
-      goal_id: task.goal_id || '',
+      goal_id: task.goal_id || 'none',
       parent_task_id: task.parent_task_id || '',
       due_date: task.due_date || '',
       scheduled_start: task.scheduled_start || '',
@@ -274,7 +274,7 @@ export default function TasksPage() {
     setFormData({
       title: '',
       description: '',
-      goal_id: '',
+      goal_id: 'none',
       parent_task_id: '',
       due_date: '',
       scheduled_start: '',
@@ -671,7 +671,7 @@ export default function TasksPage() {
                     <SelectValue placeholder="Select a goal" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">No goal</SelectItem>
+                    <SelectItem value="none">No goal</SelectItem>
                     {goals.map((goal) => (
                       <SelectItem key={goal.id} value={goal.id}>
                         {goal.title}
