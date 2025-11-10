@@ -103,25 +103,38 @@ Return JSON format:
   }
 }`;
 
-    const { text } = await generateText({
-      model: sonnet,
-      prompt: goalAnalysisPrompt,
-      temperature: 0.7,
-    });
-
-    // Parse AI response
     let goalData;
     try {
-      const jsonMatch = text.match(/\{[\s\S]*\}/);
-      if (jsonMatch) {
-        goalData = JSON.parse(jsonMatch[0]);
-      } else {
-        goalData = JSON.parse(text);
+      const { text } = await generateText({
+        model: sonnet,
+        prompt: goalAnalysisPrompt,
+        temperature: 0.7,
+      });
+
+      console.log('AI Response received, length:', text.length);
+
+      // Parse AI response
+      try {
+        const jsonMatch = text.match(/\{[\s\S]*\}/);
+        if (jsonMatch) {
+          goalData = JSON.parse(jsonMatch[0]);
+        } else {
+          goalData = JSON.parse(text);
+        }
+      } catch (parseError) {
+        console.error('Failed to parse goal data:', text);
+        return NextResponse.json(
+          { error: 'AI response was not in expected format', details: 'JSON parsing failed' },
+          { status: 500 }
+        );
       }
-    } catch (parseError) {
-      console.error('Failed to parse goal data:', text);
+    } catch (aiError) {
+      console.error('AI generation failed:', aiError);
       return NextResponse.json(
-        { error: 'AI response was not in expected format' },
+        {
+          error: 'Failed to generate goal analysis with AI',
+          details: aiError instanceof Error ? aiError.message : 'Unknown AI error',
+        },
         { status: 500 }
       );
     }

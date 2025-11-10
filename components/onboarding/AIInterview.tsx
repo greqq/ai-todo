@@ -196,10 +196,13 @@ export default function AIInterview() {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to complete onboarding');
+        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+        console.error('API Error:', errorData);
+        throw new Error(errorData.error || errorData.details || 'Failed to complete onboarding');
       }
 
       const result = await response.json();
+      console.log('Onboarding completed:', result);
 
       setMessages((prev) => [
         ...prev,
@@ -217,11 +220,18 @@ export default function AIInterview() {
       }, 2000);
     } catch (error) {
       console.error('Error completing onboarding:', error);
+
+      // Show detailed error to user
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      const errorDetails = error instanceof Response
+        ? await error.text().catch(() => 'Could not read error details')
+        : errorMessage;
+
       setMessages((prev) => [
         ...prev,
         {
           role: 'ai',
-          content: "I encountered an error setting up your account. Please try again or use Quick Setup instead.",
+          content: `I encountered an error: ${errorMessage}. Please check the console for details or try Quick Setup instead.`,
           timestamp: new Date(),
         },
       ]);
