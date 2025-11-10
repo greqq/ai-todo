@@ -3,6 +3,7 @@ import { auth, currentUser } from '@clerk/nextjs/server';
 import { generateText } from 'ai';
 import { sonnet } from '@/lib/ai/config';
 import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 
 /**
  * POST /api/ai/complete-onboarding
@@ -50,8 +51,9 @@ export async function POST(request: NextRequest) {
         );
       }
 
-      // Create user in Supabase
-      const { data: newUser, error: createError } = await supabase
+      // Create user in Supabase using ADMIN client (bypasses RLS)
+      const adminClient = createAdminClient();
+      const { data: newUser, error: createError } = await adminClient
         .from('users')
         // @ts-expect-error - Insert type inference issue
         .insert({
