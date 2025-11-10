@@ -65,16 +65,40 @@ export async function POST(request: NextRequest) {
         .select()
         .single();
 
-      if (createError || !newUser) {
-        console.error('Failed to create user:', createError);
-        return NextResponse.json(
-          { error: 'Failed to create user in database', details: createError?.message },
-          { status: 500 }
-        );
-      }
+      if (createError) {
+        // Check if it's a duplicate key error (user exists but initial query failed)
+        if (createError.code === '23505') {
+          console.log('User already exists (duplicate key), retrying fetch with admin client...');
 
-      user = newUser;
-      console.log('User created successfully:', user);
+          // Retry fetching user with admin client
+          const { data: existingUser, error: retryError } = await adminClient
+            .from('users')
+            .select('*')
+            .eq('clerk_user_id', userId)
+            .single();
+
+          if (retryError || !existingUser) {
+            console.error('Failed to fetch existing user after duplicate key error:', retryError);
+            return NextResponse.json(
+              { error: 'User exists but could not be retrieved', details: retryError?.message },
+              { status: 500 }
+            );
+          }
+
+          user = existingUser;
+          console.log('Existing user retrieved successfully:', user);
+        } else {
+          // Different error, fail the request
+          console.error('Failed to create user:', createError);
+          return NextResponse.json(
+            { error: 'Failed to create user in database', details: createError?.message },
+            { status: 500 }
+          );
+        }
+      } else if (newUser) {
+        user = newUser;
+        console.log('User created successfully:', user);
+      }
     }
 
     // Type assertion needed due to Supabase type inference issues
