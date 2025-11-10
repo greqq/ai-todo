@@ -1,340 +1,143 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { Loader2, Send, Sparkles } from 'lucide-react';
+import { Sparkles, Zap, Clock, CheckCircle2 } from 'lucide-react';
+import QuickSetup from '@/components/onboarding/QuickSetup';
+import AIInterview from '@/components/onboarding/AIInterview';
 
 /**
- * Onboarding AI Interview Page
+ * Onboarding Page - Mode Selection
  * Based on specification Section 3.1: AI-Powered Onboarding Interview
  *
- * Implements Quick Start Mode (5 questions):
- * 1. Main Goal
- * 2. Why It Matters
- * 3. Timeline
- * 4. Daily Schedule
- * 5. Energy Patterns
+ * Two modes:
+ * 1. Quick Setup (Form-based, 2 min)
+ * 2. AI Interview (Conversational, 5-10 min, RECOMMENDED)
  */
 
-interface Message {
-  role: 'ai' | 'user';
-  content: string;
-  timestamp: Date;
-}
-
-interface InterviewAnswer {
-  [key: string]: string;
-}
-
-const QUICK_START_QUESTIONS = [
-  "What's the one big goal you want to achieve in the next 3-6 months?",
-  "Why is this important to you right now?",
-  "What's your target completion date for this goal?",
-  "Describe your typical weekday. When do you work? What are your fixed commitments?",
-  "When during the day do you feel most focused and energized?",
-];
+type OnboardingMode = 'selection' | 'quick' | 'ai';
 
 export default function OnboardingPage() {
-  const router = useRouter();
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [currentInput, setCurrentInput] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [interviewAnswers, setInterviewAnswers] = useState<InterviewAnswer>({});
-  const [isCompleting, setIsCompleting] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [mode, setMode] = useState<OnboardingMode>('selection');
 
-  // Scroll to bottom when messages update
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
+  if (mode === 'quick') {
+    return <QuickSetup />;
+  }
 
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+  if (mode === 'ai') {
+    return <AIInterview />;
+  }
 
-  // Show initial greeting and first question
-  useEffect(() => {
-    const welcomeMessage: Message = {
-      role: 'ai',
-      content: "Welcome to AI TODO! 👋 I'm here to help you build a personalized productivity system. Let's start with a quick 5-minute conversation to understand your goals and how you work best.",
-      timestamp: new Date(),
-    };
-
-    const firstQuestion: Message = {
-      role: 'ai',
-      content: QUICK_START_QUESTIONS[0],
-      timestamp: new Date(),
-    };
-
-    setMessages([welcomeMessage, firstQuestion]);
-  }, []);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!currentInput.trim() || loading) return;
-
-    const userMessage = currentInput.trim();
-    setCurrentInput('');
-
-    // Add user message to chat
-    setMessages((prev) => [
-      ...prev,
-      {
-        role: 'user',
-        content: userMessage,
-        timestamp: new Date(),
-      },
-    ]);
-
-    setLoading(true);
-
-    try {
-      // Call AI interview API
-      const response = await fetch('/api/ai/interview', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          mode: 'quick',
-          questionNumber: currentQuestionIndex + 1,
-          totalQuestions: QUICK_START_QUESTIONS.length,
-          previousAnswers: interviewAnswers,
-          currentQuestion: QUICK_START_QUESTIONS[currentQuestionIndex],
-          userResponse: userMessage,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to process interview response');
-      }
-
-      const data = await response.json();
-      const aiResponse = data.ai_response;
-
-      // Save the answer
-      const updatedAnswers = {
-        ...interviewAnswers,
-        [`question_${currentQuestionIndex + 1}`]: userMessage,
-      };
-      setInterviewAnswers(updatedAnswers);
-
-      // Check if we need clarification or can proceed
-      if (aiResponse.needs_clarification) {
-        // AI needs more info, ask follow-up
-        setMessages((prev) => [
-          ...prev,
-          {
-            role: 'ai',
-            content: aiResponse.ai_message,
-            timestamp: new Date(),
-          },
-        ]);
-      } else if (aiResponse.proceed_to_next) {
-        // Move to next question
-        const nextQuestionIndex = currentQuestionIndex + 1;
-
-        // Add acknowledgment if provided
-        if (aiResponse.ai_message && aiResponse.ai_message !== QUICK_START_QUESTIONS[nextQuestionIndex]) {
-          setMessages((prev) => [
-            ...prev,
-            {
-              role: 'ai',
-              content: aiResponse.ai_message,
-              timestamp: new Date(),
-            },
-          ]);
-        }
-
-        // Check if we're done with all questions
-        if (nextQuestionIndex >= QUICK_START_QUESTIONS.length) {
-          // Complete onboarding
-          await completeOnboarding(updatedAnswers);
-        } else {
-          // Ask next question
-          setCurrentQuestionIndex(nextQuestionIndex);
-          setTimeout(() => {
-            setMessages((prev) => [
-              ...prev,
-              {
-                role: 'ai',
-                content: QUICK_START_QUESTIONS[nextQuestionIndex],
-                timestamp: new Date(),
-              },
-            ]);
-          }, 500);
-        }
-      } else {
-        // Default: show AI message
-        setMessages((prev) => [
-          ...prev,
-          {
-            role: 'ai',
-            content: aiResponse.ai_message,
-            timestamp: new Date(),
-          },
-        ]);
-      }
-    } catch (error) {
-      console.error('Error processing interview:', error);
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: 'ai',
-          content: "I'm sorry, I encountered an error. Could you please try again?",
-          timestamp: new Date(),
-        },
-      ]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const completeOnboarding = async (answers: InterviewAnswer) => {
-    setIsCompleting(true);
-
-    setMessages((prev) => [
-      ...prev,
-      {
-        role: 'ai',
-        content: "Perfect! 🎉 Let me create your personalized productivity system based on what you've shared. This will just take a moment...",
-        timestamp: new Date(),
-      },
-    ]);
-
-    try {
-      const response = await fetch('/api/ai/complete-onboarding', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          interviewAnswers: answers,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to complete onboarding');
-      }
-
-      const data = await response.json();
-
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: 'ai',
-          content: `Excellent! I've created your goal: "${data.goal.title}". I've also generated some initial tasks to help you get started. Ready to see your personalized dashboard?`,
-          timestamp: new Date(),
-        },
-      ]);
-
-      // Redirect to dashboard after a short delay
-      setTimeout(() => {
-        router.push('/dashboard');
-        router.refresh();
-      }, 2000);
-    } catch (error) {
-      console.error('Error completing onboarding:', error);
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: 'ai',
-          content: "I encountered an error while setting up your account. Let me try again...",
-          timestamp: new Date(),
-        },
-      ]);
-      setIsCompleting(false);
-    }
-  };
-
+  // Mode Selection Screen
   return (
-    <div className="flex min-h-screen flex-col bg-gradient-to-b from-background to-muted/20">
-      {/* Header */}
-      <div className="sticky top-0 z-10 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Sparkles className="h-6 w-6 text-primary" />
-              <h1 className="text-xl font-bold">AI Onboarding</h1>
-            </div>
-            <div className="text-sm text-muted-foreground">
-              Question {Math.min(currentQuestionIndex + 1, QUICK_START_QUESTIONS.length)} of {QUICK_START_QUESTIONS.length}
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-background to-muted/20 p-6">
+      <div className="w-full max-w-4xl">
+        {/* Header */}
+        <div className="mb-8 text-center">
+          <div className="mb-4 flex justify-center">
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
+              <Sparkles className="h-8 w-8 text-primary" />
             </div>
           </div>
-          {/* Progress bar */}
-          <div className="mt-3 h-1 w-full overflow-hidden rounded-full bg-muted">
-            <div
-              className="h-full bg-primary transition-all duration-500"
-              style={{
-                width: `${((currentQuestionIndex + 1) / QUICK_START_QUESTIONS.length) * 100}%`,
-              }}
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* Messages */}
-      <div className="flex-1 overflow-y-auto">
-        <div className="container mx-auto max-w-3xl px-4 py-8">
-          <div className="space-y-6">
-            {messages.map((message, index) => (
-              <div
-                key={index}
-                className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
-              >
-                <div
-                  className={`max-w-[80%] rounded-lg px-4 py-3 ${
-                    message.role === 'user'
-                      ? 'bg-primary text-primary-foreground'
-                      : 'bg-muted text-foreground'
-                  }`}
-                >
-                  <p className="whitespace-pre-wrap">{message.content}</p>
-                </div>
-              </div>
-            ))}
-            {loading && (
-              <div className="flex justify-start">
-                <div className="max-w-[80%] rounded-lg bg-muted px-4 py-3">
-                  <div className="flex items-center gap-2">
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                    <span className="text-sm text-muted-foreground">Thinking...</span>
-                  </div>
-                </div>
-              </div>
-            )}
-            <div ref={messagesEndRef} />
-          </div>
-        </div>
-      </div>
-
-      {/* Input */}
-      <div className="sticky bottom-0 border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container mx-auto max-w-3xl px-4 py-4">
-          <form onSubmit={handleSubmit} className="flex gap-2">
-            <input
-              type="text"
-              value={currentInput}
-              onChange={(e) => setCurrentInput(e.target.value)}
-              placeholder="Type your answer here..."
-              disabled={loading || isCompleting}
-              className="flex-1 rounded-lg border border-input bg-background px-4 py-3 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-            />
-            <Button
-              type="submit"
-              disabled={!currentInput.trim() || loading || isCompleting}
-              size="icon"
-              className="h-12 w-12"
-            >
-              {loading || isCompleting ? (
-                <Loader2 className="h-5 w-5 animate-spin" />
-              ) : (
-                <Send className="h-5 w-5" />
-              )}
-            </Button>
-          </form>
-          <p className="mt-2 text-center text-xs text-muted-foreground">
-            Press Enter to send • Your responses are saved automatically
+          <h1 className="mb-2 text-4xl font-bold">Welcome to AI TODO</h1>
+          <p className="text-lg text-muted-foreground">
+            Let&apos;s build your personalized productivity system
           </p>
         </div>
+
+        {/* Mode Cards */}
+        <div className="grid gap-6 md:grid-cols-2">
+          {/* Quick Setup */}
+          <button
+            onClick={() => setMode('quick')}
+            className="group relative overflow-hidden rounded-xl border-2 border-border bg-card p-8 text-left transition-all hover:border-primary hover:shadow-lg"
+          >
+            <div className="mb-4 flex items-center gap-3">
+              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-muted">
+                <Zap className="h-6 w-6 text-foreground" />
+              </div>
+              <div>
+                <h2 className="text-xl font-bold">Quick Setup</h2>
+                <p className="text-sm text-muted-foreground">Simple form</p>
+              </div>
+            </div>
+
+            <ul className="mb-6 space-y-2 text-sm text-muted-foreground">
+              <li className="flex items-start gap-2">
+                <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                <span>Fill out a quick form with your goal</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                <span>Takes about 2 minutes</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                <span>Get started immediately</span>
+              </li>
+            </ul>
+
+            <div className="flex items-center gap-2 text-sm font-medium">
+              <Clock className="h-4 w-4" />
+              <span>~2 minutes</span>
+            </div>
+
+            <div className="absolute bottom-0 right-0 h-24 w-24 translate-x-8 translate-y-8 rounded-full bg-primary/5 transition-transform group-hover:scale-150" />
+          </button>
+
+          {/* AI Interview - RECOMMENDED */}
+          <button
+            onClick={() => setMode('ai')}
+            className="group relative overflow-hidden rounded-xl border-2 border-primary bg-card p-8 text-left shadow-lg transition-all hover:shadow-xl"
+          >
+            {/* Recommended Badge */}
+            <div className="absolute right-4 top-4 rounded-full bg-primary px-3 py-1 text-xs font-bold text-primary-foreground">
+              RECOMMENDED
+            </div>
+
+            <div className="mb-4 flex items-center gap-3">
+              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
+                <Sparkles className="h-6 w-6 text-primary" />
+              </div>
+              <div>
+                <h2 className="text-xl font-bold">AI Interview</h2>
+                <p className="text-sm text-muted-foreground">Conversational setup</p>
+              </div>
+            </div>
+
+            <ul className="mb-6 space-y-2 text-sm text-muted-foreground">
+              <li className="flex items-start gap-2">
+                <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                <span>AI asks you questions about your goals</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                <span>More personalized task recommendations</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                <span>Better understanding of your schedule & energy</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                <span>SMART goal validation</span>
+              </li>
+            </ul>
+
+            <div className="flex items-center gap-2 text-sm font-medium text-primary">
+              <Clock className="h-4 w-4" />
+              <span>~5-10 minutes</span>
+            </div>
+
+            <div className="absolute bottom-0 right-0 h-32 w-32 translate-x-12 translate-y-12 rounded-full bg-primary/10 transition-transform group-hover:scale-150" />
+          </button>
+        </div>
+
+        {/* Footer Note */}
+        <p className="mt-8 text-center text-sm text-muted-foreground">
+          You can always adjust your settings later in Settings
+        </p>
       </div>
     </div>
   );
