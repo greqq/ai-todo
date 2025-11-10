@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@clerk/nextjs/server';
+import { auth, currentUser } from '@clerk/nextjs/server';
 import { generateText } from 'ai';
 import { sonnet } from '@/lib/ai/config';
 import { createClient } from '@/lib/supabase/server';
@@ -30,18 +30,49 @@ export async function POST(request: NextRequest) {
 
     const supabase = await createClient();
 
-    // Get user from database
-    const { data: user, error: userError } = await supabase
+    // Get or create user in database
+    let { data: user, error: userError } = await supabase
       .from('users')
       .select('*')
       .eq('clerk_user_id', userId)
       .single();
 
+    // If user doesn't exist yet (race condition with Clerk webhook), create them
     if (userError || !user) {
-      return NextResponse.json(
-        { error: 'User not found in database' },
-        { status: 404 }
-      );
+      console.log('User not found in database, creating new user...');
+
+      // Get user info from Clerk
+      const clerkUser = await currentUser();
+      if (!clerkUser) {
+        return NextResponse.json(
+          { error: 'Could not get user information from Clerk' },
+          { status: 401 }
+        );
+      }
+
+      // Create user in Supabase
+      const { data: newUser, error: createError } = await supabase
+        .from('users')
+        // @ts-expect-error - Insert type inference issue
+        .insert({
+          clerk_user_id: userId,
+          email: clerkUser.emailAddresses[0]?.emailAddress || '',
+          full_name: clerkUser.fullName || clerkUser.username || '',
+          onboarding_completed: false,
+        })
+        .select()
+        .single();
+
+      if (createError || !newUser) {
+        console.error('Failed to create user:', createError);
+        return NextResponse.json(
+          { error: 'Failed to create user in database', details: createError?.message },
+          { status: 500 }
+        );
+      }
+
+      user = newUser;
+      console.log('User created successfully:', user);
     }
 
     // Type assertion needed due to Supabase type inference issues
