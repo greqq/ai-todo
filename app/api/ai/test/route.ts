@@ -33,13 +33,13 @@ export async function GET() {
       modelOverride: 'claude-sonnet-4-20250514',
     });
 
-    // Test Haiku 4.5 (simple categorization)
+    // Test Haiku 3.5 (simple categorization)
     const haikuResult = await generateWithTracking({
       userId,
       operationType: 'eisenhowerCategorization',
       prompt:
         'Categorize this task: "Check email". Is it urgent and important? Answer in 5 words or less.',
-      modelOverride: 'claude-haiku-4-20250219',
+      modelOverride: 'claude-3-5-haiku-20241022',
     });
 
     // Calculate estimated monthly cost
@@ -58,8 +58,8 @@ export async function GET() {
             tokens: sonnetResult.usage,
           },
           haiku: {
-            model: 'claude-haiku-4-20250219',
-            modelName: 'Claude Haiku 4.5',
+            model: 'claude-3-5-haiku-20241022',
+            modelName: 'Claude Haiku 3.5 (4.5 not yet available)',
             response: haikuResult.text,
             cost: haikuResult.cost,
             tokens: haikuResult.usage,

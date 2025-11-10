@@ -22,12 +22,13 @@ if (!process.env.ANTHROPIC_API_KEY) {
 export const sonnet = anthropic('claude-sonnet-4-20250514');
 
 /**
- * Claude Haiku 4.5 Model Configuration
+ * Claude Haiku 3.5 Model Configuration
+ * Note: Using Haiku 3.5 as Haiku 4.5 is not yet available via API
  * Use for: Quick categorizations, simple yes/no decisions,
  * task duration estimates, context tag suggestions, simple formatting
  * Pricing: $1/MTok input, $5/MTok output
  */
-export const haiku = anthropic('claude-haiku-4-20250219');
+export const haiku = anthropic('claude-3-5-haiku-20241022');
 
 /**
  * Model selection helper
