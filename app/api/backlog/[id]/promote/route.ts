@@ -75,7 +75,7 @@ export async function POST(
         energy_required: energy_required || 'medium',
         task_type: task_type || 'deep_work',
         eisenhower_quadrant: (backlogItem as any).ai_eisenhower_quadrant || null,
-        source: 'backlog_promotion',
+        source: 'backlog_promoted',
         priority_score: 50,
       })
       .select(`
