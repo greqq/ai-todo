@@ -196,8 +196,9 @@ Return JSON format:
       );
     }
 
-    // Create the goal in the database
-    const { data: createdGoal, error: goalError } = await supabase
+    // Create the goal in the database using ADMIN client (bypasses RLS during onboarding)
+    const adminClient = createAdminClient();
+    const { data: createdGoal, error: goalError } = await adminClient
       .from('goals')
       // @ts-expect-error - Insert type inference issue
       .insert({
@@ -226,7 +227,7 @@ Return JSON format:
     // Type assertion for createdGoal
     const typedGoal = createdGoal as any;
 
-    // Create milestones
+    // Create milestones using admin client
     if (goalData.milestones && goalData.milestones.length > 0) {
       const milestonesToInsert = goalData.milestones.map((milestone: any, index: number) => ({
         goal_id: typedGoal.id,
@@ -237,7 +238,7 @@ Return JSON format:
         order_index: index,
       }));
 
-      const { error: milestonesError } = await supabase
+      const { error: milestonesError } = await adminClient
         .from('milestones')
         .insert(milestonesToInsert);
 
@@ -247,7 +248,7 @@ Return JSON format:
       }
     }
 
-    // Create initial tasks
+    // Create initial tasks using admin client
     if (goalData.initial_tasks && goalData.initial_tasks.length > 0) {
       const tasksToInsert = goalData.initial_tasks.map((task: any) => ({
         user_id: typedUser.id,
@@ -263,7 +264,7 @@ Return JSON format:
         priority_score: 75, // Default high priority for initial tasks
       }));
 
-      const { error: tasksError } = await supabase
+      const { error: tasksError } = await adminClient
         .from('tasks')
         .insert(tasksToInsert);
 
@@ -273,8 +274,8 @@ Return JSON format:
       }
     }
 
-    // Update user preferences and mark onboarding as complete
-    const { error: updateUserError } = await supabase
+    // Update user preferences and mark onboarding as complete using admin client
+    const { error: updateUserError } = await adminClient
       .from('users')
       // @ts-expect-error - Update type inference issue
       .update({
