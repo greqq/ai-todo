@@ -33,6 +33,54 @@ function normalizeEisenhowerQuadrant(quadrant: string | null | undefined): strin
 }
 
 /**
+ * Normalize task type values from AI output to database enum
+ */
+function normalizeTaskType(taskType: string | null | undefined): string {
+  if (!taskType) return 'admin';
+
+  const normalized = taskType.toLowerCase().trim();
+
+  // Map various AI outputs to valid task types
+  const mapping: { [key: string]: string } = {
+    'deep_work': 'deep_work',
+    'deep work': 'deep_work',
+    'focus': 'deep_work',
+    'focused work': 'deep_work',
+    'admin': 'admin',
+    'administrative': 'admin',
+    'communication': 'communication',
+    'meeting': 'communication',
+    'email': 'communication',
+    'learning': 'learning',
+    'study': 'learning',
+    'research': 'learning',
+    'reading': 'learning',
+    'hands-on practice': 'learning',
+    'creative': 'creative',
+    'design': 'creative',
+    'writing': 'creative',
+    'physical': 'physical',
+    'exercise': 'physical',
+    'planning': 'planning',
+    'organization': 'planning',
+  };
+
+  // Check if normalized value exists in mapping
+  if (mapping[normalized]) {
+    return mapping[normalized];
+  }
+
+  // Check if it's already a valid task type
+  const validTypes = ['deep_work', 'admin', 'communication', 'learning', 'creative', 'physical', 'planning'];
+  if (validTypes.includes(normalized)) {
+    return normalized;
+  }
+
+  // Default to admin for unknown types
+  return 'admin';
+}
+
+/**
  * POST /api/ai/accept-daily-tasks
  * Accept and save AI-generated task suggestions to database
  *
@@ -123,7 +171,7 @@ export async function POST(request: Request) {
               estimated_duration_minutes: task.estimated_duration_minutes || null,
               status: 'todo',
               energy_required: task.energy_required || 'medium',
-              task_type: task.task_type || 'deep_work',
+              task_type: normalizeTaskType(task.task_type),
               eisenhower_quadrant: normalizeEisenhowerQuadrant(task.eisenhower_quadrant),
               scheduled_start: scheduledStart,
               scheduled_end: scheduledEnd,
