@@ -2,9 +2,9 @@
   "project": {
     "name": "AI TODO App - Time Wealth Productivity System",
     "version": "1.0.0-MVP",
-    "current_task": 14,
+    "current_task": 15,
     "total_tasks": 22,
-    "completion_percentage": 59.1
+    "completion_percentage": 63.6
   },
   "tasks": [
     {
@@ -253,7 +253,7 @@
       "id": 14,
       "name": "Weekly Summary Generation",
       "file": "implementation-tasks/03-planning-analytics/task-14-weekly-summary-generation.md",
-      "status": "not_done",
+      "status": "done",
       "priority": "high",
       "dependencies": [13],
       "acceptance_criteria": [
@@ -264,7 +264,7 @@
         "Suggestions for next week provided",
         "Summary saved to database"
       ],
-      "notes": "Reference main spec Section 3.6 and 6.2.7",
+      "notes": "Completed: Weekly summary generation with AI analysis. Created helper functions for weekly stats calculation, API routes for generating and fetching summaries, UI component with tabs for overview/wins/challenges/next-week, integrated into Analytics page. Features: completion rates, time invested, energy data, goal progress, patterns detection, AI insights (key wins, challenges, suggestions), goals needing attention, backlog suggestions. Build passes successfully.",
       "blockers": []
     },
     {
@@ -442,7 +442,7 @@
   ],
   "metadata": {
     "last_updated": "2025-11-11",
-    "notes": "Task statuses: not_done | done | blocked - Simplified for AI agent usage. Task 13 completed: Evening Reflection with auto-trigger dialog, AI analysis generating insights, completion stats, reflection form (what went well, blockers, energy, mood), and API routes for saving/analyzing reflections.",
+    "notes": "Task statuses: not_done | done | blocked - Simplified for AI agent usage. Task 14 completed: Weekly Summary Generation with AI analysis, comprehensive stats calculation, patterns detection, goals needing attention tracking, UI component with tabs, and integration with Analytics page.",
     "version": "2.0.0",
     "ai_agent_instructions": {
       "next_task_logic": "Find the first task with status 'not_done' where all dependencies are 'done'",
