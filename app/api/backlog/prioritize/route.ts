@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { generateText } from 'ai';
-import { anthropic } from '@ai-sdk/anthropic';
+import { sonnet } from '@/lib/ai/config';
 import { BACKLOG_PRIORITIZATION_PROMPT } from '@/lib/ai/prompts';
 
 // POST /api/backlog/prioritize - AI-powered prioritization of backlog items
@@ -76,13 +76,8 @@ export async function POST(request: Request) {
 
     // Call AI to analyze and prioritize
     const { text } = await generateText({
-      model: anthropic('claude-3-5-sonnet-20241022'),
-      messages: [
-        {
-          role: 'user',
-          content: BACKLOG_PRIORITIZATION_PROMPT(context),
-        },
-      ],
+      model: sonnet,
+      prompt: BACKLOG_PRIORITIZATION_PROMPT(context),
       temperature: 0.7,
     });
 
@@ -146,7 +141,7 @@ export async function POST(request: Request) {
       .insert({
         user_id: (user as any).id,
         feature: 'backlog_prioritization',
-        model: 'claude-3-5-sonnet-20241022',
+        model: 'claude-sonnet-4-20250514',
         prompt_tokens: 0, // Would need to track from response
         completion_tokens: 0,
         total_cost_usd: 0,
