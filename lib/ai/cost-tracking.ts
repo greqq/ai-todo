@@ -165,3 +165,47 @@ export function getRecommendedModel(
     ? 'claude-3-5-haiku-20241022'
     : 'claude-sonnet-4-20250514';
 }
+
+/**
+ * Track AI usage - simplified wrapper for logging usage
+ */
+export async function trackAIUsage(params: {
+  userId: string;
+  model: string;
+  useCase: string;
+  inputTokens: number;
+  outputTokens: number;
+  totalTokens: number;
+  duration: number;
+  success: boolean;
+  errorMessage?: string;
+}): Promise<void> {
+  try {
+    // Map use case to operation type
+    const operationTypeMap: Record<string, AIOperationType> = {
+      onboarding_interview: 'onboardingInterview',
+      daily_task_generation: 'dailyTaskGeneration',
+      evening_reflection: 'eveningReflection',
+      weekly_summary: 'weeklySummary',
+      chat_message: 'chatMessage',
+      task_breakdown: 'taskBreakdown',
+      procrastination_analysis: 'procrastinationAnalysis',
+      eisenhower_categorization: 'eisenhowerCategorization',
+    };
+
+    const operationType = operationTypeMap[params.useCase] || 'chatMessage';
+
+    const record = createUsageRecord({
+      userId: params.userId,
+      operationType,
+      modelUsed: params.model as 'claude-sonnet-4-20250514' | 'claude-3-5-haiku-20241022',
+      inputTokens: params.inputTokens,
+      outputTokens: params.outputTokens,
+    });
+
+    await logAIUsage(record);
+  } catch (error) {
+    console.error('Failed to track AI usage:', error);
+    // Don't throw - tracking failure shouldn't break the app
+  }
+}
