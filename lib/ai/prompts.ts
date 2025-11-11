@@ -101,7 +101,7 @@ Output Format: Return JSON with task list and reasoning.
       "description": "string",
       "estimated_duration_minutes": integer,
       "energy_required": "high | medium | low",
-      "task_type": "string",
+      "task_type": "deep_work | admin | communication | learning | creative | physical | planning",
       "eisenhower_quadrant": "string",
       "suggested_time_block": "HH:MM - HH:MM",
       "linked_goal_id": "uuid",
