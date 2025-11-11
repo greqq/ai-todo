@@ -373,6 +373,66 @@ Return JSON:
 }
 
 /**
+ * Section 6.2.8: Backlog Prioritization Prompt (Sonnet)
+ * Purpose: Analyze backlog items and suggest prioritization
+ */
+export function BACKLOG_PRIORITIZATION_PROMPT(context: {
+  goals: Array<{ id: string; title: string; description?: string; type: string; target_date?: string; status: string }>;
+  preferences: any;
+  backlog_items: Array<any>;
+}) {
+  return `You are an AI productivity assistant. Analyze the user's backlog items and provide prioritization recommendations.
+
+User's Active Goals:
+${JSON.stringify(context.goals, null, 2)}
+
+User's Preferences:
+- Timezone: ${context.preferences.timezone || 'Not set'}
+- Work hours: ${context.preferences.work_hours_start || 'Not set'} to ${context.preferences.work_hours_end || 'Not set'}
+- Energy peak time: ${context.preferences.energy_peak_time || 'Not set'}
+
+Backlog Items to Analyze:
+${JSON.stringify(context.backlog_items, null, 2)}
+
+For each backlog item, provide:
+1. **Eisenhower Quadrant**: Categorize as q1_urgent_important, q2_not_urgent_important, q3_urgent_not_important, or q4_not_urgent_not_important
+2. **Effort Estimate**: small (< 1 hour), medium (1-3 hours), or large (> 3 hours)
+3. **Impact Score**: Rate from 1-10 based on alignment with user's goals and potential impact
+4. **Suggested Schedule Date**: When this should be promoted to a task (or null if not ready)
+5. **Reasoning**: Brief explanation of your assessment
+
+Also identify:
+- Items ready to schedule soon (high impact, aligned with goals, user has capacity)
+- Stale items that may no longer be relevant
+- Items that could be combined or batched together
+
+Return JSON format only:
+{
+  "prioritized_items": [
+    {
+      "id": "uuid",
+      "eisenhower_quadrant": "q2_not_urgent_important",
+      "effort_estimate": "medium",
+      "impact_score": 8,
+      "suggested_schedule_date": "2025-11-15" or null,
+      "reasoning": "Brief explanation"
+    }
+  ],
+  "insights": {
+    "ready_to_schedule": ["uuid"],
+    "potentially_stale": ["uuid"],
+    "batch_opportunities": [
+      {
+        "items": ["uuid", "uuid"],
+        "reason": "string"
+      }
+    ],
+    "general_observations": "string"
+  }
+}`;
+}
+
+/**
  * Section 6.2.9: Chat Assistant Prompt (Sonnet)
  * Purpose: Answer user questions about their productivity system
  */
