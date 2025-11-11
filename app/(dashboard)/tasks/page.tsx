@@ -26,6 +26,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { DailyTaskSuggestions } from '@/components/tasks/DailyTaskSuggestions';
 
 interface Goal {
   id: string;
@@ -563,6 +564,11 @@ export default function TasksPage() {
           <Plus className="h-4 w-4 mr-2" />
           Add Task
         </Button>
+      </div>
+
+      {/* AI Task Suggestions */}
+      <div className="mb-6">
+        <DailyTaskSuggestions onTasksAccepted={() => fetchTasks()} />
       </div>
 
       {/* Filters */}
