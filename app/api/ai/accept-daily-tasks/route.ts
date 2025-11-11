@@ -3,6 +3,36 @@ import { auth } from '@clerk/nextjs/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 
 /**
+ * Normalize Eisenhower quadrant values from AI output to database enum
+ */
+function normalizeEisenhowerQuadrant(quadrant: string | null | undefined): string | null {
+  if (!quadrant) return null;
+
+  const normalized = quadrant.toLowerCase().trim();
+
+  // Map various formats to the database enum values
+  if (normalized.includes('q1') || (normalized.includes('urgent') && normalized.includes('important') && !normalized.includes('not urgent'))) {
+    return 'q1_urgent_important';
+  }
+  if (normalized.includes('q2') || (normalized.includes('important') && normalized.includes('not urgent'))) {
+    return 'q2_not_urgent_important';
+  }
+  if (normalized.includes('q3') || (normalized.includes('urgent') && normalized.includes('not important'))) {
+    return 'q3_urgent_not_important';
+  }
+  if (normalized.includes('q4') || (normalized.includes('not urgent') && normalized.includes('not important'))) {
+    return 'q4_not_urgent_not_important';
+  }
+
+  // If it's already in the correct format, return it
+  if (['q1_urgent_important', 'q2_not_urgent_important', 'q3_urgent_not_important', 'q4_not_urgent_not_important'].includes(normalized)) {
+    return normalized;
+  }
+
+  return null;
+}
+
+/**
  * POST /api/ai/accept-daily-tasks
  * Accept and save AI-generated task suggestions to database
  *
@@ -94,7 +124,7 @@ export async function POST(request: Request) {
               status: 'todo',
               energy_required: task.energy_required || 'medium',
               task_type: task.task_type || 'deep_work',
-              eisenhower_quadrant: task.eisenhower_quadrant || null,
+              eisenhower_quadrant: normalizeEisenhowerQuadrant(task.eisenhower_quadrant),
               scheduled_start: scheduledStart,
               scheduled_end: scheduledEnd,
               source: 'ai_generated',
