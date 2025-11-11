@@ -84,7 +84,15 @@ export async function POST(request: Request) {
     // Parse AI response (expecting JSON format)
     let aiAnalysis;
     try {
-      aiAnalysis = JSON.parse(text);
+      // Remove markdown code blocks if present
+      let jsonText = text.trim();
+      if (jsonText.startsWith('```json')) {
+        jsonText = jsonText.replace(/^```json\s*/, '').replace(/\s*```$/, '');
+      } else if (jsonText.startsWith('```')) {
+        jsonText = jsonText.replace(/^```\s*/, '').replace(/\s*```$/, '');
+      }
+
+      aiAnalysis = JSON.parse(jsonText);
     } catch (parseError) {
       console.error('Error parsing AI response:', parseError);
       console.error('AI response:', text);
