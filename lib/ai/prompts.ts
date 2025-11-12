@@ -439,8 +439,10 @@ Return JSON format only:
 export function getChatAssistantPrompt(params: {
   userMessage: string;
   context: {
-    goals?: Array<{ id: string; title: string; progress: number }>;
+    goals?: Array<{ id: string; title: string; progress: number; type: string }>;
     todaysTasks?: Array<{ id: string; title: string; status: string }>;
+    allTasks?: Array<{ id: string; title: string; status: string; due_date?: string }>;
+    backlogItems?: Array<{ id: string; title: string; category: string; priority: string }>;
     completionRate?: number;
     energyPatterns?: string;
     recentReflections?: string;
@@ -451,13 +453,17 @@ export function getChatAssistantPrompt(params: {
 User Question: ${params.userMessage}
 
 Available Context:
-${params.context.goals ? `- Active Goals: ${JSON.stringify(params.context.goals)}` : ''}
-${params.context.todaysTasks ? `- Today's Tasks: ${JSON.stringify(params.context.todaysTasks)}` : ''}
+${params.context.goals ? `- Active Goals (${params.context.goals.length}): ${JSON.stringify(params.context.goals)}` : ''}
+${params.context.todaysTasks ? `- Today's Tasks (${params.context.todaysTasks.length}): ${JSON.stringify(params.context.todaysTasks)}` : ''}
+${params.context.allTasks ? `- All Tasks (${params.context.allTasks.length} total): ${JSON.stringify(params.context.allTasks.slice(0, 50))}${params.context.allTasks.length > 50 ? ' (showing first 50)' : ''}` : ''}
+${params.context.backlogItems ? `- Backlog Items (${params.context.backlogItems.length}): ${JSON.stringify(params.context.backlogItems.slice(0, 30))}${params.context.backlogItems.length > 30 ? ' (showing first 30)' : ''}` : ''}
 ${params.context.completionRate !== undefined ? `- Recent Completion Rate: ${params.context.completionRate}%` : ''}
 ${params.context.energyPatterns ? `- Energy Patterns: ${params.context.energyPatterns}` : ''}
 ${params.context.recentReflections ? `- Recent Reflections: ${params.context.recentReflections}` : ''}
 
 Provide a helpful, actionable response. If the question requires data you don't have, say so clearly.
+When discussing tasks or backlog items, reference them by title to help the user identify them.
+If the user asks about backlog or future tasks, use the "All Tasks" and "Backlog Items" data.
 
 Tone: Supportive, direct, conversational. No corporate jargon.`;
 }

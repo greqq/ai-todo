@@ -6,8 +6,10 @@
 import { createAdminClient } from '@/lib/supabase/admin';
 
 export interface UserChatContext {
-  goals: Array<{ id: string; title: string; progress: number; status: string }>;
+  goals: Array<{ id: string; title: string; progress: number; status: string; type: string }>;
   todaysTasks: Array<{ id: string; title: string; status: string; due_date?: string }>;
+  allTasks: Array<{ id: string; title: string; status: string; due_date?: string; goal_id?: string }>;
+  backlogItems: Array<{ id: string; title: string; category: string; priority: string }>;
   completionRate: number;
   energyPatterns: string;
   recentReflections: string;
@@ -41,7 +43,8 @@ export async function getUserChatContext(userId: string): Promise<UserChatContex
       title,
       completion_percentage,
       status,
-      priority
+      priority,
+      type
     `)
     .eq('user_id', dbUserId)
     .in('status', ['active', 'in_progress'])
@@ -55,6 +58,7 @@ export async function getUserChatContext(userId: string): Promise<UserChatContex
       title: goal.title,
       progress: goal.completion_percentage || 0,
       status: goal.status,
+      type: goal.type || 'other',
     })) || [];
 
   // Get today's tasks
@@ -82,6 +86,55 @@ export async function getUserChatContext(userId: string): Promise<UserChatContex
       title: task.title,
       status: task.status,
       due_date: task.due_date,
+    })) || [];
+
+  // Get ALL tasks (not just today's)
+  const { data: allTasks } = await supabase
+    .from('tasks')
+    .select(`
+      id,
+      title,
+      status,
+      due_date,
+      goal_id
+    `)
+    .eq('user_id', dbUserId)
+    .neq('status', 'cancelled')
+    .order('due_date', { ascending: true, nullsFirst: false })
+    .limit(100);
+
+  // Format all tasks
+  const formattedAllTasks =
+    allTasks?.map((task: any) => ({
+      id: task.id,
+      title: task.title,
+      status: task.status,
+      due_date: task.due_date,
+      goal_id: task.goal_id,
+    })) || [];
+
+  // Get backlog items
+  const { data: backlogItems } = await supabase
+    .from('backlog_items')
+    .select(`
+      id,
+      title,
+      category,
+      priority
+    `)
+    .eq('user_id', dbUserId)
+    .is('archived_at', null)
+    .is('promoted_to_task_id', null)
+    .order('created_at', { ascending: false })
+    .limit(50);
+
+  // Format backlog items
+  const formattedBacklogItems =
+    backlogItems?.map((item: any) => ({
+      id: item.id,
+      title: item.title,
+      category: item.category || 'idea',
+      priority: item.priority || 'nice_to_have',
     })) || [];
 
   // Get completion rate for last 7 days
@@ -170,6 +223,8 @@ export async function getUserChatContext(userId: string): Promise<UserChatContex
   return {
     goals: formattedGoals,
     todaysTasks: formattedTodaysTasks,
+    allTasks: formattedAllTasks,
+    backlogItems: formattedBacklogItems,
     completionRate,
     energyPatterns,
     recentReflections: reflectionsSummary,

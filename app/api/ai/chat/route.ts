@@ -39,6 +39,8 @@ export async function POST(request: Request) {
       context: {
         goals: context.goals,
         todaysTasks: context.todaysTasks,
+        allTasks: context.allTasks,
+        backlogItems: context.backlogItems,
         completionRate: context.completionRate,
         energyPatterns: context.energyPatterns,
         recentReflections: context.recentReflections,
