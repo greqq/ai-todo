@@ -353,7 +353,7 @@ Generate:
 
 Tone: Encouraging but realistic. Celebrate wins genuinely. Be direct about challenges.
 
-Return JSON:
+IMPORTANT: Follow this exact JSON structure with these exact field names:
 {
   "accomplishments_summary": "string",
   "key_wins": ["string"],
@@ -364,7 +364,7 @@ Return JSON:
     {
       "goal_id": "uuid",
       "goal_title": "string",
-      "reason": "string"
+      "reason": "string (NOT goal_reason - use 'reason')"
     }
   ],
   "backlog_suggestions": ["uuid"],
