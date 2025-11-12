@@ -87,28 +87,9 @@ export default function ChatInterface() {
         const { done, value } = await reader.read();
         if (done) break;
 
-        const chunk = decoder.decode(value);
-        const lines = chunk.split('\n');
-
-        for (const line of lines) {
-          if (line.startsWith('0:')) {
-            // Parse the data stream from Vercel AI SDK
-            const data = line.slice(2).trim();
-            if (data) {
-              try {
-                const parsed = JSON.parse(data);
-                if (parsed && typeof parsed === 'string') {
-                  accumulatedContent += parsed;
-                } else if (parsed && parsed.content) {
-                  accumulatedContent += parsed.content;
-                }
-              } catch {
-                // If not JSON, just append the text
-                accumulatedContent += data;
-              }
-            }
-          }
-        }
+        // Decode and accumulate the text chunk
+        const chunk = decoder.decode(value, { stream: true });
+        accumulatedContent += chunk;
 
         // Update the AI message with accumulated content
         setMessages((prev) => {
