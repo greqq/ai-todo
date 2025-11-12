@@ -15,20 +15,20 @@ import {
 
 // Schema for AI response
 const weeklySummarySchema = z.object({
-  accomplishments_summary: z.string().describe('Summary of accomplishments for the week'),
-  key_wins: z.array(z.string()).describe('3-5 specific achievements'),
-  insights: z.array(z.string()).describe('3-5 patterns noticed'),
-  challenges: z.array(z.string()).describe('2-3 areas for improvement'),
-  suggestions_for_next_week: z.array(z.string()).describe('3 actionable recommendations'),
+  accomplishments_summary: z.string(),
+  key_wins: z.array(z.string()),
+  insights: z.array(z.string()),
+  challenges: z.array(z.string()),
+  suggestions_for_next_week: z.array(z.string()),
   goals_needing_attention: z.array(
     z.object({
-      goal_id: z.string().describe('The UUID of the goal'),
-      goal_title: z.string().describe('Title of the goal'),
-      reason: z.string().describe('Why this goal needs attention'),
+      goal_id: z.string(),
+      goal_title: z.string(),
+      reason: z.string(),
     })
-  ).describe('Goals that fell behind or need more focus'),
-  backlog_suggestions: z.array(z.string()).describe('UUIDs of backlog items ready to promote'),
-  motivational_message: z.string().describe('Encouraging message for the user'),
+  ),
+  backlog_suggestions: z.array(z.string()),
+  motivational_message: z.string(),
 });
 
 // POST /api/summaries/weekly/generate - Generate weekly summary with AI
