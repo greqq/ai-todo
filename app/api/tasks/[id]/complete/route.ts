@@ -20,8 +20,17 @@ export async function POST(request: Request, context: RouteContext) {
     const params = await context.params;
     const taskId = params.id;
 
-    const body = await request.json();
-    const { actual_duration_minutes, energy_impact } = body;
+    // Parse body if present (optional for quick completion from dashboard)
+    let actual_duration_minutes = null;
+    let energy_impact = null;
+
+    try {
+      const body = await request.json();
+      actual_duration_minutes = body.actual_duration_minutes || null;
+      energy_impact = body.energy_impact || null;
+    } catch (e) {
+      // No body sent - this is fine for quick completion
+    }
 
     const supabase = createAdminClient();
 
