@@ -1,10 +1,17 @@
+'use client';
+
+import ChatInterface from '@/components/chat/ChatInterface';
+
+/**
+ * AI Chat Page
+ * Interactive chat with AI productivity coach
+ *
+ * Based on specification Section 3.10: AI Chat Interface
+ */
 export default function ChatPage() {
   return (
-    <div>
-      <h1 className="text-3xl font-bold mb-6">AI Chat</h1>
-      <p className="text-muted-foreground">
-        Coming soon...
-      </p>
+    <div className="h-[calc(100vh-4rem)]">
+      <ChatInterface />
     </div>
   );
 }
