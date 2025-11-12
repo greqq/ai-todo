@@ -1,6 +1,7 @@
 import { requireAuth } from '@/lib/auth/server';
 import { Sidebar } from '@/components/dashboard/sidebar';
 import { Header } from '@/components/dashboard/header';
+import { Toaster } from '@/components/ui/toaster';
 import { redirect } from 'next/navigation';
 import { User } from '@/types';
 
@@ -35,6 +36,9 @@ export default async function DashboardLayout({
           {children}
         </main>
       </div>
+
+      {/* Toast notifications */}
+      <Toaster />
     </div>
   );
 }
