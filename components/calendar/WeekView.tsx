@@ -88,13 +88,17 @@ export function WeekView({ date, events, onEventClick, onTimeSlotClick }: WeekVi
                   const width = 100 / event.columnCount;
                   const left = event.column * width;
 
+                  // Convert percentage to pixels (1440px total = 24 hours * 60px)
+                  const topPx = (position.top / 100) * 1440;
+                  const heightPx = (position.height / 100) * 1440;
+
                   return (
                     <div
                       key={event.id}
                       className="absolute"
                       style={{
-                        top: `${position.top}%`,
-                        height: `${position.height}%`,
+                        top: `${topPx}px`,
+                        height: `${heightPx}px`,
                         left: `${left}%`,
                         width: `${width}%`,
                         padding: '2px'

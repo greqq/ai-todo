@@ -69,24 +69,16 @@ export function getWeekDays(date: Date) {
 
 // Get all days in a month (including padding for calendar grid)
 export function getMonthDays(date: Date) {
-  const start = startOfMonth(date);
-  const end = endOfMonth(date);
+  const monthStart = startOfMonth(date);
+  const monthEnd = endOfMonth(date);
 
-  // Get first day of month's day of week (0 = Sunday, 1 = Monday, etc.)
-  const firstDayOfWeek = start.getDay();
-  const daysFromPrevMonth = firstDayOfWeek === 0 ? 6 : firstDayOfWeek - 1; // Adjust for Monday start
+  // Start from the Monday of the week containing the 1st of the month
+  const calendarStart = startOfWeek(monthStart, { weekStartsOn: 1 });
+  
+  // End on the Sunday of the week containing the last day of the month
+  const calendarEnd = endOfWeek(monthEnd, { weekStartsOn: 1 });
 
-  // Calculate padding days from previous month
-  const calendarStart = addDays(start, -daysFromPrevMonth);
-
-  // Calculate how many days we need to show (always show complete weeks)
-  const daysInMonth = end.getDate();
-  const totalDays = daysFromPrevMonth + daysInMonth;
-  const weeksNeeded = Math.ceil(totalDays / 7);
-  const totalCells = weeksNeeded * 7;
-
-  const calendarEnd = addDays(calendarStart, totalCells - 1);
-
+  // Return all days in this range
   return eachDayOfInterval({ start: calendarStart, end: calendarEnd });
 }
 
