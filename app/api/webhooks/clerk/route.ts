@@ -2,6 +2,7 @@ import { Webhook } from 'svix';
 import { headers } from 'next/headers';
 import { WebhookEvent } from '@clerk/nextjs/server';
 import { createClient } from '@supabase/supabase-js';
+import { sendWelcomeEmail } from '@/lib/email/send-email';
 
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -53,17 +54,32 @@ export async function POST(req: Request) {
   if (eventType === 'user.created') {
     const { id, email_addresses, first_name, last_name } = evt.data;
 
+    const email = email_addresses[0]?.email_address || '';
+    const fullName = `${first_name || ''} ${last_name || ''}`.trim() || 'there';
+
     const { error } = await supabaseAdmin
       .from('users')
       .insert({
         clerk_user_id: id,
-        email: email_addresses[0]?.email_address || '',
-        full_name: `${first_name || ''} ${last_name || ''}`.trim() || null,
+        email,
+        full_name: fullName !== 'there' ? fullName : null,
       });
 
     if (error) {
       console.error('Error creating user in Supabase:', error);
       return new Response('Error creating user', { status: 500 });
+    }
+
+    // Send welcome email (non-blocking)
+    if (email) {
+      const dashboardUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+      sendWelcomeEmail(email, {
+        userName: fullName,
+        dashboardUrl: `${dashboardUrl}/dashboard`,
+      }).catch((err) => {
+        console.error('Failed to send welcome email:', err);
+        // Don't fail the webhook if email fails
+      });
     }
   }
 

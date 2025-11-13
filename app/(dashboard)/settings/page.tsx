@@ -38,6 +38,9 @@ interface UserPreferences {
   daily_task_limit: number;
   enable_notifications: boolean;
   enable_email_reminders: boolean;
+  enable_email_notifications: boolean;
+  enable_daily_summary_email: boolean;
+  enable_weekly_summary_email: boolean;
 }
 
 interface UserProfile {
@@ -73,6 +76,9 @@ export default function SettingsPage() {
   const [dailyTaskLimit, setDailyTaskLimit] = useState(5);
   const [enableNotifications, setEnableNotifications] = useState(true);
   const [enableEmailReminders, setEnableEmailReminders] = useState(true);
+  const [enableEmailNotifications, setEnableEmailNotifications] = useState(true);
+  const [enableDailySummaryEmail, setEnableDailySummaryEmail] = useState(true);
+  const [enableWeeklySummaryEmail, setEnableWeeklySummaryEmail] = useState(true);
 
   // Fetch user profile on mount
   useEffect(() => {
@@ -96,6 +102,9 @@ export default function SettingsPage() {
           setDailyTaskLimit(data.preferences.daily_task_limit || 5);
           setEnableNotifications(data.preferences.enable_notifications ?? true);
           setEnableEmailReminders(data.preferences.enable_email_reminders ?? true);
+          setEnableEmailNotifications(data.preferences.enable_email_notifications ?? true);
+          setEnableDailySummaryEmail(data.preferences.enable_daily_summary_email ?? true);
+          setEnableWeeklySummaryEmail(data.preferences.enable_weekly_summary_email ?? true);
         }
       } catch (error) {
         console.error('Error fetching profile:', error);
@@ -129,6 +138,9 @@ export default function SettingsPage() {
             daily_task_limit: dailyTaskLimit,
             enable_notifications: enableNotifications,
             enable_email_reminders: enableEmailReminders,
+            enable_email_notifications: enableEmailNotifications,
+            enable_daily_summary_email: enableDailySummaryEmail,
+            enable_weekly_summary_email: enableWeeklySummaryEmail,
           },
         }),
       });
@@ -415,10 +427,10 @@ export default function SettingsPage() {
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
                   <Label htmlFor="enable-notifications" className="text-sm font-normal">
-                    Enable Notifications
+                    Enable In-App Notifications
                   </Label>
                   <p className="text-xs text-muted-foreground">
-                    Receive in-app notifications
+                    Receive notifications within the app
                   </p>
                 </div>
                 <input
@@ -429,21 +441,82 @@ export default function SettingsPage() {
                   className="h-4 w-4 rounded border-gray-300"
                 />
               </div>
+            </div>
+          </div>
+
+          {/* Email Notifications */}
+          <div className="space-y-4">
+            <Label>Email Notifications</Label>
+            <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
-                  <Label htmlFor="enable-email" className="text-sm font-normal">
-                    Email Reminders
+                  <Label htmlFor="enable-email-notifications" className="text-sm font-normal">
+                    Enable Email Notifications
                   </Label>
                   <p className="text-xs text-muted-foreground">
-                    Receive email reminders for tasks and summaries
+                    Master toggle for all email notifications
                   </p>
                 </div>
                 <input
-                  id="enable-email"
+                  id="enable-email-notifications"
+                  type="checkbox"
+                  checked={enableEmailNotifications}
+                  onChange={(e) => setEnableEmailNotifications(e.target.checked)}
+                  className="h-4 w-4 rounded border-gray-300"
+                />
+              </div>
+              <div className="flex items-center justify-between pl-6">
+                <div className="space-y-0.5">
+                  <Label htmlFor="enable-daily-summary" className="text-sm font-normal">
+                    Daily Summary Emails
+                  </Label>
+                  <p className="text-xs text-muted-foreground">
+                    Receive your daily plan each morning
+                  </p>
+                </div>
+                <input
+                  id="enable-daily-summary"
+                  type="checkbox"
+                  checked={enableDailySummaryEmail}
+                  onChange={(e) => setEnableDailySummaryEmail(e.target.checked)}
+                  disabled={!enableEmailNotifications}
+                  className="h-4 w-4 rounded border-gray-300 disabled:opacity-50"
+                />
+              </div>
+              <div className="flex items-center justify-between pl-6">
+                <div className="space-y-0.5">
+                  <Label htmlFor="enable-weekly-summary" className="text-sm font-normal">
+                    Weekly Summary Emails
+                  </Label>
+                  <p className="text-xs text-muted-foreground">
+                    Receive your weekly progress report
+                  </p>
+                </div>
+                <input
+                  id="enable-weekly-summary"
+                  type="checkbox"
+                  checked={enableWeeklySummaryEmail}
+                  onChange={(e) => setEnableWeeklySummaryEmail(e.target.checked)}
+                  disabled={!enableEmailNotifications}
+                  className="h-4 w-4 rounded border-gray-300 disabled:opacity-50"
+                />
+              </div>
+              <div className="flex items-center justify-between pl-6">
+                <div className="space-y-0.5">
+                  <Label htmlFor="enable-email-reminders" className="text-sm font-normal">
+                    Task Reminder Emails
+                  </Label>
+                  <p className="text-xs text-muted-foreground">
+                    Receive reminders for upcoming tasks
+                  </p>
+                </div>
+                <input
+                  id="enable-email-reminders"
                   type="checkbox"
                   checked={enableEmailReminders}
                   onChange={(e) => setEnableEmailReminders(e.target.checked)}
-                  className="h-4 w-4 rounded border-gray-300"
+                  disabled={!enableEmailNotifications}
+                  className="h-4 w-4 rounded border-gray-300 disabled:opacity-50"
                 />
               </div>
             </div>
