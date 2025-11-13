@@ -202,7 +202,6 @@ export default function AIInterview() {
       }
 
       const result = await response.json();
-      console.log('Onboarding completed:', result);
 
       setMessages((prev) => [
         ...prev,
