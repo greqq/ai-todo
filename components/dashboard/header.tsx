@@ -3,6 +3,7 @@
 import { UserButton } from '@clerk/nextjs';
 import { User } from '@/types';
 import { MobileSidebar } from './mobile-sidebar';
+import { ThemeToggle } from '@/components/theme-toggle';
 
 interface HeaderProps {
   user: User;
@@ -19,8 +20,9 @@ export function Header({ user }: HeaderProps) {
         <h1 className="text-lg font-semibold">Welcome back, {user.full_name || 'there'}!</h1>
       </div>
 
-      {/* User menu */}
+      {/* Theme toggle and user menu */}
       <div className="flex items-center space-x-4">
+        <ThemeToggle />
         <UserButton afterSignOutUrl="/" />
       </div>
     </header>

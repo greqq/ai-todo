@@ -24,7 +24,7 @@ export default function AnalyticsPage() {
                 <Calendar className="h-6 w-6 text-indigo-600" />
                 Weekly Summary
               </h2>
-              <p className="text-gray-600">
+              <p className="text-muted-foreground">
                 Get AI-powered insights into your weekly progress, patterns, and suggestions for
                 improvement.
               </p>
