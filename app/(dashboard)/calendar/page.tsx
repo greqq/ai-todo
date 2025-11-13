@@ -90,7 +90,6 @@ export default function CalendarPage() {
   };
 
   const handleEventClick = (event: CalendarEvent) => {
-    console.log('Event clicked:', event);
     // TODO: Show event details dialog
     toast({
       title: event.title,
