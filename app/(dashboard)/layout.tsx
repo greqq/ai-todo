@@ -1,6 +1,7 @@
 import { requireAuth } from '@/lib/auth/server';
 import { Sidebar } from '@/components/dashboard/sidebar';
 import { Header } from '@/components/dashboard/header';
+import { Footer } from '@/components/layout/footer';
 import { Toaster } from '@/components/ui/toaster';
 import { redirect } from 'next/navigation';
 import { User } from '@/types';
@@ -35,6 +36,9 @@ export default async function DashboardLayout({
         <main className="flex-1 overflow-y-auto p-6">
           {children}
         </main>
+
+        {/* Footer */}
+        <Footer />
       </div>
 
       {/* Toast notifications */}

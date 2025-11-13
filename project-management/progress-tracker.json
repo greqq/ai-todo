@@ -2,9 +2,9 @@
   "project": {
     "name": "AI TODO App - Time Wealth Productivity System",
     "version": "1.0.0-MVP",
-    "current_task": 21,
+    "current_task": 22,
     "total_tasks": 22,
-    "completion_percentage": 90.9
+    "completion_percentage": 95.5
   },
   "tasks": [
     {
@@ -377,7 +377,7 @@
       "id": 21,
       "name": "Privacy Policy & Terms",
       "file": "implementation-tasks/05-finalization/task-21-privacy-policy-and-terms.md",
-      "status": "not_done",
+      "status": "done",
       "priority": "low",
       "dependencies": [],
       "acceptance_criteria": [
@@ -387,7 +387,7 @@
         "Pages accessible from footer",
         "Content is clear and comprehensive"
       ],
-      "notes": "Reference main spec Section 8.2 and 8.4",
+      "notes": "Completed: Privacy Policy page (/privacy) and Terms of Service page (/terms) created with comprehensive legal content covering data collection, usage, AI processing, user rights, GDPR compliance, acceptable use policy, AI limitations, data ownership, service availability, termination conditions, warranties, and liability. Footer component created and added to both landing page and dashboard layout with links to Privacy Policy, Terms of Service, and contact email. All acceptance criteria met. Build passes successfully.",
       "blockers": []
     },
     {
@@ -442,7 +442,7 @@
   ],
   "metadata": {
     "last_updated": "2025-11-13",
-    "notes": "Task statuses: not_done | done | blocked - Simplified for AI agent usage. Task 20 completed: Settings Page with theme toggle (dark/light/system modes), data export functionality (all user data as JSON), account deletion with confirmation. Created API routes /api/user/export and /api/user/delete. Build passes successfully.",
+    "notes": "Task statuses: not_done | done | blocked - Simplified for AI agent usage. Task 21 completed: Privacy Policy and Terms of Service pages created with comprehensive legal content, footer component with links added to landing page and dashboard layout. All GDPR compliance requirements documented. Build passes successfully. Only Task 22 (Email Notifications & Final Polish) remains.",
     "version": "2.0.0",
     "ai_agent_instructions": {
       "next_task_logic": "Find the first task with status 'not_done' where all dependencies are 'done'",
