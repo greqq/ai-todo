@@ -12,6 +12,7 @@ import {
   BarChart3,
   MessageSquare,
   Settings,
+  Zap,
 } from 'lucide-react';
 
 const navigation = [
@@ -20,6 +21,7 @@ const navigation = [
   { name: 'Tasks', href: '/tasks', icon: CheckSquare },
   { name: 'Backlog', href: '/backlog', icon: Inbox },
   { name: 'Calendar', href: '/calendar', icon: Calendar },
+  { name: 'Energy', href: '/energy', icon: Zap },
   { name: 'Analytics', href: '/analytics', icon: BarChart3 },
   { name: 'AI Chat', href: '/chat', icon: MessageSquare },
   { name: 'Settings', href: '/settings', icon: Settings },
