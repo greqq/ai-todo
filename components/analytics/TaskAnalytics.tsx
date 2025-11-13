@@ -89,8 +89,8 @@ export function TaskAnalytics() {
     return (
       <Card className="p-8">
         <div className="flex items-center justify-center gap-3">
-          <Loader2 className="h-5 w-5 animate-spin text-blue-600" />
-          <p className="text-gray-600">Loading task analytics...</p>
+          <Loader2 className="h-5 w-5 animate-spin text-blue-600 dark:text-blue-400" />
+          <p className="text-muted-foreground">Loading task analytics...</p>
         </div>
       </Card>
     );
@@ -147,32 +147,32 @@ export function TaskAnalytics() {
         <TabsContent value="completion" className="space-y-4">
           {/* Streak Cards */}
           <div className="grid md:grid-cols-2 gap-4">
-            <Card className="p-6 bg-gradient-to-r from-orange-50 to-red-50 border-orange-200">
+            <Card className="p-6 bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-950 dark:to-red-950 border-orange-200 dark:border-orange-800">
               <div className="flex items-center justify-between">
                 <div className="space-y-1">
-                  <div className="flex items-center gap-2 text-sm text-gray-600">
-                    <Flame className="h-4 w-4 text-orange-600" />
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <Flame className="h-4 w-4 text-orange-600 dark:text-orange-400" />
                     <span>Current Streak</span>
                   </div>
-                  <p className="text-4xl font-bold text-orange-600">
+                  <p className="text-4xl font-bold text-orange-600 dark:text-orange-400">
                     {analytics.completionMetrics.currentStreak}
                   </p>
-                  <p className="text-sm text-gray-600">days in a row</p>
+                  <p className="text-sm text-muted-foreground">days in a row</p>
                 </div>
               </div>
             </Card>
 
-            <Card className="p-6 bg-gradient-to-r from-purple-50 to-pink-50 border-purple-200">
+            <Card className="p-6 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-950 dark:to-pink-950 border-purple-200 dark:border-purple-800">
               <div className="flex items-center justify-between">
                 <div className="space-y-1">
-                  <div className="flex items-center gap-2 text-sm text-gray-600">
-                    <Trophy className="h-4 w-4 text-purple-600" />
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <Trophy className="h-4 w-4 text-purple-600 dark:text-purple-400" />
                     <span>Longest Streak</span>
                   </div>
-                  <p className="text-4xl font-bold text-purple-600">
+                  <p className="text-4xl font-bold text-purple-600 dark:text-purple-400">
                     {analytics.completionMetrics.longestStreak}
                   </p>
-                  <p className="text-sm text-gray-600">days</p>
+                  <p className="text-sm text-muted-foreground">days</p>
                 </div>
               </div>
             </Card>
@@ -189,7 +189,7 @@ export function TaskAnalytics() {
               {/* Today */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">Today</span>
+                  <span className="text-sm text-muted-foreground">Today</span>
                   <Badge
                     variant="secondary"
                     className={getCompletionRateColor(
@@ -200,13 +200,13 @@ export function TaskAnalytics() {
                   </Badge>
                 </div>
                 <p className="text-3xl font-bold">{analytics.completionMetrics.today}</p>
-                <p className="text-sm text-gray-500">tasks completed</p>
+                <p className="text-sm text-muted-foreground">tasks completed</p>
               </div>
 
               {/* This Week */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">This Week</span>
+                  <span className="text-sm text-muted-foreground">This Week</span>
                   <Badge
                     variant="secondary"
                     className={getCompletionRateColor(
@@ -217,13 +217,13 @@ export function TaskAnalytics() {
                   </Badge>
                 </div>
                 <p className="text-3xl font-bold">{analytics.completionMetrics.week}</p>
-                <p className="text-sm text-gray-500">tasks completed</p>
+                <p className="text-sm text-muted-foreground">tasks completed</p>
               </div>
 
               {/* This Month */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">This Month</span>
+                  <span className="text-sm text-muted-foreground">This Month</span>
                   <Badge
                     variant="secondary"
                     className={getCompletionRateColor(
@@ -234,13 +234,13 @@ export function TaskAnalytics() {
                   </Badge>
                 </div>
                 <p className="text-3xl font-bold">{analytics.completionMetrics.month}</p>
-                <p className="text-sm text-gray-500">tasks completed</p>
+                <p className="text-sm text-muted-foreground">tasks completed</p>
               </div>
             </div>
 
             <div className="mt-6 pt-6 border-t">
               <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-600">Average tasks per day</span>
+                <span className="text-sm text-muted-foreground">Average tasks per day</span>
                 <span className="text-xl font-semibold">
                   {analytics.completionMetrics.averageTasksPerDay}
                 </span>
@@ -255,34 +255,34 @@ export function TaskAnalytics() {
           <div className="grid md:grid-cols-3 gap-4">
             <Card className="p-6">
               <div className="space-y-1">
-                <div className="flex items-center gap-2 text-sm text-gray-600">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Clock className="h-4 w-4" />
                   <span>Today</span>
                 </div>
                 <p className="text-3xl font-bold">{analytics.timeMetrics.totalTimeToday}h</p>
-                <p className="text-sm text-gray-500">time invested</p>
+                <p className="text-sm text-muted-foreground">time invested</p>
               </div>
             </Card>
 
             <Card className="p-6">
               <div className="space-y-1">
-                <div className="flex items-center gap-2 text-sm text-gray-600">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Calendar className="h-4 w-4" />
                   <span>This Week</span>
                 </div>
                 <p className="text-3xl font-bold">{analytics.timeMetrics.totalTimeWeek}h</p>
-                <p className="text-sm text-gray-500">time invested</p>
+                <p className="text-sm text-muted-foreground">time invested</p>
               </div>
             </Card>
 
             <Card className="p-6">
               <div className="space-y-1">
-                <div className="flex items-center gap-2 text-sm text-gray-600">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <TrendingUp className="h-4 w-4" />
                   <span>This Month</span>
                 </div>
                 <p className="text-3xl font-bold">{analytics.timeMetrics.totalTimeMonth}h</p>
-                <p className="text-sm text-gray-500">time invested</p>
+                <p className="text-sm text-muted-foreground">time invested</p>
               </div>
             </Card>
           </div>
@@ -297,7 +297,7 @@ export function TaskAnalytics() {
               <div className="space-y-3">
                 {analytics.timeMetrics.byGoal.map((goal) => (
                   <div key={goal.goalId} className="flex items-center justify-between">
-                    <span className="text-sm text-gray-700">{goal.goalTitle}</span>
+                    <span className="text-sm text-foreground">{goal.goalTitle}</span>
                     <Badge variant="secondary">{goal.hours}h</Badge>
                   </div>
                 ))}
@@ -313,7 +313,7 @@ export function TaskAnalytics() {
                 <div className="space-y-3">
                   {analytics.timeMetrics.byType.map((type) => (
                     <div key={type.type} className="flex items-center justify-between">
-                      <span className="text-sm text-gray-700">{formatTaskType(type.type)}</span>
+                      <span className="text-sm text-foreground">{formatTaskType(type.type)}</span>
                       <Badge variant="secondary">{type.hours}h</Badge>
                     </div>
                   ))}
@@ -326,21 +326,21 @@ export function TaskAnalytics() {
               <div className="space-y-4">
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600">Accuracy Rate</span>
+                    <span className="text-sm text-muted-foreground">Accuracy Rate</span>
                     <span className="text-2xl font-bold">
                       {analytics.timeMetrics.estimationAccuracy}%
                     </span>
                   </div>
-                  <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+                  <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-blue-500 transition-all duration-500"
+                      className="h-full bg-blue-500 dark:bg-blue-400 transition-all duration-500"
                       style={{
                         width: `${Math.min(analytics.timeMetrics.estimationAccuracy, 100)}%`,
                       }}
                     />
                   </div>
                 </div>
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-muted-foreground">
                   {analytics.timeMetrics.estimationAccuracy >= 80
                     ? 'Excellent! Your time estimates are very accurate.'
                     : analytics.timeMetrics.estimationAccuracy >= 60
@@ -393,9 +393,9 @@ export function TaskAnalytics() {
 
           {/* Task Speed */}
           <div className="grid md:grid-cols-2 gap-4">
-            <Card className="p-6 bg-gradient-to-r from-green-50 to-emerald-50 border-green-200">
+            <Card className="p-6 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950 dark:to-emerald-950 border-green-200 dark:border-green-800">
               <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                <Zap className="h-5 w-5 text-green-600" />
+                <Zap className="h-5 w-5 text-green-600 dark:text-green-400" />
                 Completed Fastest
               </h3>
               <div className="space-y-2">
@@ -407,9 +407,9 @@ export function TaskAnalytics() {
               </div>
             </Card>
 
-            <Card className="p-6 bg-gradient-to-r from-orange-50 to-amber-50 border-orange-200">
+            <Card className="p-6 bg-gradient-to-r from-orange-50 to-amber-50 dark:from-orange-950 dark:to-amber-950 border-orange-200 dark:border-orange-800">
               <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                <Clock className="h-5 w-5 text-orange-600" />
+                <Clock className="h-5 w-5 text-orange-600 dark:text-orange-400" />
                 Take Longest
               </h3>
               <div className="space-y-2">
@@ -435,19 +435,19 @@ export function TaskAnalytics() {
                     <p className="text-2xl font-bold">
                       {analytics.patternRecognition.procrastinationPatterns.totalPostponed}
                     </p>
-                    <p className="text-sm text-gray-500">tasks postponed</p>
+                    <p className="text-sm text-muted-foreground">tasks postponed</p>
                   </div>
                   <div>
                     <p className="text-2xl font-bold">
                       {analytics.patternRecognition.procrastinationPatterns.averagePostponements}
                     </p>
-                    <p className="text-sm text-gray-500">avg postponements</p>
+                    <p className="text-sm text-muted-foreground">avg postponements</p>
                   </div>
                 </div>
                 {analytics.patternRecognition.procrastinationPatterns.commonReasons.length > 0 && (
                   <div className="pt-4 border-t">
                     <p className="text-sm font-medium mb-2">Common blockers:</p>
-                    <ul className="text-sm text-gray-600 space-y-1">
+                    <ul className="text-sm text-muted-foreground space-y-1">
                       {analytics.patternRecognition.procrastinationPatterns.commonReasons
                         .slice(0, 3)
                         .map((reason, index) => (
@@ -470,17 +470,17 @@ export function TaskAnalytics() {
                     <p className="text-2xl font-bold text-green-600">
                       {analytics.patternRecognition.energyCorrelation.highEnergyCompletionRate}%
                     </p>
-                    <p className="text-sm text-gray-500">high energy</p>
+                    <p className="text-sm text-muted-foreground">high energy</p>
                   </div>
                   <div>
                     <p className="text-2xl font-bold text-orange-600">
                       {analytics.patternRecognition.energyCorrelation.lowEnergyCompletionRate}%
                     </p>
-                    <p className="text-sm text-gray-500">low energy</p>
+                    <p className="text-sm text-muted-foreground">low energy</p>
                   </div>
                 </div>
                 <div className="pt-4 border-t">
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm text-muted-foreground">
                     {analytics.patternRecognition.energyCorrelation.optimalEnergyRange}
                   </p>
                 </div>

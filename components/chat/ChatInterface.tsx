@@ -120,18 +120,18 @@ export default function ChatInterface() {
   };
 
   return (
-    <div className="flex flex-col h-full bg-gray-50">
+    <div className="flex flex-col h-full bg-background">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200 px-6 py-4">
+      <div className="bg-card border-b px-6 py-4">
         <div className="flex items-center gap-3">
-          <div className="flex items-center justify-center w-10 h-10 bg-indigo-100 rounded-full">
-            <Bot className="h-5 w-5 text-indigo-600" />
+          <div className="flex items-center justify-center w-10 h-10 bg-indigo-100 dark:bg-indigo-900 rounded-full">
+            <Bot className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
           </div>
           <div>
-            <h1 className="text-xl font-semibold text-gray-900">
+            <h1 className="text-xl font-semibold">
               AI Productivity Coach
             </h1>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-muted-foreground">
               Ask me anything about your goals, tasks, or productivity
             </p>
           </div>
@@ -142,13 +142,13 @@ export default function ChatInterface() {
       <div className="flex-1 overflow-y-auto px-6 py-6 space-y-4">
         {messages.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-center px-4">
-            <div className="flex items-center justify-center w-16 h-16 bg-indigo-100 rounded-full mb-4">
-              <Sparkles className="h-8 w-8 text-indigo-600" />
+            <div className="flex items-center justify-center w-16 h-16 bg-indigo-100 dark:bg-indigo-900 rounded-full mb-4">
+              <Sparkles className="h-8 w-8 text-indigo-600 dark:text-indigo-400" />
             </div>
-            <h2 className="text-2xl font-semibold text-gray-900 mb-2">
+            <h2 className="text-2xl font-semibold mb-2">
               How can I help you today?
             </h2>
-            <p className="text-gray-600 mb-6 max-w-md">
+            <p className="text-muted-foreground mb-6 max-w-md">
               I can help you with questions about your goals, tasks, productivity
               patterns, and more. Just ask!
             </p>
@@ -187,8 +187,8 @@ export default function ChatInterface() {
                 )}
               >
                 {message.role === 'assistant' && (
-                  <div className="flex items-center justify-center w-8 h-8 bg-indigo-100 rounded-full flex-shrink-0">
-                    <Bot className="h-4 w-4 text-indigo-600" />
+                  <div className="flex items-center justify-center w-8 h-8 bg-indigo-100 dark:bg-indigo-900 rounded-full flex-shrink-0">
+                    <Bot className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
                   </div>
                 )}
                 <div
@@ -196,27 +196,27 @@ export default function ChatInterface() {
                     'px-4 py-3 rounded-2xl max-w-[80%]',
                     message.role === 'user'
                       ? 'bg-indigo-600 text-white'
-                      : 'bg-white text-gray-900 border border-gray-200'
+                      : 'bg-card text-foreground border'
                   )}
                 >
                   <p className="text-sm whitespace-pre-wrap">{message.content}</p>
                 </div>
                 {message.role === 'user' && (
-                  <div className="flex items-center justify-center w-8 h-8 bg-gray-200 rounded-full flex-shrink-0">
-                    <User className="h-4 w-4 text-gray-600" />
+                  <div className="flex items-center justify-center w-8 h-8 bg-gray-200 dark:bg-gray-700 rounded-full flex-shrink-0">
+                    <User className="h-4 w-4 text-gray-600 dark:text-gray-300" />
                   </div>
                 )}
               </div>
             ))}
             {isLoading && messages[messages.length - 1]?.role !== 'assistant' && (
               <div className="flex gap-3 justify-start">
-                <div className="flex items-center justify-center w-8 h-8 bg-indigo-100 rounded-full flex-shrink-0">
-                  <Bot className="h-4 w-4 text-indigo-600" />
+                <div className="flex items-center justify-center w-8 h-8 bg-indigo-100 dark:bg-indigo-900 rounded-full flex-shrink-0">
+                  <Bot className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
                 </div>
-                <div className="px-4 py-3 rounded-2xl bg-white border border-gray-200">
+                <div className="px-4 py-3 rounded-2xl bg-card border">
                   <div className="flex items-center gap-2">
-                    <Loader2 className="h-4 w-4 animate-spin text-indigo-600" />
-                    <span className="text-sm text-gray-600">Thinking...</span>
+                    <Loader2 className="h-4 w-4 animate-spin text-indigo-600 dark:text-indigo-400" />
+                    <span className="text-sm text-muted-foreground">Thinking...</span>
                   </div>
                 </div>
               </div>
@@ -227,10 +227,10 @@ export default function ChatInterface() {
       </div>
 
       {/* Input */}
-      <div className="bg-white border-t border-gray-200 px-6 py-4">
+      <div className="bg-card border-t px-6 py-4">
         {error && (
-          <div className="mb-3 p-3 bg-red-50 border border-red-200 rounded-lg">
-            <p className="text-sm text-red-600">{error}</p>
+          <div className="mb-3 p-3 bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 rounded-lg">
+            <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
           </div>
         )}
         <form onSubmit={handleSubmit} className="flex gap-3">
@@ -241,7 +241,7 @@ export default function ChatInterface() {
             onChange={(e) => setInput(e.target.value)}
             placeholder="Ask me anything..."
             disabled={isLoading}
-            className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+            className="flex-1 px-4 py-3 border bg-background rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed"
           />
           <Button
             type="submit"

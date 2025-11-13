@@ -194,10 +194,10 @@ export function MorningPlanningDialog({
               <CheckCircle className="h-20 w-20 text-green-500" />
             </div>
             <div className="space-y-2">
-              <h2 className="text-3xl font-bold text-gray-900">
+              <h2 className="text-3xl font-bold">
                 You&apos;ve got this!
               </h2>
-              <p className="text-lg text-gray-600">
+              <p className="text-lg text-muted-foreground">
                 Your day is planned and ready. Let&apos;s make it count!
               </p>
             </div>
@@ -219,7 +219,7 @@ export function MorningPlanningDialog({
             {loading && (
               <div className="py-12 flex flex-col items-center space-y-4">
                 <Loader2 className="h-12 w-12 animate-spin text-purple-500" />
-                <p className="text-gray-600">
+                <p className="text-muted-foreground">
                   Analyzing your goals and energy patterns...
                 </p>
               </div>
@@ -234,7 +234,7 @@ export function MorningPlanningDialog({
             {!loading && tasks.length > 0 && (
               <div className="space-y-6">
                 {dailyMessage && (
-                  <Card className="p-6 bg-gradient-to-r from-purple-50 to-blue-50 border-purple-200">
+                  <Card className="p-6 bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-950 dark:to-blue-950 border-purple-200 dark:border-purple-800">
                     <div className="space-y-4">
                       {dailyMessage && (
                         <div>
@@ -242,7 +242,7 @@ export function MorningPlanningDialog({
                             <Sparkles className="h-5 w-5 text-purple-500" />
                             Today&apos;s Message
                           </h3>
-                          <p className="text-gray-700">{dailyMessage}</p>
+                          <p className="text-foreground">{dailyMessage}</p>
                         </div>
                       )}
                       {focusSuggestion && (
@@ -251,7 +251,7 @@ export function MorningPlanningDialog({
                             <Star className="h-5 w-5 text-amber-500" />
                             Today&apos;s Focus
                           </h3>
-                          <p className="text-gray-700">{focusSuggestion}</p>
+                          <p className="text-foreground">{focusSuggestion}</p>
                         </div>
                       )}
                     </div>
@@ -283,7 +283,7 @@ export function MorningPlanningDialog({
                             )}
                           </div>
 
-                          <p className="text-sm text-gray-600">
+                          <p className="text-sm text-muted-foreground">
                             {task.description}
                           </p>
 
@@ -322,7 +322,7 @@ export function MorningPlanningDialog({
                           </div>
 
                           {task.reasoning && (
-                            <p className="text-xs text-gray-500 italic">
+                            <p className="text-xs text-muted-foreground italic">
                               {task.reasoning}
                             </p>
                           )}
