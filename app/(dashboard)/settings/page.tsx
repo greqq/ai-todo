@@ -2,11 +2,13 @@
 
 import { useState, useEffect } from 'react';
 import { useUser } from '@clerk/nextjs';
+import { useTheme } from 'next-themes';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select } from '@/components/ui/select-old';
 import { Button } from '@/components/ui/button';
+import { useRouter } from 'next/navigation';
 
 // Timezone list (common timezones)
 const TIMEZONES = [
@@ -50,9 +52,15 @@ interface UserProfile {
 
 export default function SettingsPage() {
   const { user } = useUser();
+  const router = useRouter();
+  const { theme, setTheme } = useTheme();
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [exporting, setExporting] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleteConfirmText, setDeleteConfirmText] = useState('');
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
   // Form state
@@ -137,6 +145,68 @@ export default function SettingsPage() {
       setMessage({ type: 'error', text: 'Failed to save preferences' });
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleExportData = async () => {
+    setExporting(true);
+    setMessage(null);
+
+    try {
+      const response = await fetch('/api/user/export');
+      if (!response.ok) {
+        throw new Error('Failed to export data');
+      }
+
+      const data = await response.json();
+
+      // Create a blob and download
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `ai-todo-data-export-${new Date().toISOString().split('T')[0]}.json`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+
+      setMessage({ type: 'success', text: 'Data exported successfully!' });
+    } catch (error) {
+      console.error('Error exporting data:', error);
+      setMessage({ type: 'error', text: 'Failed to export data' });
+    } finally {
+      setExporting(false);
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    if (deleteConfirmText !== 'DELETE') {
+      setMessage({ type: 'error', text: 'Please type DELETE to confirm' });
+      return;
+    }
+
+    setDeleting(true);
+    setMessage(null);
+
+    try {
+      const response = await fetch('/api/user/delete', {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete account');
+      }
+
+      // Sign out and redirect
+      setMessage({ type: 'success', text: 'Account deleted successfully. Redirecting...' });
+      setTimeout(() => {
+        router.push('/sign-in');
+      }, 2000);
+    } catch (error) {
+      console.error('Error deleting account:', error);
+      setMessage({ type: 'error', text: 'Failed to delete account' });
+      setDeleting(false);
     }
   };
 
@@ -377,6 +447,111 @@ export default function SettingsPage() {
                 />
               </div>
             </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Theme Settings */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Appearance</CardTitle>
+          <CardDescription>
+            Customize the look and feel of the app
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="theme">Theme</Label>
+            <Select
+              id="theme"
+              value={theme}
+              onChange={(e) => setTheme(e.target.value)}
+            >
+              <option value="light">Light</option>
+              <option value="dark">Dark</option>
+              <option value="system">System</option>
+            </Select>
+            <p className="text-xs text-muted-foreground">
+              Choose your preferred color scheme
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Data Management */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Data Management</CardTitle>
+          <CardDescription>
+            Export or delete your data
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          {/* Export Data */}
+          <div className="space-y-3">
+            <div>
+              <h3 className="font-medium">Export Your Data</h3>
+              <p className="text-sm text-muted-foreground mt-1">
+                Download all your data in JSON format. This includes goals, tasks, reflections, and analytics.
+              </p>
+            </div>
+            <Button onClick={handleExportData} disabled={exporting} variant="outline">
+              {exporting ? 'Exporting...' : 'Export Data'}
+            </Button>
+          </div>
+
+          {/* Delete Account */}
+          <div className="space-y-3 pt-6 border-t border-destructive/20">
+            <div>
+              <h3 className="font-medium text-destructive">Delete Account</h3>
+              <p className="text-sm text-muted-foreground mt-1">
+                Permanently delete your account and all associated data. This action cannot be undone.
+              </p>
+            </div>
+            {!showDeleteConfirm ? (
+              <Button
+                onClick={() => setShowDeleteConfirm(true)}
+                variant="destructive"
+              >
+                Delete Account
+              </Button>
+            ) : (
+              <div className="space-y-3 p-4 border border-destructive rounded-md bg-destructive/5">
+                <p className="text-sm font-medium">
+                  Are you sure? This will permanently delete all your data.
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  Type <span className="font-mono font-bold">DELETE</span> to confirm:
+                </p>
+                <Input
+                  type="text"
+                  value={deleteConfirmText}
+                  onChange={(e) => setDeleteConfirmText(e.target.value)}
+                  placeholder="Type DELETE"
+                  className="max-w-xs"
+                />
+                <div className="flex gap-2">
+                  <Button
+                    onClick={handleDeleteAccount}
+                    disabled={deleting || deleteConfirmText !== 'DELETE'}
+                    variant="destructive"
+                    size="sm"
+                  >
+                    {deleting ? 'Deleting...' : 'Confirm Delete'}
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      setShowDeleteConfirm(false);
+                      setDeleteConfirmText('');
+                    }}
+                    variant="outline"
+                    size="sm"
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>

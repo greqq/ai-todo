@@ -2,9 +2,9 @@
   "project": {
     "name": "AI TODO App - Time Wealth Productivity System",
     "version": "1.0.0-MVP",
-    "current_task": 20,
+    "current_task": 21,
     "total_tasks": 22,
-    "completion_percentage": 86.4
+    "completion_percentage": 90.9
   },
   "tasks": [
     {
@@ -359,7 +359,7 @@
       "id": 20,
       "name": "Settings Page",
       "file": "implementation-tasks/05-finalization/task-20-settings-page.md",
-      "status": "not_done",
+      "status": "done",
       "priority": "medium",
       "dependencies": [5],
       "acceptance_criteria": [
@@ -370,7 +370,7 @@
         "Data delete confirmation works",
         "Theme toggle functional"
       ],
-      "notes": "Reference main spec Section 8",
+      "notes": "Completed: Enhanced settings page with theme toggle (light/dark/system modes using next-themes), data export functionality (exports all user data as JSON including goals, tasks, reflections, energy logs, backlog, weekly summaries, and AI usage), account deletion with confirmation (requires typing 'DELETE', deletes all user data from Supabase and Clerk). Created API routes /api/user/export and /api/user/delete. Build passes successfully.",
       "blockers": []
     },
     {
@@ -442,7 +442,7 @@
   ],
   "metadata": {
     "last_updated": "2025-11-13",
-    "notes": "Task statuses: not_done | done | blocked - Simplified for AI agent usage. Task 19 completed: Energy Tracking System with API routes (logging, patterns analysis), energy helper functions, UI components (EnergyLogEntry, EnergyHeatmap, EnergyCreatorsDrainers), dedicated energy tracking page, navigation integration. Build passes successfully.",
+    "notes": "Task statuses: not_done | done | blocked - Simplified for AI agent usage. Task 20 completed: Settings Page with theme toggle (dark/light/system modes), data export functionality (all user data as JSON), account deletion with confirmation. Created API routes /api/user/export and /api/user/delete. Build passes successfully.",
     "version": "2.0.0",
     "ai_agent_instructions": {
       "next_task_logic": "Find the first task with status 'not_done' where all dependencies are 'done'",
