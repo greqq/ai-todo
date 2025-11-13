@@ -17,11 +17,11 @@ export default function AnalyticsPage() {
 
       <div className="space-y-8">
         {/* Weekly Summary Card */}
-        <Card className="p-6 bg-gradient-to-r from-indigo-50 to-purple-50 border-indigo-200">
+        <Card className="p-6 bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-950 dark:to-purple-950 border-indigo-200 dark:border-indigo-800">
           <div className="flex items-start justify-between">
             <div className="space-y-2">
-              <h2 className="text-2xl font-semibold flex items-center gap-2">
-                <Calendar className="h-6 w-6 text-indigo-600" />
+              <h2 className="text-2xl font-semibold flex items-center gap-2 text-foreground">
+                <Calendar className="h-6 w-6 text-indigo-600 dark:text-indigo-400" />
                 Weekly Summary
               </h2>
               <p className="text-muted-foreground">

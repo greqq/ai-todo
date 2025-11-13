@@ -234,7 +234,7 @@ export function MorningPlanningDialog({
             {!loading && tasks.length > 0 && (
               <div className="space-y-6">
                 {dailyMessage && (
-                  <Card className="p-6 bg-gradient-to-r from-purple-50 to-blue-50 border-purple-200">
+                  <Card className="p-6 bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-950 dark:to-blue-950 border-purple-200 dark:border-purple-800">
                     <div className="space-y-4">
                       {dailyMessage && (
                         <div>
