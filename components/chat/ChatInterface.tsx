@@ -202,21 +202,21 @@ export default function ChatInterface() {
                   <p className="text-sm whitespace-pre-wrap">{message.content}</p>
                 </div>
                 {message.role === 'user' && (
-                  <div className="flex items-center justify-center w-8 h-8 bg-gray-200 rounded-full flex-shrink-0">
-                    <User className="h-4 w-4 text-gray-600" />
+                  <div className="flex items-center justify-center w-8 h-8 bg-gray-200 dark:bg-gray-700 rounded-full flex-shrink-0">
+                    <User className="h-4 w-4 text-gray-600 dark:text-gray-300" />
                   </div>
                 )}
               </div>
             ))}
             {isLoading && messages[messages.length - 1]?.role !== 'assistant' && (
               <div className="flex gap-3 justify-start">
-                <div className="flex items-center justify-center w-8 h-8 bg-indigo-100 rounded-full flex-shrink-0">
-                  <Bot className="h-4 w-4 text-indigo-600" />
+                <div className="flex items-center justify-center w-8 h-8 bg-indigo-100 dark:bg-indigo-900 rounded-full flex-shrink-0">
+                  <Bot className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
                 </div>
-                <div className="px-4 py-3 rounded-2xl bg-white border border-gray-200">
+                <div className="px-4 py-3 rounded-2xl bg-card border">
                   <div className="flex items-center gap-2">
-                    <Loader2 className="h-4 w-4 animate-spin text-indigo-600" />
-                    <span className="text-sm text-gray-600">Thinking...</span>
+                    <Loader2 className="h-4 w-4 animate-spin text-indigo-600 dark:text-indigo-400" />
+                    <span className="text-sm text-muted-foreground">Thinking...</span>
                   </div>
                 </div>
               </div>
@@ -227,10 +227,10 @@ export default function ChatInterface() {
       </div>
 
       {/* Input */}
-      <div className="bg-white border-t border-gray-200 px-6 py-4">
+      <div className="bg-card border-t px-6 py-4">
         {error && (
-          <div className="mb-3 p-3 bg-red-50 border border-red-200 rounded-lg">
-            <p className="text-sm text-red-600">{error}</p>
+          <div className="mb-3 p-3 bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 rounded-lg">
+            <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
           </div>
         )}
         <form onSubmit={handleSubmit} className="flex gap-3">
@@ -241,7 +241,7 @@ export default function ChatInterface() {
             onChange={(e) => setInput(e.target.value)}
             placeholder="Ask me anything..."
             disabled={isLoading}
-            className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+            className="flex-1 px-4 py-3 border bg-background rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed"
           />
           <Button
             type="submit"
