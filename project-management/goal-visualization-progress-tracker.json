@@ -1,0 +1,829 @@
+{
+  "project": {
+    "name": "AI TODO App - Time Wealth Productivity System (Enhanced)",
+    "version": "1.1.0-MVP",
+    "started_date": null,
+    "completed_date": null,
+    "current_task": "9A",
+    "total_tasks": 27,
+    "completion_percentage": 81.48,
+    "enhancements_added": "Life Reset Guide features",
+    "base_mvp_status": "completed",
+    "base_mvp_version": "1.0.0-MVP"
+  },
+  "new_tasks_added": [
+    {
+      "task_id": "9A",
+      "name": "Enhanced Life Reset Onboarding Interview",
+      "reason": "Replace simple 5-question onboarding with comprehensive 5-phase interview",
+      "impact": "Critical - Foundation for all other Life Reset features"
+    },
+    {
+      "task_id": "9B",
+      "name": "Goal Hierarchy & Auto-Breakdown System",
+      "reason": "AI breaks down 12-month goals into 6mo → 3mo → monthly → weekly milestones",
+      "impact": "High - Core feature for goal visualization"
+    },
+    {
+      "task_id": "9C",
+      "name": "Goal Visualization Component",
+      "reason": "Interactive timeline showing goal breakdown from 12 months to daily tasks",
+      "impact": "High - User-facing value, makes progress visible"
+    },
+    {
+      "task_id": "9D",
+      "name": "Multiple Goals & Prioritization",
+      "reason": "Support 3-5 concurrent goals with priority weighting",
+      "impact": "Medium - Expands system capability"
+    },
+    {
+      "task_id": "9E",
+      "name": "Morning/Evening Routines System",
+      "reason": "Dedicated routine builder separate from goal tasks",
+      "impact": "Medium - Nice-to-have enhancement"
+    }
+  ],
+  "tasks": [
+    {
+      "id": 1,
+      "name": "Project Setup & Initialization",
+      "file": "implementation-tasks/01-foundation/task-01-project-setup.md",
+      "status": "done",
+      "priority": "critical",
+      "estimated_hours": 4,
+      "actual_hours": null,
+      "started_date": null,
+      "completed_date": "2025-11-13",
+      "dependencies": [],
+      "acceptance_criteria": [
+        "Next.js project initialized with TypeScript",
+        "All dependencies installed",
+        "Folder structure created",
+        "Tailwind CSS configured and working",
+        "Basic UI components (Button) created",
+        "Landing page displays correctly",
+        "Development server runs without errors"
+      ],
+      "notes": "Base MVP task - Completed",
+      "blockers": []
+    },
+    {
+      "id": 2,
+      "name": "Supabase Database Setup",
+      "file": "implementation-tasks/01-foundation/task-02-database-setup.md",
+      "status": "done",
+      "priority": "critical",
+      "estimated_hours": 6,
+      "actual_hours": null,
+      "started_date": null,
+      "completed_date": "2025-11-13",
+      "dependencies": [1],
+      "acceptance_criteria": [
+        "Supabase project created",
+        "All database tables created",
+        "Indexes added for performance",
+        "Helper functions created",
+        "Triggers set up for auto-updates",
+        "Row Level Security enabled on all tables",
+        "RLS policies created for all tables",
+        "Supabase clients configured in Next.js",
+        "TypeScript types generated",
+        "Database connection test passes"
+      ],
+      "notes": "Base MVP task - Completed",
+      "blockers": []
+    },
+    {
+      "id": 3,
+      "name": "Clerk Authentication Setup",
+      "file": "implementation-tasks/01-foundation/task-03-clerk-auth.md",
+      "status": "done",
+      "priority": "critical",
+      "estimated_hours": 4,
+      "actual_hours": null,
+      "started_date": null,
+      "completed_date": "2025-11-13",
+      "dependencies": [1, 2],
+      "acceptance_criteria": [
+        "Clerk configured in Next.js",
+        "Sign-in and sign-up pages working",
+        "Middleware protects routes",
+        "Webhook syncs users to Supabase",
+        "Auth utilities created",
+        "Test user can sign up and appears in Supabase"
+      ],
+      "notes": "Base MVP task - Completed",
+      "blockers": []
+    },
+    {
+      "id": 4,
+      "name": "Basic Layout & Navigation",
+      "file": "implementation-tasks/01-foundation/task-04-basic-layout-and-navigation.md",
+      "status": "done",
+      "priority": "high",
+      "estimated_hours": 4,
+      "actual_hours": null,
+      "started_date": null,
+      "completed_date": "2025-11-13",
+      "dependencies": [3],
+      "acceptance_criteria": [
+        "Dashboard layout renders correctly",
+        "Sidebar navigation functional",
+        "All route pages accessible",
+        "Mobile responsive design works",
+        "Active nav item highlights",
+        "User profile button in header",
+        "Onboarding redirect logic works",
+        "Protected routes require auth"
+      ],
+      "notes": "Base MVP task - Completed",
+      "blockers": []
+    },
+    {
+      "id": 5,
+      "name": "User Profile & Preferences",
+      "file": "implementation-tasks/02-core-features/task-05-user-profile-and-preferences.md",
+      "status": "done",
+      "priority": "high",
+      "estimated_hours": 3,
+      "actual_hours": null,
+      "started_date": null,
+      "completed_date": "2025-11-13",
+      "dependencies": [4],
+      "acceptance_criteria": [
+        "User profile page displays correctly",
+        "Preferences can be updated",
+        "Timezone handling works",
+        "Work hours configuration functional",
+        "Data persists in Supabase"
+      ],
+      "notes": "Base MVP task - Completed",
+      "blockers": []
+    },
+    {
+      "id": 6,
+      "name": "Goal Management (CRUD)",
+      "file": "implementation-tasks/02-core-features/task-06-goal-management-crud.md",
+      "status": "done",
+      "priority": "critical",
+      "estimated_hours": 6,
+      "actual_hours": null,
+      "started_date": null,
+      "completed_date": "2025-11-13",
+      "dependencies": [5],
+      "acceptance_criteria": [
+        "Create goal functionality works",
+        "Read/list goals displays correctly",
+        "Update goal saves changes",
+        "Delete/archive goal works",
+        "Goal hierarchy supported",
+        "Milestones can be added",
+        "Progress tracking calculates correctly"
+      ],
+      "notes": "Base MVP task - Completed. Will be enhanced by Task 9B (Goal Hierarchy)",
+      "blockers": []
+    },
+    {
+      "id": 7,
+      "name": "Task Management (CRUD)",
+      "file": "implementation-tasks/02-core-features/task-07-task-management-crud.md",
+      "status": "done",
+      "priority": "critical",
+      "estimated_hours": 6,
+      "actual_hours": null,
+      "started_date": null,
+      "completed_date": "2025-11-13",
+      "dependencies": [6],
+      "acceptance_criteria": [
+        "Create task functionality works",
+        "Task list displays with filters",
+        "Update task saves changes",
+        "Complete task updates status",
+        "Delete task works",
+        "Task properties editable",
+        "Subtasks supported"
+      ],
+      "notes": "Base MVP task - Completed",
+      "blockers": []
+    },
+    {
+      "id": 8,
+      "name": "AI Integration Setup (Vercel AI SDK)",
+      "file": "implementation-tasks/02-core-features/task-08-ai-integration-setup.md",
+      "status": "done",
+      "priority": "critical",
+      "estimated_hours": 4,
+      "actual_hours": null,
+      "started_date": null,
+      "completed_date": "2025-11-13",
+      "dependencies": [7],
+      "acceptance_criteria": [
+        "Vercel AI SDK installed and configured",
+        "Claude Sonnet connection works",
+        "Claude Haiku connection works",
+        "Test API route returns AI response",
+        "Error handling implemented",
+        "Cost tracking in place"
+      ],
+      "notes": "Base MVP task - Completed. Will be enhanced by Tasks 9A, 9B (new AI prompts)",
+      "blockers": []
+    },
+    {
+      "id": "9A",
+      "name": "Enhanced Life Reset Onboarding Interview",
+      "file": "GOAL_VISUALIZATION_AND_ONBOARDING_REDESIGN.md#part-2",
+      "status": "not_started",
+      "priority": "critical",
+      "estimated_hours": 10,
+      "actual_hours": null,
+      "started_date": null,
+      "completed_date": null,
+      "assigned_to": null,
+      "dependencies": [8],
+      "acceptance_criteria": [
+        "5 phases flow conversationally (Current Life, Anti-Vision, Vision, Time Horizons, Obstacles)",
+        "AI asks one question at a time with empathy",
+        "Users can say 'I don't know' and skip questions",
+        "Progress indicator shows current phase and time remaining",
+        "All responses saved to onboarding_data JSONB",
+        "Life Reset Map generated with Vision Statement",
+        "Multiple goals captured (primary + secondary)",
+        "Morning/evening routines captured",
+        "Takes 10-20 minutes to complete",
+        "Beautiful phase transitions with animations"
+      ],
+      "notes": "Foundation for all Life Reset features. Replaces simple 5-question onboarding. Review GOAL_VISUALIZATION_AND_ONBOARDING_REDESIGN.md Part 2 for detailed prompts.",
+      "blockers": [],
+      "database_changes": [
+        "Add life_reset_map JSONB to users table",
+        "Enhance onboarding_data structure to support 5 phases",
+        "Add vision_statement TEXT to users",
+        "Add is_routine BOOLEAN to tasks",
+        "Add routine_type TEXT to tasks (morning/evening)",
+        "Add recurrence_pattern TEXT to tasks"
+      ],
+      "new_files": [
+        "components/onboarding/LifeResetInterview.tsx",
+        "components/onboarding/PhaseProgress.tsx",
+        "components/onboarding/QuickResponseButtons.tsx",
+        "app/api/ai/life-reset-chat/route.ts",
+        "lib/ai/prompts.ts (add getLifeResetPhase1-5Prompts)",
+        "lib/ai/prompts.ts (add getLifeResetMapPrompt)",
+        "types/life-reset.types.ts"
+      ],
+      "files_to_modify": [
+        "app/onboarding/page.tsx (add Life Reset mode option)",
+        "app/api/ai/complete-onboarding/route.ts (handle Life Reset Map generation)"
+      ]
+    },
+    {
+      "id": "9B",
+      "name": "Goal Hierarchy & Auto-Breakdown System",
+      "file": "GOAL_VISUALIZATION_AND_ONBOARDING_REDESIGN.md#part-1",
+      "status": "not_started",
+      "priority": "critical",
+      "estimated_hours": 8,
+      "actual_hours": null,
+      "started_date": null,
+      "completed_date": null,
+      "assigned_to": null,
+      "dependencies": ["9A"],
+      "acceptance_criteria": [
+        "AI generates breakdown for 12-month goals: 6mo, 3mo, monthly, weekly milestones",
+        "Breakdown algorithm calculates milestone dates automatically",
+        "Each milestone has title, description, completion % target",
+        "Milestones saved to goal_breakdown_milestones table",
+        "Breakdown respects user's timeline and constraints",
+        "Can regenerate breakdown with AI",
+        "Weekly themes generated for first month"
+      ],
+      "notes": "Uses AI to automatically break down long-term goals. Core logic for visualization in Task 9C. See GOAL_VISUALIZATION_AND_ONBOARDING_REDESIGN.md Part 1 for algorithm details.",
+      "blockers": [],
+      "database_changes": [
+        "Create goal_breakdown_milestones table",
+        "  - id UUID PK",
+        "  - goal_id UUID FK",
+        "  - user_id UUID FK",
+        "  - period_type TEXT (12_month, 6_month, 3_month, 1_month, weekly)",
+        "  - title TEXT",
+        "  - description TEXT",
+        "  - target_date DATE",
+        "  - completion_percentage_target INT",
+        "  - key_deliverables JSONB",
+        "  - order_index INT",
+        "  - completed BOOLEAN",
+        "  - completed_at TIMESTAMP"
+      ],
+      "new_files": [
+        "lib/goal-breakdown/breakdown-algorithm.ts",
+        "app/api/goals/[id]/breakdown/route.ts (GET, POST, PUT)",
+        "lib/ai/prompts.ts (add getGoalBreakdownPrompt)"
+      ],
+      "files_to_modify": [
+        "app/api/ai/complete-onboarding/route.ts (auto-generate breakdown for primary goal)"
+      ]
+    },
+    {
+      "id": "9C",
+      "name": "Goal Visualization Component",
+      "file": "GOAL_VISUALIZATION_AND_ONBOARDING_REDESIGN.md#section-1-3",
+      "status": "not_started",
+      "priority": "high",
+      "estimated_hours": 10,
+      "actual_hours": null,
+      "started_date": null,
+      "completed_date": null,
+      "assigned_to": null,
+      "dependencies": ["9B"],
+      "acceptance_criteria": [
+        "Interactive timeline displays goal breakdown",
+        "Shows 12mo → 6mo → 3mo → 1mo → weekly progression",
+        "Milestones shown as clickable nodes",
+        "Progress bar shows current position",
+        "Color coding: past (green), current (blue), future (gray)",
+        "Click milestone opens popover with details",
+        "Responsive design works on mobile",
+        "Beautiful animations and transitions",
+        "Weekly focus section shows current week's targets"
+      ],
+      "notes": "Major user-facing feature. Creates interactive timeline visualization. Beautiful UI is critical for user engagement.",
+      "blockers": [],
+      "database_changes": [],
+      "new_files": [
+        "components/goals/GoalTimeline.tsx",
+        "components/goals/TimelineNode.tsx",
+        "components/goals/BreakdownMilestoneCard.tsx"
+      ],
+      "files_to_modify": [
+        "app/(dashboard)/goals/[id]/page.tsx (add Timeline tab)"
+      ]
+    },
+    {
+      "id": "9D",
+      "name": "Multiple Goals & Prioritization",
+      "file": "GOAL_VISUALIZATION_AND_ONBOARDING_REDESIGN.md#notes",
+      "status": "not_started",
+      "priority": "high",
+      "estimated_hours": 8,
+      "actual_hours": null,
+      "started_date": null,
+      "completed_date": null,
+      "assigned_to": null,
+      "dependencies": ["9B"],
+      "acceptance_criteria": [
+        "Can create 3-5 active goals simultaneously",
+        "Primary goal + secondary goals (reading, walking, etc.)",
+        "Each goal has priority level (high, medium, low)",
+        "Dashboard shows all active goals with progress",
+        "Task generation balances across all goals based on priority",
+        "Can link related goals",
+        "Goal cards show breakdown preview"
+      ],
+      "notes": "Enables multiple concurrent goals (Career + Health + Reading + etc.). Task generation respects priorities. Primary goal gets full breakdown, secondary goals get monthly checkpoints.",
+      "blockers": [],
+      "database_changes": [
+        "Add goal_category TEXT to goals (primary, secondary, lifestyle)",
+        "Enhance priority column usage"
+      ],
+      "new_files": [
+        "components/goals/MultiGoalDashboard.tsx"
+      ],
+      "files_to_modify": [
+        "app/api/ai/complete-onboarding/route.ts (create multiple goals)",
+        "lib/ai/prompts.ts (update getDailyTaskGenerationPrompt to balance goals)",
+        "app/(dashboard)/dashboard/page.tsx (show all active goals)"
+      ]
+    },
+    {
+      "id": "9E",
+      "name": "Morning/Evening Routines System",
+      "file": "GOAL_VISUALIZATION_AND_ONBOARDING_REDESIGN.md#section-2-7",
+      "status": "not_started",
+      "priority": "medium",
+      "estimated_hours": 8,
+      "actual_hours": null,
+      "started_date": null,
+      "completed_date": null,
+      "assigned_to": null,
+      "dependencies": ["9A"],
+      "acceptance_criteria": [
+        "Routines page created at /routines",
+        "Morning routine section with time-blocked items",
+        "Evening routine section with time-blocked items",
+        "AI suggests initial routines based on Life Reset Map",
+        "Can add/edit/delete routine items",
+        "Daily checklist on dashboard",
+        "Track completion per day",
+        "Routine streak tracking",
+        "Optional vs required items"
+      ],
+      "notes": "Separate from goal tasks. Dedicated routine builder with AI suggestions from Life Reset Map. See GOAL_VISUALIZATION_AND_ONBOARDING_REDESIGN.md Section 2.7 for details.",
+      "blockers": [],
+      "database_changes": [
+        "Already added to tasks table in 9A: is_routine, routine_type, recurrence_pattern"
+      ],
+      "new_files": [
+        "app/(dashboard)/routines/page.tsx",
+        "components/routines/RoutineCard.tsx",
+        "components/routines/RoutineTracker.tsx"
+      ],
+      "files_to_modify": [
+        "app/(dashboard)/dashboard/page.tsx (add routine widget)",
+        "app/(dashboard)/layout.tsx (add Routines nav link)",
+        "app/api/ai/complete-onboarding/route.ts (create routine tasks from Life Reset Map)"
+      ]
+    },
+    {
+      "id": 9,
+      "name": "Onboarding AI Interview (Simple)",
+      "file": "implementation-tasks/02-core-features/task-09-onboarding-ai-interview.md",
+      "status": "done",
+      "priority": "high",
+      "estimated_hours": 4,
+      "actual_hours": null,
+      "started_date": null,
+      "completed_date": "2025-11-13",
+      "dependencies": [8],
+      "acceptance_criteria": [
+        "Interview flow works (Quick Start mode)",
+        "AI asks questions conversationally",
+        "SMART goal validation works",
+        "User responses saved",
+        "Initial goal created from interview",
+        "Onboarding completion flag set",
+        "Redirect to dashboard after completion"
+      ],
+      "notes": "Base MVP task - Completed. WILL BE REPLACED by Task 9A (Enhanced Life Reset Onboarding). Kept as fallback option.",
+      "blockers": []
+    },
+    {
+      "id": 10,
+      "name": "Daily Task Generation AI",
+      "file": "implementation-tasks/02-core-features/task-10-daily-task-generation-ai.md",
+      "status": "done",
+      "priority": "critical",
+      "estimated_hours": 5,
+      "actual_hours": null,
+      "started_date": null,
+      "completed_date": "2025-11-13",
+      "dependencies": [9],
+      "acceptance_criteria": [
+        "AI generates 3-5 tasks daily",
+        "Tasks match user's goals",
+        "Energy levels considered",
+        "Eisenhower categorization works",
+        "User can accept/modify suggestions",
+        "Tasks saved to database"
+      ],
+      "notes": "Base MVP task - Completed. Will be enhanced by Task 9D (balance across multiple goals)",
+      "blockers": []
+    },
+    {
+      "id": 11,
+      "name": "Backlog Management",
+      "file": "implementation-tasks/03-planning-analytics/task-11-backlog-management.md",
+      "status": "done",
+      "priority": "medium",
+      "estimated_hours": 4,
+      "actual_hours": null,
+      "started_date": null,
+      "completed_date": "2025-11-13",
+      "dependencies": [7],
+      "acceptance_criteria": [
+        "Add items to backlog works",
+        "List backlog items displays",
+        "Categorization functional",
+        "Promote to task works",
+        "AI prioritization suggestions shown",
+        "Archive/delete works"
+      ],
+      "notes": "Base MVP task - Completed",
+      "blockers": []
+    },
+    {
+      "id": 12,
+      "name": "Morning Planning Session",
+      "file": "implementation-tasks/03-planning-analytics/task-12-morning-planning-session.md",
+      "status": "done",
+      "priority": "high",
+      "estimated_hours": 4,
+      "actual_hours": null,
+      "started_date": null,
+      "completed_date": "2025-11-13",
+      "dependencies": [10],
+      "acceptance_criteria": [
+        "Morning greeting displays",
+        "Daily plan shows AI-generated tasks",
+        "User can review and adjust",
+        "Plan confirmation saves",
+        "Focus mode accessible"
+      ],
+      "notes": "Base MVP task - Completed. Will integrate with Task 9E (morning routine)",
+      "blockers": []
+    },
+    {
+      "id": 13,
+      "name": "Evening Reflection",
+      "file": "implementation-tasks/03-planning-analytics/task-13-evening-reflection.md",
+      "status": "done",
+      "priority": "high",
+      "estimated_hours": 4,
+      "actual_hours": null,
+      "started_date": null,
+      "completed_date": "2025-11-13",
+      "dependencies": [10],
+      "acceptance_criteria": [
+        "Evening prompt triggers",
+        "Completion summary shows",
+        "Reflection questions display",
+        "User responses saved",
+        "AI analysis generates insights",
+        "Tomorrow preview shown"
+      ],
+      "notes": "Base MVP task - Completed. Will integrate with Task 9E (evening routine)",
+      "blockers": []
+    },
+    {
+      "id": 14,
+      "name": "Weekly Summary Generation",
+      "file": "implementation-tasks/03-planning-analytics/task-14-weekly-summary-generation.md",
+      "status": "done",
+      "priority": "high",
+      "estimated_hours": 5,
+      "actual_hours": null,
+      "started_date": null,
+      "completed_date": "2025-11-13",
+      "dependencies": [13],
+      "acceptance_criteria": [
+        "Weekly stats calculated correctly",
+        "AI insights generated",
+        "Goal progress shown",
+        "Patterns detected",
+        "Suggestions for next week provided",
+        "Summary saved to database"
+      ],
+      "notes": "Base MVP task - Completed. Will show progress across multiple goals (Task 9D)",
+      "blockers": []
+    },
+    {
+      "id": 15,
+      "name": "Progress Tracking & Analytics Dashboard",
+      "file": "implementation-tasks/03-planning-analytics/task-15-progress-tracking-and-analytics.md",
+      "status": "done",
+      "priority": "medium",
+      "estimated_hours": 6,
+      "actual_hours": null,
+      "started_date": null,
+      "completed_date": "2025-11-13",
+      "dependencies": [14],
+      "acceptance_criteria": [
+        "Analytics dashboard displays",
+        "Completion metrics shown",
+        "Charts render correctly",
+        "Goal progress visualized",
+        "Time tracking displayed",
+        "Patterns highlighted"
+      ],
+      "notes": "Base MVP task - Completed. Will integrate Task 9C (timeline visualization)",
+      "blockers": []
+    },
+    {
+      "id": 16,
+      "name": "Calendar View",
+      "file": "implementation-tasks/04-ui-advanced/task-16-calendar-view.md",
+      "status": "done",
+      "priority": "medium",
+      "estimated_hours": 6,
+      "actual_hours": null,
+      "started_date": null,
+      "completed_date": "2025-11-13",
+      "dependencies": [7],
+      "acceptance_criteria": [
+        "Week view displays tasks",
+        "Month view shows overview",
+        "Drag-and-drop scheduling works",
+        "Time blocks displayed",
+        "Task details shown on click"
+      ],
+      "notes": "Base MVP task - Completed",
+      "blockers": []
+    },
+    {
+      "id": 17,
+      "name": "Main Dashboard",
+      "file": "implementation-tasks/04-ui-advanced/task-17-main-dashboard.md",
+      "status": "done",
+      "priority": "high",
+      "estimated_hours": 6,
+      "actual_hours": null,
+      "started_date": null,
+      "completed_date": "2025-11-13",
+      "dependencies": [15, 16],
+      "acceptance_criteria": [
+        "Today's tasks widget works",
+        "Goal progress cards display",
+        "Quick actions functional",
+        "Energy indicator shows",
+        "Upcoming tasks visible",
+        "Dashboard responsive"
+      ],
+      "notes": "Base MVP task - Completed. Will be enhanced by Tasks 9D (multiple goals), 9E (routines widget)",
+      "blockers": []
+    },
+    {
+      "id": 18,
+      "name": "AI Chat Interface",
+      "file": "implementation-tasks/04-ui-advanced/task-18-ai-chat-interface.md",
+      "status": "done",
+      "priority": "medium",
+      "estimated_hours": 5,
+      "actual_hours": null,
+      "started_date": null,
+      "completed_date": "2025-11-13",
+      "dependencies": [8],
+      "acceptance_criteria": [
+        "Chat interface displays",
+        "Messages send and receive",
+        "AI responds contextually",
+        "Chat history saved",
+        "Loading states work",
+        "Error handling implemented"
+      ],
+      "notes": "Base MVP task - Completed",
+      "blockers": []
+    },
+    {
+      "id": 19,
+      "name": "Energy Tracking System",
+      "file": "implementation-tasks/04-ui-advanced/task-19-energy-tracking-system.md",
+      "status": "done",
+      "priority": "medium",
+      "estimated_hours": 5,
+      "actual_hours": null,
+      "started_date": null,
+      "completed_date": "2025-11-13",
+      "dependencies": [7],
+      "acceptance_criteria": [
+        "Energy log entry works",
+        "Energy patterns detected",
+        "Energy calendar displays",
+        "Task-energy matching shown",
+        "Creators/drainers identified"
+      ],
+      "notes": "Base MVP task - Completed",
+      "blockers": []
+    },
+    {
+      "id": 20,
+      "name": "Settings Page",
+      "file": "implementation-tasks/05-finalization/task-20-settings-page.md",
+      "status": "done",
+      "priority": "medium",
+      "estimated_hours": 4,
+      "actual_hours": null,
+      "started_date": null,
+      "completed_date": "2025-11-13",
+      "dependencies": [5],
+      "acceptance_criteria": [
+        "Settings page displays all options",
+        "Account settings editable",
+        "Preferences save correctly",
+        "Data export works",
+        "Data delete confirmation works",
+        "Theme toggle functional"
+      ],
+      "notes": "Base MVP task - Completed. Will add 'Re-run Life Reset' option (Task 9A integration)",
+      "blockers": []
+    },
+    {
+      "id": 21,
+      "name": "Privacy Policy & Terms",
+      "file": "implementation-tasks/05-finalization/task-21-privacy-policy-and-terms.md",
+      "status": "done",
+      "priority": "low",
+      "estimated_hours": 2,
+      "actual_hours": null,
+      "started_date": null,
+      "completed_date": "2025-11-13",
+      "dependencies": [],
+      "acceptance_criteria": [
+        "Privacy policy page created",
+        "Terms of service page created",
+        "GDPR compliance documented",
+        "Pages accessible from footer",
+        "Content is clear and comprehensive"
+      ],
+      "notes": "Base MVP task - Completed",
+      "blockers": []
+    },
+    {
+      "id": 22,
+      "name": "Email Notifications & Final Polish",
+      "file": "implementation-tasks/05-finalization/task-22-email-notifications-and-polish.md",
+      "status": "done",
+      "priority": "medium",
+      "estimated_hours": 6,
+      "actual_hours": null,
+      "started_date": null,
+      "completed_date": "2025-11-13",
+      "dependencies": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21],
+      "acceptance_criteria": [
+        "Resend configured",
+        "Welcome email sends",
+        "Daily summary emails work",
+        "Weekly summary emails work",
+        "Notification preferences respected",
+        "All pages polished",
+        "No console errors",
+        "Mobile responsive throughout",
+        "Performance optimized",
+        "Ready for production deployment"
+      ],
+      "notes": "Base MVP task - Completed. Version 1.0.0-MVP COMPLETE!",
+      "blockers": []
+    }
+  ],
+  "milestones": [
+    {
+      "name": "Foundation Complete (Tasks 1-4)",
+      "tasks": [1, 2, 3, 4],
+      "status": "done",
+      "target_date": null,
+      "completed_date": "2025-11-13",
+      "completion_percentage": 100
+    },
+    {
+      "name": "Core Features Complete (Tasks 5-8)",
+      "tasks": [5, 6, 7, 8],
+      "status": "done",
+      "target_date": null,
+      "completed_date": "2025-11-13",
+      "completion_percentage": 100
+    },
+    {
+      "name": "Base Onboarding Complete (Task 9)",
+      "tasks": [9],
+      "status": "done",
+      "target_date": null,
+      "completed_date": "2025-11-13",
+      "completion_percentage": 100
+    },
+    {
+      "name": "AI Task Generation Complete (Task 10)",
+      "tasks": [10],
+      "status": "done",
+      "target_date": null,
+      "completed_date": "2025-11-13",
+      "completion_percentage": 100
+    },
+    {
+      "name": "Planning & Analytics Complete (Tasks 11-15)",
+      "tasks": [11, 12, 13, 14, 15],
+      "status": "done",
+      "target_date": null,
+      "completed_date": "2025-11-13",
+      "completion_percentage": 100
+    },
+    {
+      "name": "UI & Advanced Complete (Tasks 16-19)",
+      "tasks": [16, 17, 18, 19],
+      "status": "done",
+      "target_date": null,
+      "completed_date": "2025-11-13",
+      "completion_percentage": 100
+    },
+    {
+      "name": "MVP 1.0 Complete (Tasks 20-22)",
+      "tasks": [20, 21, 22],
+      "status": "done",
+      "target_date": null,
+      "completed_date": "2025-11-13",
+      "completion_percentage": 100
+    },
+    {
+      "name": "🎯 Life Reset Features Complete (Tasks 9A-9E)",
+      "tasks": ["9A", "9B", "9C", "9D", "9E"],
+      "status": "not_started",
+      "target_date": null,
+      "completed_date": null,
+      "completion_percentage": 0,
+      "description": "Enhanced onboarding, goal breakdown, visualization, multiple goals, routines"
+    }
+  ],
+  "metadata": {
+    "last_updated": "2025-11-14",
+    "updated_by": "Life Reset Enhancement - November 2025",
+    "base_mvp_completed_hours": 107,
+    "total_estimated_hours": 151,
+    "life_reset_hours": 44,
+    "total_actual_hours": 0,
+    "notes": "Base MVP (v1.0.0) completed with 22 tasks (100%). Now adding 5 Life Reset enhancement tasks (9A-9E) totaling 44 hours for v1.1.0. Task statuses: not_started | in_progress | done | blocked",
+    "version": "1.1.0",
+    "enhancement_summary": "Life Reset Guide features: comprehensive 5-phase onboarding, goal auto-breakdown with AI, interactive timeline visualization, multiple concurrent goals support, morning/evening routines system",
+    "ai_agent_instructions": {
+      "next_task_logic": "Start with Task 9A (Enhanced Life Reset Onboarding) as it's the foundation. Then 9B (Goal Breakdown), then 9C (Visualization), then 9D and 9E can be done in parallel.",
+      "recommended_order": ["9A", "9B", "9C", "9D", "9E"],
+      "parallel_possible": "9D and 9E can be done in parallel after 9A and 9B complete"
+    }
+  }
+}
