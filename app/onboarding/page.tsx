@@ -3,20 +3,22 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { Sparkles, Zap, Clock, CheckCircle2 } from 'lucide-react';
+import { Sparkles, Zap, Clock, CheckCircle2, Target } from 'lucide-react';
 import QuickSetup from '@/components/onboarding/QuickSetup';
 import AIInterview from '@/components/onboarding/AIInterview';
+import LifeResetInterview from '@/components/onboarding/LifeResetInterview';
 
 /**
  * Onboarding Page - Mode Selection
  * Based on specification Section 3.1: AI-Powered Onboarding Interview
  *
- * Two modes:
+ * Three modes:
  * 1. Quick Setup (Form-based, 2 min)
- * 2. AI Interview (Conversational, 5-10 min, RECOMMENDED)
+ * 2. AI Interview (Conversational, 5-10 min) - Legacy, kept as fallback
+ * 3. Life Reset Guide (Comprehensive, 10-20 min, RECOMMENDED)
  */
 
-type OnboardingMode = 'selection' | 'quick' | 'ai';
+type OnboardingMode = 'selection' | 'quick' | 'ai' | 'life-reset';
 
 export default function OnboardingPage() {
   const [mode, setMode] = useState<OnboardingMode>('selection');
@@ -27,6 +29,10 @@ export default function OnboardingPage() {
 
   if (mode === 'ai') {
     return <AIInterview />;
+  }
+
+  if (mode === 'life-reset') {
+    return <LifeResetInterview />;
   }
 
   // Mode Selection Screen
@@ -47,34 +53,34 @@ export default function OnboardingPage() {
         </div>
 
         {/* Mode Cards */}
-        <div className="grid gap-6 md:grid-cols-2">
+        <div className="grid gap-6 lg:grid-cols-3 md:grid-cols-2">
           {/* Quick Setup */}
           <button
             onClick={() => setMode('quick')}
-            className="group relative overflow-hidden rounded-xl border-2 border-border bg-card p-8 text-left transition-all hover:border-primary hover:shadow-lg"
+            className="group relative overflow-hidden rounded-xl border-2 border-border bg-card p-6 text-left transition-all hover:border-primary hover:shadow-lg"
           >
             <div className="mb-4 flex items-center gap-3">
               <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-muted">
                 <Zap className="h-6 w-6 text-foreground" />
               </div>
               <div>
-                <h2 className="text-xl font-bold">Quick Setup</h2>
-                <p className="text-sm text-muted-foreground">Simple form</p>
+                <h2 className="text-lg font-bold">Quick Setup</h2>
+                <p className="text-xs text-muted-foreground">Simple form</p>
               </div>
             </div>
 
-            <ul className="mb-6 space-y-2 text-sm text-muted-foreground">
+            <ul className="mb-4 space-y-2 text-sm text-muted-foreground">
               <li className="flex items-start gap-2">
-                <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                <span>Fill out a quick form with your goal</span>
+                <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
+                <span className="text-xs">Fill out a quick form</span>
               </li>
               <li className="flex items-start gap-2">
-                <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                <span>Takes about 2 minutes</span>
+                <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
+                <span className="text-xs">Basic goal setup</span>
               </li>
               <li className="flex items-start gap-2">
-                <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                <span>Get started immediately</span>
+                <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
+                <span className="text-xs">Start immediately</span>
               </li>
             </ul>
 
@@ -86,51 +92,89 @@ export default function OnboardingPage() {
             <div className="absolute bottom-0 right-0 h-24 w-24 translate-x-8 translate-y-8 rounded-full bg-primary/5 transition-transform group-hover:scale-150" />
           </button>
 
-          {/* AI Interview - RECOMMENDED */}
+          {/* Life Reset Guide - RECOMMENDED */}
           <button
-            onClick={() => setMode('ai')}
-            className="group relative overflow-hidden rounded-xl border-2 border-primary bg-card p-8 text-left shadow-lg transition-all hover:shadow-xl"
+            onClick={() => setMode('life-reset')}
+            className="group relative overflow-hidden rounded-xl border-2 border-primary bg-card p-6 text-left shadow-lg transition-all hover:shadow-xl"
           >
             {/* Recommended Badge */}
-            <div className="absolute right-4 top-4 rounded-full bg-primary px-3 py-1 text-xs font-bold text-primary-foreground">
+            <div className="absolute right-3 top-3 rounded-full bg-primary px-2.5 py-0.5 text-xs font-bold text-primary-foreground">
               RECOMMENDED
             </div>
 
             <div className="mb-4 flex items-center gap-3">
               <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
-                <Sparkles className="h-6 w-6 text-primary" />
+                <Target className="h-6 w-6 text-primary" />
               </div>
               <div>
-                <h2 className="text-xl font-bold">AI Interview</h2>
-                <p className="text-sm text-muted-foreground">Conversational setup</p>
+                <h2 className="text-lg font-bold">Life Reset Guide</h2>
+                <p className="text-xs text-muted-foreground">Comprehensive plan</p>
               </div>
             </div>
 
-            <ul className="mb-6 space-y-2 text-sm text-muted-foreground">
+            <ul className="mb-4 space-y-2 text-sm text-muted-foreground">
               <li className="flex items-start gap-2">
-                <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                <span>AI asks you questions about your goals</span>
+                <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
+                <span className="text-xs">5-phase deep assessment</span>
               </li>
               <li className="flex items-start gap-2">
-                <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                <span>More personalized task recommendations</span>
+                <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
+                <span className="text-xs">Multiple goals & routines</span>
               </li>
               <li className="flex items-start gap-2">
-                <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                <span>Better understanding of your schedule & energy</span>
+                <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
+                <span className="text-xs">Complete Life Reset Map</span>
               </li>
               <li className="flex items-start gap-2">
-                <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                <span>SMART goal validation</span>
+                <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
+                <span className="text-xs">Personalized roadmap</span>
               </li>
             </ul>
 
             <div className="flex items-center gap-2 text-sm font-medium text-primary">
               <Clock className="h-4 w-4" />
-              <span>~5-10 minutes</span>
+              <span>~10-20 minutes</span>
             </div>
 
             <div className="absolute bottom-0 right-0 h-32 w-32 translate-x-12 translate-y-12 rounded-full bg-primary/10 transition-transform group-hover:scale-150" />
+          </button>
+
+          {/* AI Interview - Simple */}
+          <button
+            onClick={() => setMode('ai')}
+            className="group relative overflow-hidden rounded-xl border-2 border-border bg-card p-6 text-left transition-all hover:border-primary hover:shadow-lg"
+          >
+            <div className="mb-4 flex items-center gap-3">
+              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-muted">
+                <Sparkles className="h-6 w-6 text-foreground" />
+              </div>
+              <div>
+                <h2 className="text-lg font-bold">AI Interview</h2>
+                <p className="text-xs text-muted-foreground">Conversational</p>
+              </div>
+            </div>
+
+            <ul className="mb-4 space-y-2 text-sm text-muted-foreground">
+              <li className="flex items-start gap-2">
+                <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
+                <span className="text-xs">Simple AI questions</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
+                <span className="text-xs">Single goal focus</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
+                <span className="text-xs">SMART validation</span>
+              </li>
+            </ul>
+
+            <div className="flex items-center gap-2 text-sm font-medium">
+              <Clock className="h-4 w-4" />
+              <span>~5-10 minutes</span>
+            </div>
+
+            <div className="absolute bottom-0 right-0 h-24 w-24 translate-x-8 translate-y-8 rounded-full bg-primary/5 transition-transform group-hover:scale-150" />
           </button>
         </div>
 
