@@ -1,0 +1,285 @@
+{
+  "project": {
+    "name": "AI TODO App - Time Wealth Productivity System (Enhanced)",
+    "version": "1.1.0-MVP",
+    "started_date": null,
+    "completed_date": null,
+    "current_task": 1,
+    "total_tasks": 27,
+    "completion_percentage": 0,
+    "enhancements_added": "Life Reset Guide features"
+  },
+  "new_tasks_added": [
+    {
+      "task_id": "9A",
+      "name": "Enhanced Life Reset Onboarding Interview",
+      "reason": "Replace simple 5-question onboarding with comprehensive 5-phase interview",
+      "impact": "Critical - Foundation for all other Life Reset features"
+    },
+    {
+      "task_id": "9B",
+      "name": "Goal Hierarchy & Auto-Breakdown System",
+      "reason": "AI breaks down 12-month goals into 6mo → 3mo → monthly → weekly milestones",
+      "impact": "High - Core feature for goal visualization"
+    },
+    {
+      "task_id": "9C",
+      "name": "Goal Visualization Component",
+      "reason": "Interactive timeline showing goal breakdown from 12 months to daily tasks",
+      "impact": "High - User-facing value, makes progress visible"
+    },
+    {
+      "task_id": "9D",
+      "name": "Multiple Goals & Prioritization",
+      "reason": "Support 3-5 concurrent goals with priority weighting",
+      "impact": "Medium - Expands system capability"
+    },
+    {
+      "task_id": "9E",
+      "name": "Morning/Evening Routines System",
+      "reason": "Dedicated routine builder separate from goal tasks",
+      "impact": "Medium - Nice-to-have enhancement"
+    }
+  ],
+  "tasks": [
+    // ... Tasks 1-8 remain the same ...
+    {
+      "id": "9A",
+      "name": "Enhanced Life Reset Onboarding Interview",
+      "file": "life-reset-task-breakdown.md#task-9a",
+      "status": "not_started",
+      "priority": "critical",
+      "estimated_hours": 10,
+      "actual_hours": null,
+      "started_date": null,
+      "completed_date": null,
+      "assigned_to": null,
+      "dependencies": [8],
+      "acceptance_criteria": [
+        "5 phases flow conversationally",
+        "AI asks one question at a time",
+        "Users can go back and edit responses",
+        "Progress indicator shows current phase",
+        "All responses saved to database",
+        "Vision statement generated",
+        "Takes 10-20 minutes to complete"
+      ],
+      "notes": "Foundation for all Life Reset features. Review enhanced-onboarding-prompt.md for detailed prompts.",
+      "blockers": [],
+      "database_changes": [
+        "Add vision_statement to users table",
+        "Add anti_patterns JSONB to users",
+        "Add energy_preferences JSONB to users",
+        "Enhanced onboarding_data structure"
+      ],
+      "new_files": [
+        "app/onboarding/interview/page.tsx",
+        "components/onboarding/interview-phase.tsx",
+        "components/onboarding/interview-progress.tsx",
+        "app/api/ai/onboarding-interview/route.ts",
+        "lib/ai/prompts/onboarding-interview.ts"
+      ]
+    },
+    {
+      "id": "9B",
+      "name": "Goal Hierarchy & Auto-Breakdown System",
+      "file": "life-reset-task-breakdown.md#task-9b",
+      "status": "not_started",
+      "priority": "critical",
+      "estimated_hours": 8,
+      "actual_hours": null,
+      "started_date": null,
+      "completed_date": null,
+      "assigned_to": null,
+      "dependencies": ["9A"],
+      "acceptance_criteria": [
+        "AI generates 6-month milestone",
+        "AI generates 3-month milestone",
+        "AI generates monthly objectives (Month 1-3)",
+        "AI generates weekly targets (Week 1-4 for Month 1)",
+        "Milestones saved to database",
+        "Breakdown respects user's constraints",
+        "Dependencies identified"
+      ],
+      "notes": "Uses AI to automatically break down long-term goals. Enables visualization in Task 9C.",
+      "blockers": [],
+      "database_changes": [
+        "Add parent_milestone_id to goals",
+        "Add timeframe to goals",
+        "Add breakdown_generated boolean to goals",
+        "Add breakdown_data JSONB to goals",
+        "Add timeframe to milestones",
+        "Add parent_milestone_id to milestones",
+        "Add ai_generated boolean to milestones",
+        "Add category to goals"
+      ],
+      "new_files": [
+        "app/api/ai/breakdown-goal/route.ts",
+        "lib/ai/goal-breakdown.ts",
+        "components/goals/goal-timeline.tsx"
+      ]
+    },
+    {
+      "id": "9C",
+      "name": "Goal Visualization Component",
+      "file": "life-reset-task-breakdown.md#task-9c",
+      "status": "not_started",
+      "priority": "high",
+      "estimated_hours": 10,
+      "actual_hours": null,
+      "started_date": null,
+      "completed_date": null,
+      "assigned_to": null,
+      "dependencies": ["9B"],
+      "acceptance_criteria": [
+        "Timeline displays 12-month view",
+        "Can zoom to month/week view",
+        "Milestones shown as markers",
+        "Progress percentage accurate",
+        "Click milestone to see details",
+        "Responsive on mobile",
+        "Visual indication of current focus"
+      ],
+      "notes": "Creates interactive timeline visualization. Major user-facing feature.",
+      "blockers": [],
+      "database_changes": [],
+      "new_files": [
+        "components/goals/goal-roadmap.tsx",
+        "components/goals/timeline-view.tsx",
+        "components/goals/milestone-card.tsx",
+        "app/(dashboard)/goals/[id]/roadmap/page.tsx"
+      ]
+    },
+    {
+      "id": "9D",
+      "name": "Multiple Goals & Prioritization",
+      "file": "life-reset-task-breakdown.md#task-9d",
+      "status": "not_started",
+      "priority": "high",
+      "estimated_hours": 8,
+      "actual_hours": null,
+      "started_date": null,
+      "completed_date": null,
+      "assigned_to": null,
+      "dependencies": ["9B"],
+      "acceptance_criteria": [
+        "Can create 3-5 active goals",
+        "Each goal has category and priority",
+        "Priority weights total 100%",
+        "Task generation respects priorities",
+        "Dashboard shows all goals",
+        "Can adjust priorities with sliders",
+        "Related goals can be linked"
+      ],
+      "notes": "Enables multiple concurrent goals (Career + Health + Reading + etc.). Task generation balances across all goals.",
+      "blockers": [],
+      "database_changes": [
+        "Add priority_weight to goals",
+        "Create goal_relationships table"
+      ],
+      "new_files": [
+        "components/goals/goal-priority-slider.tsx",
+        "components/goals/multi-goal-dashboard.tsx",
+        "lib/ai/balanced-task-generation.ts"
+      ]
+    },
+    {
+      "id": "9E",
+      "name": "Morning/Evening Routines System",
+      "file": "life-reset-task-breakdown.md#task-9e",
+      "status": "not_started",
+      "priority": "medium",
+      "estimated_hours": 8,
+      "actual_hours": null,
+      "started_date": null,
+      "completed_date": null,
+      "assigned_to": null,
+      "dependencies": ["9A"],
+      "acceptance_criteria": [
+        "Can create morning routine",
+        "Can create evening routine",
+        "AI suggests initial routines based on goals",
+        "Items have duration and order",
+        "Daily checklist on dashboard",
+        "Track completion per day",
+        "Optional vs required items",
+        "Streak tracking"
+      ],
+      "notes": "Separate from goal tasks. Dedicated routine builder with AI suggestions.",
+      "blockers": [],
+      "database_changes": [
+        "Create routines table",
+        "Create routine_items table",
+        "Create routine_completions table"
+      ],
+      "new_files": [
+        "app/(dashboard)/routines/page.tsx",
+        "components/routines/routine-builder.tsx",
+        "components/routines/routine-checklist.tsx",
+        "components/dashboard/morning-routine-widget.tsx"
+      ]
+    }
+    // ... Tasks 10-22 remain the same, just renumbered if needed ...
+  ],
+  "milestones": [
+    {
+      "name": "Foundation Complete",
+      "tasks": [1, 2, 3, 4],
+      "status": "not_started",
+      "target_date": null,
+      "completed_date": null
+    },
+    {
+      "name": "Core Features Complete",
+      "tasks": [5, 6, 7, 8],
+      "status": "not_started",
+      "target_date": null,
+      "completed_date": null
+    },
+    {
+      "name": "Life Reset Features Complete",
+      "tasks": ["9A", "9B", "9C", "9D", "9E"],
+      "status": "not_started",
+      "target_date": null,
+      "completed_date": null,
+      "description": "Enhanced onboarding, goal breakdown, visualization, multiple goals, routines"
+    },
+    {
+      "name": "AI Task Generation Complete",
+      "tasks": [10],
+      "status": "not_started",
+      "target_date": null,
+      "completed_date": null
+    },
+    {
+      "name": "Planning & Analytics Complete",
+      "tasks": [11, 12, 13, 14, 15],
+      "status": "not_started",
+      "target_date": null,
+      "completed_date": null
+    },
+    {
+      "name": "UI & Advanced Complete",
+      "tasks": [16, 17, 18, 19],
+      "status": "not_started",
+      "target_date": null,
+      "completed_date": null
+    },
+    {
+      "name": "MVP Complete",
+      "tasks": [20, 21, 22],
+      "status": "not_started",
+      "target_date": null,
+      "completed_date": null
+    }
+  ],
+  "metadata": {
+    "last_updated": null,
+    "updated_by": "Life Reset Enhancement - November 2025",
+    "total_estimated_hours": 187,
+    "total_actual_hours": 0,
+    "notes": "Added 5 Life Reset tasks (9A-9E) totaling 44 hours. Task statuses: not_started | in_progress | completed | blocked",
+    "version": "1.1.0",
+    "enhancement_summary": "Life Reset Guide features: comprehensive onboarding (5 phases), goal visualization, multiple goals support, morning/evening routines"
+  }
+}
