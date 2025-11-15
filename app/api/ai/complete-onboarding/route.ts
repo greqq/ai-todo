@@ -4,7 +4,8 @@ import { generateText } from 'ai';
 import { sonnet } from '@/lib/ai/config';
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
-import { getLifeResetMapPrompt } from '@/lib/ai/prompts';
+import { getLifeResetMapPrompt, getGoalBreakdownPrompt } from '@/lib/ai/prompts';
+import { generateMilestoneStructure } from '@/lib/goal-breakdown/breakdown-algorithm';
 import type { LifeResetOnboardingData, LifeResetMap } from '@/types/life-reset.types';
 
 /**
@@ -183,6 +184,87 @@ async function processLifeResetOnboarding(
     if (milestonesError) {
       console.error('Failed to create primary goal milestones:', milestonesError);
     }
+  }
+
+  // Generate goal breakdown (12mo → 6mo → 3mo → 1mo → weekly) for primary goal
+  console.log('Generating goal breakdown for primary goal...');
+  try {
+    const startDate = new Date(typedPrimaryGoal.start_date || new Date());
+    const targetDate = new Date(typedPrimaryGoal.target_date);
+
+    // Generate milestone structure using algorithm
+    const milestoneStructure = generateMilestoneStructure(
+      typedPrimaryGoal.title,
+      startDate,
+      targetDate
+    );
+
+    // Generate AI-enhanced breakdown
+    const breakdownPrompt = getGoalBreakdownPrompt({
+      goalTitle: typedPrimaryGoal.title,
+      goalDescription: typedPrimaryGoal.description || '',
+      goalType: typedPrimaryGoal.type,
+      startDate: milestoneStructure.start_date,
+      targetDate: milestoneStructure.target_date,
+      totalDurationMonths: milestoneStructure.total_duration_months,
+      milestoneStructure: milestoneStructure.milestones,
+      userContext: {
+        vision_statement: lifeResetMap.vision_statement,
+        energy_preferences: energyPreferences,
+      },
+    });
+
+    const { text: breakdownText } = await generateText({
+      model: sonnet,
+      prompt: breakdownPrompt,
+      temperature: 0.7,
+    });
+
+    console.log('AI breakdown received, parsing...');
+
+    // Parse AI response
+    let breakdownData;
+    try {
+      const jsonMatch = breakdownText.match(/\{[\s\S]*\}/);
+      if (jsonMatch) {
+        breakdownData = JSON.parse(jsonMatch[0]);
+      } else {
+        breakdownData = JSON.parse(breakdownText);
+      }
+    } catch (parseError) {
+      console.error('Failed to parse breakdown data, skipping breakdown generation');
+      breakdownData = null;
+    }
+
+    // Insert breakdown milestones if parsing succeeded
+    if (breakdownData && breakdownData.milestones) {
+      const milestonesToInsert = breakdownData.milestones.map((milestone: any) => ({
+        goal_id: typedPrimaryGoal.id,
+        user_id: typedUser.id,
+        period_type: milestone.period_type,
+        title: milestone.title,
+        description: milestone.description,
+        target_date: milestone.target_date,
+        completion_percentage_target: milestone.completion_percentage_target,
+        key_deliverables: milestone.key_deliverables || [],
+        order_index: milestone.order_index,
+        completed: false,
+      }));
+
+      const { error: breakdownError } = await adminClient
+        .from('goal_breakdown_milestones')
+        .insert(milestonesToInsert);
+
+      if (breakdownError) {
+        console.error('Failed to create breakdown milestones:', breakdownError);
+        // Don't fail the request, just log the error
+      } else {
+        console.log(`Successfully created ${milestonesToInsert.length} breakdown milestones`);
+      }
+    }
+  } catch (breakdownGenerationError) {
+    console.error('Error generating goal breakdown:', breakdownGenerationError);
+    // Don't fail the request, breakdown is optional enhancement
   }
 
   console.log('Creating secondary goals...');

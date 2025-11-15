@@ -819,3 +819,117 @@ Return JSON format matching the LifeResetMap interface:
   "initial_tasks": [...]
 }`;
 }
+
+/**
+ * Goal Breakdown Prompt
+ * Generate detailed milestone breakdown for a goal: 12mo → 6mo → 3mo → 1mo → weekly
+ */
+export function getGoalBreakdownPrompt(params: {
+  goalTitle: string;
+  goalDescription: string;
+  goalType: string;
+  startDate: string;
+  targetDate: string;
+  totalDurationMonths: number;
+  milestoneStructure: {
+    period_type: string;
+    title: string;
+    target_date: string;
+    completion_percentage_target: number;
+  }[];
+  userContext?: {
+    vision_statement?: string;
+    energy_preferences?: any;
+    current_skills?: string[];
+  };
+}) {
+  const { goalTitle, goalDescription, goalType, startDate, targetDate, totalDurationMonths, milestoneStructure, userContext } = params;
+
+  return `You are an AI Goal Planning Assistant helping a user break down their long-term goal into actionable milestones.
+
+GOAL DETAILS:
+- Title: ${goalTitle}
+- Description: ${goalDescription}
+- Type: ${goalType}
+- Start Date: ${startDate}
+- Target Date: ${targetDate}
+- Total Duration: ${totalDurationMonths} months
+
+${userContext?.vision_statement ? `USER'S VISION:
+${userContext.vision_statement}
+` : ''}
+
+${userContext?.current_skills ? `CURRENT SKILLS:
+${userContext.current_skills.join(', ')}
+` : ''}
+
+MILESTONE STRUCTURE:
+You will fill in detailed content for these pre-calculated milestones:
+${JSON.stringify(milestoneStructure, null, 2)}
+
+YOUR TASK:
+For each milestone in the structure above, generate:
+1. A compelling, specific title that describes what should be achieved
+2. A detailed description of what success looks like at this point
+3. 3-5 key deliverables (specific, measurable outcomes)
+4. Why this milestone matters in the journey toward the goal
+
+GUIDELINES:
+- Make milestones progressively build on each other
+- Earlier milestones focus on foundation/learning
+- Middle milestones focus on building/practicing
+- Later milestones focus on mastery/results
+- Weekly milestones should be specific, actionable themes
+- Consider the user's energy patterns and constraints
+- Be realistic but ambitious
+- Focus on outcomes, not just activities
+
+WEEKLY MILESTONES (First 4 weeks):
+- Week 1: Setup, research, initial momentum
+- Week 2: First real progress, building habits
+- Week 3: Deepening skills, overcoming initial challenges
+- Week 4: First month checkpoint, early wins
+
+MONTHLY MILESTONES:
+- Month 1: Foundation established, initial progress visible
+- Month 3: Significant progress, key skills developed
+- Month 6: Halfway point, major deliverables complete
+- Month 12: Goal achieved or very close to completion
+
+Return JSON format:
+{
+  "milestones": [
+    {
+      "period_type": "12_month | 6_month | 3_month | 1_month | weekly",
+      "title": "string (specific, inspiring)",
+      "description": "string (what success looks like, 2-3 sentences)",
+      "target_date": "YYYY-MM-DD (from structure)",
+      "completion_percentage_target": number (from structure),
+      "key_deliverables": [
+        "string (specific, measurable outcome)",
+        "string",
+        "string"
+      ],
+      "order_index": number (from structure)
+    }
+  ],
+  "weekly_themes": {
+    "week_1": "string (one sentence theme)",
+    "week_2": "string",
+    "week_3": "string",
+    "week_4": "string"
+  },
+  "critical_path": [
+    "string (key dependency or requirement)",
+    "string",
+    "string"
+  ],
+  "success_indicators": [
+    "string (how to know you're on track)",
+    "string",
+    "string"
+  ]
+}
+
+Generate a comprehensive, realistic breakdown that will guide the user from start to finish.`;
+}
