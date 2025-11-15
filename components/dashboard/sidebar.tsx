@@ -13,6 +13,7 @@ import {
   MessageSquare,
   Settings,
   Zap,
+  Sunrise,
 } from 'lucide-react';
 
 const navigation = [
@@ -21,6 +22,7 @@ const navigation = [
   { name: 'Tasks', href: '/tasks', icon: CheckSquare },
   { name: 'Backlog', href: '/backlog', icon: Inbox },
   { name: 'Calendar', href: '/calendar', icon: Calendar },
+  { name: 'Routines', href: '/routines', icon: Sunrise },
   { name: 'Energy', href: '/energy', icon: Zap },
   { name: 'Analytics', href: '/analytics', icon: BarChart3 },
   { name: 'AI Chat', href: '/chat', icon: MessageSquare },

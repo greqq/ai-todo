@@ -8,6 +8,7 @@ import { MultiGoalDashboard } from '@/components/goals/MultiGoalDashboard';
 import { QuickActions } from '@/components/dashboard/QuickActions';
 import { EnergyIndicator } from '@/components/dashboard/EnergyIndicator';
 import { UpcomingTasksWidget } from '@/components/dashboard/UpcomingTasksWidget';
+import { RoutineWidget } from '@/components/dashboard/RoutineWidget';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Sparkles, Moon, Flame, Trophy, Loader2 } from 'lucide-react';
@@ -222,9 +223,10 @@ export default function DashboardPage() {
               <MultiGoalDashboard maxDisplay={10} showCreateButton={true} />
             </div>
 
-            {/* Right Column - Energy & Upcoming (1 col on desktop) */}
+            {/* Right Column - Energy, Routines & Upcoming (1 col on desktop) */}
             <div className="space-y-6">
               <EnergyIndicator energy={dashboardData.energy} />
+              <RoutineWidget />
               <UpcomingTasksWidget tasks={dashboardData.upcomingTasks} />
             </div>
           </div>
