@@ -102,15 +102,25 @@ export interface RoutineTimeBlock {
   optional?: boolean;
 }
 
+export interface RoutineTask {
+  title: string;
+  description: string;
+  duration_minutes: number;
+  energy_required: 'high' | 'medium' | 'low';
+  task_type: 'deep_work' | 'admin' | 'communication' | 'learning' | 'creative' | 'physical' | 'planning';
+}
+
 export interface MorningRoutine {
   description: string;
   time_blocks: RoutineTimeBlock[];
+  tasks: RoutineTask[];
   non_negotiables: string[];
 }
 
 export interface EveningRoutine {
   description: string;
   time_blocks: RoutineTimeBlock[];
+  tasks: RoutineTask[];
   non_negotiables: string[];
 }
 
@@ -133,10 +143,18 @@ export interface GoalDefinition {
   description: string;
   type: 'career' | 'health' | 'financial' | 'relationships' | 'personal_growth' | 'creative' | 'other';
   category: 'primary' | 'secondary' | 'lifestyle';
+  start_date: string; // YYYY-MM-DD
   target_date: string; // YYYY-MM-DD
   priority: 'high' | 'medium' | 'low';
   success_criteria: string[];
+  milestones?: MilestoneDefinition[];
   timeframe_months?: number;
+}
+
+export interface MilestoneDefinition {
+  title: string;
+  description: string;
+  target_date: string; // YYYY-MM-DD
 }
 
 export interface GoalsHierarchy {

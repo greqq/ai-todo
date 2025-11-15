@@ -40,7 +40,7 @@ export function QuickResponseButtons({
         className="gap-1.5"
       >
         <HelpCircle className="h-3.5 w-3.5" />
-        <span>I don't know</span>
+        <span>I don&apos;t know</span>
       </Button>
 
       {/* Skip button */}
