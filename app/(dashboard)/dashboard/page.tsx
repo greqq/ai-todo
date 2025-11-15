@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { MorningPlanningDialog } from '@/components/planning/MorningPlanningDialog';
 import { EveningReflectionDialog } from '@/components/planning/EveningReflectionDialog';
 import { TodayTasksWidget } from '@/components/dashboard/TodayTasksWidget';
-import { GoalProgressCards } from '@/components/dashboard/GoalProgressCards';
+import { MultiGoalDashboard } from '@/components/goals/MultiGoalDashboard';
 import { QuickActions } from '@/components/dashboard/QuickActions';
 import { EnergyIndicator } from '@/components/dashboard/EnergyIndicator';
 import { UpcomingTasksWidget } from '@/components/dashboard/UpcomingTasksWidget';
@@ -219,7 +219,7 @@ export default function DashboardPage() {
                 completionRate={dashboardData.todayStats.completionRate}
                 onTaskComplete={handleTaskComplete}
               />
-              <GoalProgressCards goals={dashboardData.activeGoals} />
+              <MultiGoalDashboard maxDisplay={10} showCreateButton={true} />
             </div>
 
             {/* Right Column - Energy & Upcoming (1 col on desktop) */}

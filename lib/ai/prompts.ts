@@ -46,7 +46,12 @@ Return JSON format:
  * Purpose: Generate 3-5 prioritized tasks for the day
  */
 export function getDailyTaskGenerationPrompt(params: {
-  goals: Array<{ id: string; title: string; priority: string }>;
+  goals: Array<{
+    id: string;
+    title: string;
+    priority: string;
+    goal_category?: 'primary' | 'secondary' | 'lifestyle';
+  }>;
   date: string;
   dayOfWeek: string;
   workHoursStart: string;
@@ -62,15 +67,32 @@ export function getDailyTaskGenerationPrompt(params: {
   existingCommitments?: string;
   availableTasks?: string;
 }) {
+  // Separate goals by category for smart distribution
+  const primaryGoals = params.goals.filter(g => g.goal_category === 'primary');
+  const secondaryGoals = params.goals.filter(g => g.goal_category === 'secondary');
+  const lifestyleGoals = params.goals.filter(g => g.goal_category === 'lifestyle' || !g.goal_category);
+
   return `You are an AI productivity assistant. Generate a daily task plan for the user.
 
 User Context:
-- Active Goals: ${JSON.stringify(params.goals)}
 - Current Day: ${params.dayOfWeek}, ${params.date}
 - Available Time: ${params.workHoursStart} to ${params.workHoursEnd}
 - Energy Peak: ${params.energyPeakTime}
 - Recent Completion Rate: ${params.last7DaysCompletionRate}%
 - Tasks Completed Yesterday: ${params.tasksCompletedYesterday}
+
+ACTIVE GOALS (by category):
+
+${primaryGoals.length > 0 ? `🎯 PRIMARY GOAL (Main Focus - 60% of tasks):
+${primaryGoals.map(g => `- ${g.title} [${g.priority} priority]`).join('\n')}` : ''}
+
+${secondaryGoals.length > 0 ? `
+📊 SECONDARY GOALS (Supporting Objectives - 30% of tasks):
+${secondaryGoals.map(g => `- ${g.title} [${g.priority} priority]`).join('\n')}` : ''}
+
+${lifestyleGoals.length > 0 ? `
+🌱 LIFESTYLE GOALS (Habits & Wellness - 10% of tasks):
+${lifestyleGoals.map(g => `- ${g.title} [${g.priority} priority]`).join('\n')}` : ''}
 
 User's Energy Pattern:
 - Morning energy: ${params.energyLevels.morning}
@@ -81,15 +103,26 @@ ${params.existingCommitments ? `Existing Commitments Today:\n${params.existingCo
 
 ${params.availableTasks ? `Available Tasks Pool:\n${params.availableTasks}` : ''}
 
-Instructions:
+MULTI-GOAL TASK DISTRIBUTION STRATEGY:
+1. **Primary Goal (60%)**: Most tasks should advance the primary goal - this is the user's main focus
+2. **Secondary Goals (30%)**: Include 1-2 tasks for secondary goals to maintain momentum
+3. **Lifestyle Goals (10%)**: Include at least 1 quick lifestyle/habit task daily
+4. **Balance & Integration**: Look for tasks that can advance multiple goals simultaneously
+
+TASK SELECTION RULES:
 1. Select 3-5 tasks maximum (don't overwhelm the user)
 2. Match task energy levels to user's energy curve
-3. Include one "Eat the Frog" task (hardest/most important)
+3. Include one "Eat the Frog" task from PRIMARY goal (hardest/most important)
 4. Batch similar task types when possible
 5. Prioritize Q2 tasks (Important but Not Urgent)
 6. Consider task dependencies
 7. Apply Parkinson's Law (set appropriate time constraints)
-8. Balance across active goals based on their priorities
+8. **CRITICAL**: Respect the 60/30/10 distribution across goal categories
+
+TASK WEIGHTING EXAMPLES:
+- 3 tasks: 2 primary, 1 secondary
+- 4 tasks: 2-3 primary, 1 secondary, 1 lifestyle
+- 5 tasks: 3 primary, 1-2 secondary, 1 lifestyle
 
 Output Format: Return JSON with task list and reasoning.
 
@@ -105,12 +138,14 @@ Output Format: Return JSON with task list and reasoning.
       "eisenhower_quadrant": "string",
       "suggested_time_block": "HH:MM - HH:MM",
       "linked_goal_id": "uuid",
+      "linked_goal_category": "primary | secondary | lifestyle",
       "is_eat_the_frog": boolean,
-      "reasoning": "Why this task today"
+      "reasoning": "Why this task today (mention which goal it advances)"
     }
   ],
   "daily_message": "Encouraging message for the day",
-  "focus_suggestion": "Primary goal or theme for today"
+  "focus_suggestion": "Primary goal or theme for today (should reference primary goal)",
+  "goal_distribution_summary": "Brief note on how tasks are balanced across goals"
 }`;
 }
 
