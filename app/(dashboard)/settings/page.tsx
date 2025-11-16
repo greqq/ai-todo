@@ -64,6 +64,7 @@ export default function SettingsPage() {
   const [deleting, setDeleting] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deleteConfirmText, setDeleteConfirmText] = useState('');
+  const [resettingOnboarding, setResettingOnboarding] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
   // Form state
@@ -189,6 +190,32 @@ export default function SettingsPage() {
       setMessage({ type: 'error', text: 'Failed to export data' });
     } finally {
       setExporting(false);
+    }
+  };
+
+  const handleResetOnboarding = async () => {
+    setResettingOnboarding(true);
+    setMessage(null);
+
+    try {
+      const response = await fetch('/api/user/reset-onboarding', {
+        method: 'POST',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to reset onboarding');
+      }
+
+      setMessage({ type: 'success', text: 'Onboarding reset! Redirecting...' });
+
+      // Redirect to onboarding page after a short delay
+      setTimeout(() => {
+        router.push('/onboarding');
+      }, 1000);
+    } catch (error) {
+      console.error('Error resetting onboarding:', error);
+      setMessage({ type: 'error', text: 'Failed to reset onboarding' });
+      setResettingOnboarding(false);
     }
   };
 
@@ -548,6 +575,43 @@ export default function SettingsPage() {
               Choose your preferred color scheme
             </p>
           </div>
+        </CardContent>
+      </Card>
+
+      {/* Re-run Onboarding */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Life Reset Guide</CardTitle>
+          <CardDescription>
+            Re-do the comprehensive onboarding experience
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          <div>
+            <h3 className="font-medium">Re-run Life Reset Onboarding</h3>
+            <p className="text-sm text-muted-foreground mt-1">
+              Go through the comprehensive 5-phase Life Reset interview again to refine your goals, vision, and routines.
+              This won&apos;t delete your existing data - it will create new goals and update your Life Reset Map.
+            </p>
+          </div>
+          <div className="rounded-lg bg-muted/50 p-4 space-y-2">
+            <p className="text-sm font-medium">What you&apos;ll experience:</p>
+            <ul className="text-sm text-muted-foreground space-y-1 ml-4 list-disc">
+              <li>5-phase deep assessment (Current Life, Anti-Vision, Vision, Time Horizons, Obstacles)</li>
+              <li>Create multiple goals with automatic breakdown into milestones</li>
+              <li>Define morning and evening routines</li>
+              <li>Generate a personalized Life Reset Map and roadmap</li>
+              <li>Takes 10-20 minutes to complete</li>
+            </ul>
+          </div>
+          <Button
+            onClick={handleResetOnboarding}
+            disabled={resettingOnboarding}
+            variant="outline"
+            className="w-full sm:w-auto"
+          >
+            {resettingOnboarding ? 'Resetting...' : 'Start Life Reset Guide'}
+          </Button>
         </CardContent>
       </Card>
 
