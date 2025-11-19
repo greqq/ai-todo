@@ -1,3 +1,20 @@
+// Mock the 'ai' package before importing helpers
+jest.mock('ai', () => ({
+  generateText: jest.fn(),
+  streamText: jest.fn(),
+}));
+
+jest.mock('@/lib/ai/config', () => ({
+  sonnet: { name: 'claude-sonnet-4-20250514' },
+  haiku: { name: 'claude-3-5-haiku-20241022' },
+}));
+
+jest.mock('@/lib/ai/cost-tracking', () => ({
+  createUsageRecord: jest.fn(() => ({ estimated_cost: 0.01 })),
+  logAIUsage: jest.fn(),
+  getRecommendedModel: jest.fn(() => 'claude-sonnet-4-20250514'),
+}));
+
 import {
   parseAIJsonResponse,
   validateAIResponse,
