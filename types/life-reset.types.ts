@@ -262,6 +262,7 @@ export interface LifeResetChatResponse {
   needsClarification: boolean;
   proceedToNextPhase: boolean;
   allPhasesComplete: boolean;
+  collectedData?: any; // Accumulated interview data from all phases
 }
 
 export interface CompleteOnboardingRequest {

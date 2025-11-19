@@ -129,6 +129,12 @@ Respond in JSON format as specified in the prompt above.`,
       );
     }
 
+    // Merge new data from AI with existing collected data
+    const updatedCollectedData = {
+      ...collectedData,
+      ...(aiResponse.data_to_save || {}),
+    };
+
     // Construct response
     const response: LifeResetChatResponse = {
       aiMessage: aiResponse.ai_message,
@@ -136,6 +142,7 @@ Respond in JSON format as specified in the prompt above.`,
       needsClarification: aiResponse.needs_clarification || false,
       proceedToNextPhase: aiResponse.proceed_to_next_phase || false,
       allPhasesComplete: aiResponse.all_phases_complete || false,
+      collectedData: updatedCollectedData, // Return updated collected data
     };
 
     return NextResponse.json(response);

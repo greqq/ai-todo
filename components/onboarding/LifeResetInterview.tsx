@@ -157,10 +157,18 @@ export default function LifeResetInterview() {
 
       const data = await response.json();
 
-      // Add AI response to chat
+      // Update collected data if provided by API
+      if (data.collectedData) {
+        setCollectedData(data.collectedData);
+      }
+
+      // Add AI response to chat with phase indicator
+      const currentPhaseInfo = PHASES[currentPhase - 1];
+      const phasePrefix = `**Phase ${currentPhase}: ${currentPhaseInfo.icon} ${currentPhaseInfo.name}**\n\n`;
+
       const aiMessage: InterviewMessage = {
         role: 'ai',
-        content: data.aiMessage,
+        content: phasePrefix + data.aiMessage,
         timestamp: new Date(),
       };
 
@@ -194,6 +202,16 @@ export default function LifeResetInterview() {
     } finally {
       setLoading(false);
     }
+  };
+
+  // Handle keyboard shortcuts in textarea
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    // Enter without shift sends the message
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSubmit(e as any);
+    }
+    // Shift+Enter adds a new line (default textarea behavior)
   };
 
   // Handle quick response: "I don't know"
@@ -370,14 +388,24 @@ export default function LifeResetInterview() {
           />
 
           {/* Input form */}
-          <form onSubmit={handleSubmit} className="flex gap-2">
-            <input
-              type="text"
+          <form onSubmit={handleSubmit} className="flex gap-2 items-end">
+            <textarea
               value={currentInput}
               onChange={(e) => setCurrentInput(e.target.value)}
-              placeholder="Type your answer..."
+              onKeyDown={handleKeyDown}
+              placeholder="Type your answer... (Shift+Enter for new line)"
               disabled={loading || isCompleting}
-              className="flex-1 rounded-lg border border-input bg-background px-4 py-3 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+              rows={1}
+              className="flex-1 rounded-lg border border-input bg-background px-4 py-3 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 resize-none min-h-[48px] max-h-[200px] overflow-y-auto"
+              style={{
+                height: 'auto',
+                minHeight: '48px',
+              }}
+              onInput={(e) => {
+                const target = e.target as HTMLTextAreaElement;
+                target.style.height = 'auto';
+                target.style.height = Math.min(target.scrollHeight, 200) + 'px';
+              }}
             />
             <Button
               type="submit"
@@ -394,7 +422,7 @@ export default function LifeResetInterview() {
           </form>
 
           <p className="text-center text-xs text-muted-foreground">
-            Press Enter to send • Your answers help us create a personalized plan
+            Press Enter to send • Shift+Enter for new line • Your answers help us create a personalized plan
           </p>
         </div>
       </div>

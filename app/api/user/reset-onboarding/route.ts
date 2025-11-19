@@ -19,6 +19,7 @@ export async function POST() {
     // Reset the has_completed_onboarding flag
     const { data, error } = await supabase
       .from('users')
+      // @ts-ignore - Supabase types need regeneration after migrations
       .update({
         has_completed_onboarding: false,
       })
