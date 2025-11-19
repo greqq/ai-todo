@@ -42,8 +42,13 @@ describe('AI Helper Functions', () => {
     });
 
     it('should throw error for invalid JSON', () => {
+      // Suppress console.error for this test
+      const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+
       const invalidJson = 'not a json string';
       expect(() => parseAIJsonResponse(invalidJson)).toThrow('Invalid JSON response from AI');
+
+      consoleSpy.mockRestore();
     });
 
     it('should handle complex nested objects', () => {
@@ -111,7 +116,7 @@ describe('AI Helper Functions', () => {
     });
 
     it('should handle rate limit errors', () => {
-      const error = new Error('Rate limit exceeded');
+      const error = new Error('API rate limit exceeded');
       const result = handleAIError(error);
       expect(result.code).toBe('RATE_LIMIT');
       expect(result.error).toContain('Too many requests');
