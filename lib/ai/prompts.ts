@@ -467,3 +467,125 @@ If the user asks about backlog or future tasks, use the "All Tasks" and "Backlog
 
 Tone: Supportive, direct, conversational. No corporate jargon.`;
 }
+
+/**
+ * Section 6.2.10: Goal Breakdown Prompt (Sonnet)
+ * Purpose: Break down long-term goals into hierarchical sub-goals with clear milestones
+ */
+export function getGoalBreakdownPrompt(params: {
+  goalTitle: string;
+  goalDescription?: string;
+  goalType: string;
+  startDate: string;
+  targetDate: string;
+  successCriteria?: string[];
+  userContext?: {
+    workHoursStart?: string;
+    workHoursEnd?: string;
+    energyPeakTime?: string;
+    timezone?: string;
+  };
+}) {
+  // Calculate duration in months
+  const start = new Date(params.startDate);
+  const end = new Date(params.targetDate);
+  const durationMonths = Math.round(
+    (end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24 * 30)
+  );
+
+  // Determine hierarchy levels based on duration
+  let hierarchyLevels: string[];
+  if (durationMonths >= 12) {
+    hierarchyLevels = ['long_term', 'quarterly', 'monthly', 'weekly'];
+  } else if (durationMonths >= 6) {
+    hierarchyLevels = ['quarterly', 'monthly', 'weekly'];
+  } else if (durationMonths >= 3) {
+    hierarchyLevels = ['monthly', 'weekly'];
+  } else {
+    hierarchyLevels = ['weekly'];
+  }
+
+  // Create hierarchy mapping only for used levels
+  const levelDescriptions: Record<string, string> = {
+    long_term: '6-12 month milestones',
+    quarterly: '3 month milestones',
+    monthly: '1 month milestones',
+    weekly: '1-2 week milestones'
+  };
+
+  const hierarchyMappingText = hierarchyLevels
+    .map(level => `- ${level}: ${levelDescriptions[level]}`)
+    .join('\n');
+
+  return `You are an AI goal-setting coach. Break down this long-term goal into a realistic, actionable hierarchy of sub-goals.
+
+PARENT GOAL:
+Title: ${params.goalTitle}
+Description: ${params.goalDescription || 'Not provided'}
+Type: ${params.goalType}
+Duration: ${durationMonths} months (${params.startDate} to ${params.targetDate})
+Success Criteria: ${params.successCriteria?.length ? params.successCriteria.join('; ') : 'Not specified'}
+
+USER CONTEXT:
+${params.userContext?.workHoursStart ? `- Work hours: ${params.userContext.workHoursStart} to ${params.userContext.workHoursEnd}` : ''}
+${params.userContext?.energyPeakTime ? `- Energy peak: ${params.userContext.energyPeakTime}` : ''}
+${params.userContext?.timezone ? `- Timezone: ${params.userContext.timezone}` : ''}
+
+TASK:
+Create a hierarchical breakdown with these levels: ${hierarchyLevels.join(' → ')}
+
+HIERARCHY MAPPING (for this goal):
+${hierarchyMappingText}
+
+REQUIREMENTS FOR EACH SUB-GOAL:
+1. **Title**: Clear, specific, actionable (use concrete deliverables, not vague descriptions)
+2. **Description**: What needs to be accomplished and why it matters for the parent goal
+3. **Level**: Must be one of: ${hierarchyLevels.join(', ')}
+4. **Target Date**: Realistic date that fits the timeline (spread sub-goals evenly)
+5. **Success Criteria**: 2-4 specific, measurable criteria (use numbers, deliverables, observable outcomes)
+6. **Initial Tasks**: 3-5 concrete action items to start this sub-goal (only for the NEAREST milestone level)
+
+BREAKDOWN STRATEGY:
+- Work backwards from the target date
+- Each level should have 2-4 sub-goals (avoid overwhelming the user)
+- Sub-goals should be sequential and build on each other
+- Earlier milestones = foundational work (research, setup, learning)
+- Middle milestones = core execution (building, creating, implementing)
+- Later milestones = refinement and completion (testing, polishing, launching)
+- Align with user's ${params.goalType} goal type (career goals focus on skills/outcomes, health goals on habits/metrics, etc.)
+
+EDGE CASE HANDLING:
+- If goal description is vague: Interpret reasonably based on the title and type, but flag that refinement may be needed
+- If duration is unusually long (>18 months): Warn that this is ambitious and may need adjustment
+- If duration is very short (<2 months): Create fewer milestones, focus on weekly breakdown
+- If success criteria missing: Generate realistic criteria based on goal type
+
+IMPORTANT:
+- Be realistic about timelines - don't create impossible deadlines
+- Each sub-goal must be independently achievable
+- Tasks should be concrete actions (start with verbs)
+- Success criteria must be measurable (avoid "improve" or "better", use specific metrics)
+
+Return JSON format only:
+{
+  "breakdown": [
+    {
+      "title": "string",
+      "description": "string",
+      "level": "${hierarchyLevels.join(' | ')}",
+      "target_date": "YYYY-MM-DD",
+      "success_criteria": ["string", "string", ...],
+      "initial_tasks": [
+        {
+          "title": "string",
+          "description": "string",
+          "estimated_duration_minutes": integer,
+          "energy_required": "high | medium | low"
+        }
+      ] // Only include for the nearest milestone (${hierarchyLevels[hierarchyLevels.length - 1]})
+    }
+  ],
+  "breakdown_notes": "Brief explanation of the breakdown strategy and any assumptions made",
+  "refinement_suggestions": ["Any areas where the user should provide more clarity"]
+}`;
+}
