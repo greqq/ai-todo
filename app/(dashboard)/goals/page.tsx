@@ -343,7 +343,7 @@ export default function GoalsPage() {
                         {goal.priority}
                       </Badge>
                       <Badge variant={getTypeColor(goal.type)}>
-                        {goal.type.replace('_', ' ')}
+                        {goal.type?.replace('_', ' ') ?? 'N/A'}
                       </Badge>
                     </div>
                     {goal.description && (

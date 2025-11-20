@@ -1,0 +1,152 @@
+# ============================================
+# Docker Compose for Local Development
+# ============================================
+# This file orchestrates multiple Docker containers as services
+# 
+# Quick Start:
+#   docker-compose up          # Start all services
+#   docker-compose down        # Stop all services
+#   docker-compose logs -f     # View logs
+#   docker-compose ps          # List running services
+#
+# What this sets up:
+#   - Next.js app (your TODO app)
+#   - PostgreSQL database (local development)
+#   - Networking between containers
+#   - Persistent data storage
+
+version: '3.8'  # Docker Compose file format version
+
+services:
+  # ============================================
+  # Next.js Application
+  # ============================================
+  app:
+    # Use Node.js image directly for development
+    # For production, use the Dockerfile build
+    image: node:20-alpine
+    
+    # Container name
+    container_name: todoapp-nextjs
+    
+    # Working directory
+    working_dir: /app
+    
+    # Command to run in dev mode
+    command: sh -c "npm install && npm run dev"
+    
+    # Port mapping: host:container
+    # Access app at http://localhost:3000
+    ports:
+      - "3000:3000"
+    
+    # Environment variables
+    # In production, these come from AWS Secrets Manager
+    environment:
+      - NODE_ENV=development
+      - DATABASE_URL=postgresql://todoapp:password@postgres:5432/todoapp
+      - NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
+      - NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY}
+      - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
+      - NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=${NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
+      - CLERK_SECRET_KEY=${CLERK_SECRET_KEY}
+      - CLERK_WEBHOOK_SECRET=${CLERK_WEBHOOK_SECRET}
+      - NEXT_PUBLIC_CLERK_SIGN_IN_URL=${NEXT_PUBLIC_CLERK_SIGN_IN_URL}
+      - NEXT_PUBLIC_CLERK_SIGN_UP_URL=${NEXT_PUBLIC_CLERK_SIGN_UP_URL}
+      - NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=${NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL}
+      - NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=${NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - RESEND_API_KEY=${RESEND_API_KEY}
+      - NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL}
+    
+    # Mount source code for hot reloading during development
+    # Changes to your code = instant updates!
+    volumes:
+      - .:/app
+      - /app/node_modules  # Don't override node_modules
+      - /app/.next         # Don't override .next build folder
+    
+    # Dependencies - start postgres first
+    depends_on:
+      postgres:
+        condition: service_healthy
+    
+    # Restart policy
+    restart: unless-stopped
+    
+    # Networks
+    networks:
+      - todoapp-network
+
+  # ============================================
+  # PostgreSQL Database (for local development)
+  # ============================================
+  # In production, you'll use RDS or Supabase
+  postgres:
+    image: postgres:15-alpine
+    container_name: todoapp-postgres
+    
+    # Port mapping
+    ports:
+      - "5432:5432"
+    
+    # Environment variables
+    environment:
+      - POSTGRES_USER=todoapp
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=todoapp
+    
+    # Persist data even when container stops
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      # Auto-run migration scripts on startup
+      - ./supabase/migrations:/docker-entrypoint-initdb.d
+    
+    # Health check (ensures DB is ready before starting app)
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U todoapp"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    
+    restart: unless-stopped
+    
+    networks:
+      - todoapp-network
+
+  # ============================================
+  # Redis (Optional - for caching/sessions)
+  # ============================================
+  # Uncomment if you want to add Redis caching
+  # redis:
+  #   image: redis:7-alpine
+  #   container_name: todoapp-redis
+  #   ports:
+  #     - "6379:6379"
+  #   volumes:
+  #     - redis-data:/data
+  #   healthcheck:
+  #     test: ["CMD", "redis-cli", "ping"]
+  #     interval: 10s
+  #     timeout: 3s
+  #     retries: 5
+  #   restart: unless-stopped
+  #   networks:
+  #     - todoapp-network
+
+# ============================================
+# Networks
+# ============================================
+# All containers can communicate with each other by service name
+# Example: app can connect to "postgres:5432"
+networks:
+  todoapp-network:
+    driver: bridge
+
+# ============================================
+# Volumes (Persistent Storage)
+# ============================================
+# Data persists even when containers are deleted
+volumes:
+  postgres-data:
+  # redis-data:
