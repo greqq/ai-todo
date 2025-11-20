@@ -1,0 +1,337 @@
+{
+  "project": {
+    "name": "Interactive Goal Breakdown & Visualization",
+    "version": "1.0.0",
+    "current_task": 0,
+    "total_tasks": 12,
+    "completion_percentage": 0,
+    "prd_file": "product-development/current-feature/goal-visualization-PRD.md"
+  },
+  "tasks": [
+    {
+      "id": 1,
+      "name": "AI Goal Breakdown Prompt Engineering",
+      "status": "not_done",
+      "priority": "critical",
+      "dependencies": [],
+      "estimated_time": "2-3 hours",
+      "acceptance_criteria": [
+        "AI prompt created for goal breakdown generation",
+        "Prompt handles various goal durations (3-12 months)",
+        "Generates appropriate hierarchy levels (6mo → 3mo → 1mo → weekly)",
+        "Each sub-goal has clear deliverables and success criteria",
+        "Prompt tested with sample goals and produces quality output",
+        "Edge cases handled (very short/long goals, vague goals)"
+      ],
+      "implementation_notes": "Create prompt in /lib/ai/prompts.ts. Test with various goal types (career, health, learning, etc.). Ensure breakdown is realistic and actionable.",
+      "files_to_modify": [
+        "/lib/ai/prompts.ts"
+      ],
+      "notes": "",
+      "blockers": []
+    },
+    {
+      "id": 2,
+      "name": "Goal Breakdown API Endpoint",
+      "status": "not_done",
+      "priority": "critical",
+      "dependencies": [1],
+      "estimated_time": "3-4 hours",
+      "acceptance_criteria": [
+        "POST /api/goals/[id]/breakdown endpoint created",
+        "Endpoint authenticates user via Clerk",
+        "Fetches parent goal from database",
+        "Calls AI with goal breakdown prompt",
+        "Creates child goals in database with proper hierarchy",
+        "Sets parent_goal_id and level fields correctly",
+        "Returns structured breakdown data",
+        "Error handling for AI failures",
+        "Transaction handling (all-or-nothing goal creation)"
+      ],
+      "implementation_notes": "Use Anthropic SDK with Claude Sonnet. Create goals in transaction. Handle failures gracefully.",
+      "files_to_modify": [
+        "/app/api/goals/[id]/breakdown/route.ts (new file)"
+      ],
+      "notes": "",
+      "blockers": []
+    },
+    {
+      "id": 3,
+      "name": "Hierarchical Goal Fetching Helper",
+      "status": "not_done",
+      "priority": "high",
+      "dependencies": [2],
+      "estimated_time": "2 hours",
+      "acceptance_criteria": [
+        "Helper function fetches goal with all children recursively",
+        "Returns properly nested structure",
+        "Includes completion percentages at each level",
+        "Includes milestones for each sub-goal",
+        "Optimized query (avoids N+1 problem)",
+        "Type-safe with TypeScript"
+      ],
+      "implementation_notes": "Create in /lib/db/goals-helpers.ts. Use recursive CTE or multiple queries with proper mapping.",
+      "files_to_modify": [
+        "/lib/db/goals-helpers.ts (new file or add to existing)"
+      ],
+      "notes": "",
+      "blockers": []
+    },
+    {
+      "id": 4,
+      "name": "Timeline Visualization Component - Data Layer",
+      "status": "not_done",
+      "priority": "high",
+      "dependencies": [3],
+      "estimated_time": "2-3 hours",
+      "acceptance_criteria": [
+        "Component accepts hierarchical goal data",
+        "Transforms data into timeline node structure",
+        "Calculates positioning for nodes (desktop horizontal layout)",
+        "Calculates positioning for mobile (vertical layout)",
+        "Handles various hierarchy depths (2-4 levels)",
+        "Responsive to screen size changes"
+      ],
+      "implementation_notes": "Create /components/goals/GoalTimelineVisualization.tsx. Use hooks for layout calculations.",
+      "files_to_modify": [
+        "/components/goals/GoalTimelineVisualization.tsx (new file)"
+      ],
+      "notes": "",
+      "blockers": []
+    },
+    {
+      "id": 5,
+      "name": "Timeline Visualization Component - UI Layer",
+      "status": "not_done",
+      "priority": "high",
+      "dependencies": [4],
+      "estimated_time": "4-5 hours",
+      "acceptance_criteria": [
+        "SVG-based timeline renders correctly",
+        "Nodes display with progress rings",
+        "Connecting lines show progression",
+        "Color-coded by timeframe (6mo/3mo/1mo/weekly)",
+        "Tooltips show on hover with quick info",
+        "Click handler opens expanded view",
+        "Smooth animations using Framer Motion",
+        "Mobile-responsive (vertical timeline)",
+        "Accessible (keyboard navigation, ARIA labels)"
+      ],
+      "implementation_notes": "Use Framer Motion for animations. Radix UI Dialog for expanded view. TailwindCSS for styling.",
+      "files_to_modify": [
+        "/components/goals/GoalTimelineVisualization.tsx"
+      ],
+      "notes": "",
+      "blockers": []
+    },
+    {
+      "id": 6,
+      "name": "Timeline Node Expanded View",
+      "status": "not_done",
+      "priority": "high",
+      "dependencies": [5],
+      "estimated_time": "3 hours",
+      "acceptance_criteria": [
+        "Modal/dialog opens when node clicked",
+        "Shows sub-goal details (title, description, target date)",
+        "Lists associated milestones with completion status",
+        "Lists associated tasks with status",
+        "Shows progress bar and completion percentage",
+        "Close and navigate between nodes",
+        "Smooth open/close animations"
+      ],
+      "implementation_notes": "Use existing Radix UI Dialog component. Create GoalNodeDetails.tsx component.",
+      "files_to_modify": [
+        "/components/goals/GoalNodeDetails.tsx (new file)",
+        "/components/goals/GoalTimelineVisualization.tsx"
+      ],
+      "notes": "",
+      "blockers": []
+    },
+    {
+      "id": 7,
+      "name": "Integrate Timeline into Goals Page",
+      "status": "not_done",
+      "priority": "high",
+      "dependencies": [6],
+      "estimated_time": "2 hours",
+      "acceptance_criteria": [
+        "Timeline displays on /goals page for long-term goals",
+        "Only shows for goals with level='long_term' or 'quarterly'",
+        "Toggle between list view and timeline view",
+        "Loading states while fetching hierarchy",
+        "Error states if breakdown generation fails",
+        "Empty state if no long-term goals exist"
+      ],
+      "implementation_notes": "Update existing /app/goals/page.tsx. Add tab/toggle for view switching.",
+      "files_to_modify": [
+        "/app/goals/page.tsx"
+      ],
+      "notes": "",
+      "blockers": []
+    },
+    {
+      "id": 8,
+      "name": "Dashboard Widget for Timeline",
+      "status": "not_done",
+      "priority": "medium",
+      "dependencies": [7],
+      "estimated_time": "2 hours",
+      "acceptance_criteria": [
+        "Compact timeline widget on dashboard",
+        "Shows active long-term goal with progress",
+        "Click to expand to full timeline view",
+        "Only shows if user has long-term goals",
+        "Responsive and matches dashboard design"
+      ],
+      "implementation_notes": "Create /components/dashboard/GoalTimelineWidget.tsx. Add to dashboard layout.",
+      "files_to_modify": [
+        "/components/dashboard/GoalTimelineWidget.tsx (new file)",
+        "/app/dashboard/page.tsx"
+      ],
+      "notes": "",
+      "blockers": []
+    },
+    {
+      "id": 9,
+      "name": "Auto-trigger Breakdown on Goal Creation",
+      "status": "not_done",
+      "priority": "high",
+      "dependencies": [2],
+      "estimated_time": "2 hours",
+      "acceptance_criteria": [
+        "When long-term goal created, AI breakdown auto-triggers",
+        "User sees loading indicator during generation",
+        "Success notification when breakdown complete",
+        "Failure notification with retry option if AI fails",
+        "Can skip auto-generation if desired",
+        "Breakdown only triggers for goals 3+ months duration"
+      ],
+      "implementation_notes": "Update goal creation flow. Add checkbox to opt-out of auto-breakdown. Call breakdown API after goal creation.",
+      "files_to_modify": [
+        "/components/goals/CreateGoalDialog.tsx",
+        "/app/api/goals/route.ts"
+      ],
+      "notes": "",
+      "blockers": []
+    },
+    {
+      "id": 10,
+      "name": "Progress Recalculation for Hierarchy",
+      "status": "not_done",
+      "priority": "critical",
+      "dependencies": [9],
+      "estimated_time": "2-3 hours",
+      "acceptance_criteria": [
+        "Parent goal completion_percentage updates when child goals complete",
+        "Recursive calculation up the hierarchy",
+        "Database trigger or function handles auto-update",
+        "Real-time updates in UI (optimistic or via refresh)",
+        "Handles partial completion correctly"
+      ],
+      "implementation_notes": "Create database function/trigger in Supabase. May need to update existing goal progress trigger.",
+      "files_to_modify": [
+        "/supabase/migrations/[timestamp]_goal_hierarchy_progress.sql (new file)"
+      ],
+      "notes": "",
+      "blockers": []
+    },
+    {
+      "id": 11,
+      "name": "Testing & Bug Fixes",
+      "status": "not_done",
+      "priority": "high",
+      "dependencies": [10],
+      "estimated_time": "3-4 hours",
+      "acceptance_criteria": [
+        "Test with various goal types and durations",
+        "Test mobile responsive design",
+        "Test animations and interactions",
+        "Test error scenarios (AI failure, network issues)",
+        "Test performance with complex hierarchies",
+        "No console errors or warnings",
+        "Accessibility testing (keyboard nav, screen readers)"
+      ],
+      "implementation_notes": "Manual testing + automated tests if time permits. Fix any discovered bugs.",
+      "files_to_modify": [
+        "Various files as bugs are discovered"
+      ],
+      "notes": "",
+      "blockers": []
+    },
+    {
+      "id": 12,
+      "name": "Documentation & Handoff",
+      "status": "not_done",
+      "priority": "medium",
+      "dependencies": [11],
+      "estimated_time": "1-2 hours",
+      "acceptance_criteria": [
+        "Code comments added for complex logic",
+        "README or docs updated with feature description",
+        "AI prompt documented with examples",
+        "Known limitations documented",
+        "Future improvements noted"
+      ],
+      "implementation_notes": "Document in code and potentially update main README.",
+      "files_to_modify": [
+        "README.md or docs/goal-visualization.md (new file)"
+      ],
+      "notes": "",
+      "blockers": []
+    }
+  ],
+  "milestones": [
+    {
+      "name": "AI & Backend Complete",
+      "tasks": [1, 2, 3],
+      "status": "not_done"
+    },
+    {
+      "name": "Core Visualization Complete",
+      "tasks": [4, 5, 6],
+      "status": "not_done"
+    },
+    {
+      "name": "Integration Complete",
+      "tasks": [7, 8, 9, 10],
+      "status": "not_done"
+    },
+    {
+      "name": "Feature Ready for Production",
+      "tasks": [11, 12],
+      "status": "not_done"
+    }
+  ],
+  "metadata": {
+    "last_updated": "2025-11-20",
+    "created_date": "2025-11-20",
+    "notes": "Feature implementation tracker for Interactive Goal Breakdown & Visualization. All tasks follow the acceptance criteria defined in the PRD.",
+    "version": "1.0.0",
+    "ai_agent_instructions": {
+      "next_task_logic": "Find the first task with status 'not_done' where all dependencies are 'done'",
+      "status_values": ["not_done", "in_progress", "done", "blocked"],
+      "completion_tracking": "Update completion_percentage based on done tasks / total tasks * 100",
+      "important_notes": [
+        "Read the PRD file before starting implementation",
+        "Update task status to 'in_progress' when starting",
+        "Mark 'done' only when all acceptance criteria are met",
+        "Add detailed notes for each completed task",
+        "Document any blockers immediately",
+        "Test thoroughly before marking task as done"
+      ]
+    },
+    "technical_context": {
+      "tech_stack": "Next.js 14, TypeScript, Supabase, Anthropic Claude, Framer Motion, Radix UI, TailwindCSS",
+      "key_files": [
+        "/lib/ai/prompts.ts - AI prompts",
+        "/app/api/goals/ - Goal API routes",
+        "/components/goals/ - Goal components",
+        "/supabase/migrations/ - Database migrations"
+      ],
+      "database_tables": [
+        "goals - existing table with parent_goal_id and level fields"
+      ]
+    }
+  }
+}

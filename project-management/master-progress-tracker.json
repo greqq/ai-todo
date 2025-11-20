@@ -1,0 +1,968 @@
+{
+  "project": {
+    "name": "AI TODO App - Feature Enhancements (Goal Visualization & Onboarding Redesign)",
+    "version": "2.0.0",
+    "current_task": 0,
+    "total_tasks": 30,
+    "completion_percentage": 0,
+    "start_date": "2025-11-20",
+    "target_completion_date": "TBD"
+  },
+  "features": [
+    {
+      "id": "feature-1",
+      "name": "Interactive Goal Breakdown & Visualization",
+      "prd_file": "product-development/current-feature/goal-visualization-PRD.md",
+      "progress_tracker": "product-development/current-feature/goal-visualization-progress-tracker.json",
+      "priority": "high",
+      "status": "not_started",
+      "task_ids": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+      "estimated_hours": "30-35",
+      "completion_percentage": 0
+    },
+    {
+      "id": "feature-2",
+      "name": "Improved Onboarding Flow with Routines",
+      "prd_file": "product-development/current-feature/onboarding-redesign-PRD.md",
+      "progress_tracker": "product-development/current-feature/onboarding-redesign-progress-tracker.json",
+      "priority": "high",
+      "status": "not_started",
+      "task_ids": [13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30],
+      "estimated_hours": "60-75",
+      "completion_percentage": 0
+    }
+  ],
+  "tasks": [
+    {
+      "id": 1,
+      "feature_id": "feature-1",
+      "name": "AI Goal Breakdown Prompt Engineering",
+      "status": "not_done",
+      "priority": "critical",
+      "dependencies": [],
+      "estimated_time": "2-3 hours",
+      "acceptance_criteria": [
+        "AI prompt created for goal breakdown generation",
+        "Prompt handles various goal durations (3-12 months)",
+        "Generates appropriate hierarchy levels (6mo → 3mo → 1mo → weekly)",
+        "Each sub-goal has clear deliverables and success criteria",
+        "Prompt tested with sample goals and produces quality output",
+        "Edge cases handled (very short/long goals, vague goals)"
+      ],
+      "implementation_notes": "Create prompt in /lib/ai/prompts.ts. Test with various goal types (career, health, learning, etc.). Ensure breakdown is realistic and actionable.",
+      "files_to_modify": [
+        "/lib/ai/prompts.ts"
+      ],
+      "prd_reference": "product-development/current-feature/goal-visualization-PRD.md - Section 3.3 (AI Logic)",
+      "notes": "",
+      "blockers": []
+    },
+    {
+      "id": 2,
+      "feature_id": "feature-1",
+      "name": "Goal Breakdown API Endpoint",
+      "status": "not_done",
+      "priority": "critical",
+      "dependencies": [1],
+      "estimated_time": "3-4 hours",
+      "acceptance_criteria": [
+        "POST /api/goals/[id]/breakdown endpoint created",
+        "Endpoint authenticates user via Clerk",
+        "Fetches parent goal from database",
+        "Calls AI with goal breakdown prompt",
+        "Creates child goals in database with proper hierarchy",
+        "Sets parent_goal_id and level fields correctly",
+        "Returns structured breakdown data",
+        "Error handling for AI failures",
+        "Transaction handling (all-or-nothing goal creation)"
+      ],
+      "implementation_notes": "Use Anthropic SDK with Claude Sonnet. Create goals in transaction. Handle failures gracefully.",
+      "files_to_modify": [
+        "/app/api/goals/[id]/breakdown/route.ts (new file)"
+      ],
+      "prd_reference": "product-development/current-feature/goal-visualization-PRD.md - Section 3.3 (Technical Specifications)",
+      "notes": "",
+      "blockers": []
+    },
+    {
+      "id": 3,
+      "feature_id": "feature-1",
+      "name": "Hierarchical Goal Fetching Helper",
+      "status": "not_done",
+      "priority": "high",
+      "dependencies": [2],
+      "estimated_time": "2 hours",
+      "acceptance_criteria": [
+        "Helper function fetches goal with all children recursively",
+        "Returns properly nested structure",
+        "Includes completion percentages at each level",
+        "Includes milestones for each sub-goal",
+        "Optimized query (avoids N+1 problem)",
+        "Type-safe with TypeScript"
+      ],
+      "implementation_notes": "Create in /lib/db/goals-helpers.ts. Use recursive CTE or multiple queries with proper mapping.",
+      "files_to_modify": [
+        "/lib/db/goals-helpers.ts (new file or add to existing)"
+      ],
+      "prd_reference": "product-development/current-feature/goal-visualization-PRD.md - Section 3.3 (Database Changes)",
+      "notes": "",
+      "blockers": []
+    },
+    {
+      "id": 4,
+      "feature_id": "feature-1",
+      "name": "Timeline Visualization Component - Data Layer",
+      "status": "not_done",
+      "priority": "high",
+      "dependencies": [3],
+      "estimated_time": "2-3 hours",
+      "acceptance_criteria": [
+        "Component accepts hierarchical goal data",
+        "Transforms data into timeline node structure",
+        "Calculates positioning for nodes (desktop horizontal layout)",
+        "Calculates positioning for mobile (vertical layout)",
+        "Handles various hierarchy depths (2-4 levels)",
+        "Responsive to screen size changes"
+      ],
+      "implementation_notes": "Create /components/goals/GoalTimelineVisualization.tsx. Use hooks for layout calculations.",
+      "files_to_modify": [
+        "/components/goals/GoalTimelineVisualization.tsx (new file)"
+      ],
+      "prd_reference": "product-development/current-feature/goal-visualization-PRD.md - Section 3.3 (UI Components)",
+      "notes": "",
+      "blockers": []
+    },
+    {
+      "id": 5,
+      "feature_id": "feature-1",
+      "name": "Timeline Visualization Component - UI Layer",
+      "status": "not_done",
+      "priority": "high",
+      "dependencies": [4],
+      "estimated_time": "4-5 hours",
+      "acceptance_criteria": [
+        "SVG-based timeline renders correctly",
+        "Nodes display with progress rings",
+        "Connecting lines show progression",
+        "Color-coded by timeframe (6mo/3mo/1mo/weekly)",
+        "Tooltips show on hover with quick info",
+        "Click handler opens expanded view",
+        "Smooth animations using Framer Motion",
+        "Mobile-responsive (vertical timeline)",
+        "Accessible (keyboard navigation, ARIA labels)"
+      ],
+      "implementation_notes": "Use Framer Motion for animations. Radix UI Dialog for expanded view. TailwindCSS for styling.",
+      "files_to_modify": [
+        "/components/goals/GoalTimelineVisualization.tsx"
+      ],
+      "prd_reference": "product-development/current-feature/goal-visualization-PRD.md - Section 3.3 (Visualization Details)",
+      "notes": "",
+      "blockers": []
+    },
+    {
+      "id": 6,
+      "feature_id": "feature-1",
+      "name": "Timeline Node Expanded View",
+      "status": "not_done",
+      "priority": "high",
+      "dependencies": [5],
+      "estimated_time": "3 hours",
+      "acceptance_criteria": [
+        "Modal/dialog opens when node clicked",
+        "Shows sub-goal details (title, description, target date)",
+        "Lists associated milestones with completion status",
+        "Lists associated tasks with status",
+        "Shows progress bar and completion percentage",
+        "Close and navigate between nodes",
+        "Smooth open/close animations"
+      ],
+      "implementation_notes": "Use existing Radix UI Dialog component. Create GoalNodeDetails.tsx component.",
+      "files_to_modify": [
+        "/components/goals/GoalNodeDetails.tsx (new file)",
+        "/components/goals/GoalTimelineVisualization.tsx"
+      ],
+      "prd_reference": "product-development/current-feature/goal-visualization-PRD.md - Section 3.2 (User Flow)",
+      "notes": "",
+      "blockers": []
+    },
+    {
+      "id": 7,
+      "feature_id": "feature-1",
+      "name": "Integrate Timeline into Goals Page",
+      "status": "not_done",
+      "priority": "high",
+      "dependencies": [6],
+      "estimated_time": "2 hours",
+      "acceptance_criteria": [
+        "Timeline displays on /goals page for long-term goals",
+        "Only shows for goals with level='long_term' or 'quarterly'",
+        "Toggle between list view and timeline view",
+        "Loading states while fetching hierarchy",
+        "Error states if breakdown generation fails",
+        "Empty state if no long-term goals exist"
+      ],
+      "implementation_notes": "Update existing /app/goals/page.tsx. Add tab/toggle for view switching.",
+      "files_to_modify": [
+        "/app/goals/page.tsx"
+      ],
+      "prd_reference": "product-development/current-feature/goal-visualization-PRD.md - Section 3.2 (User Flow)",
+      "notes": "",
+      "blockers": []
+    },
+    {
+      "id": 8,
+      "feature_id": "feature-1",
+      "name": "Dashboard Widget for Timeline",
+      "status": "not_done",
+      "priority": "medium",
+      "dependencies": [7],
+      "estimated_time": "2 hours",
+      "acceptance_criteria": [
+        "Compact timeline widget on dashboard",
+        "Shows active long-term goal with progress",
+        "Click to expand to full timeline view",
+        "Only shows if user has long-term goals",
+        "Responsive and matches dashboard design"
+      ],
+      "implementation_notes": "Create /components/dashboard/GoalTimelineWidget.tsx. Add to dashboard layout.",
+      "files_to_modify": [
+        "/components/dashboard/GoalTimelineWidget.tsx (new file)",
+        "/app/dashboard/page.tsx"
+      ],
+      "prd_reference": "product-development/current-feature/goal-visualization-PRD.md - Section 3.2 (User Flow)",
+      "notes": "",
+      "blockers": []
+    },
+    {
+      "id": 9,
+      "feature_id": "feature-1",
+      "name": "Auto-trigger Breakdown on Goal Creation",
+      "status": "not_done",
+      "priority": "high",
+      "dependencies": [2],
+      "estimated_time": "2 hours",
+      "acceptance_criteria": [
+        "When long-term goal created, AI breakdown auto-triggers",
+        "User sees loading indicator during generation",
+        "Success notification when breakdown complete",
+        "Failure notification with retry option if AI fails",
+        "Can skip auto-generation if desired",
+        "Breakdown only triggers for goals 3+ months duration"
+      ],
+      "implementation_notes": "Update goal creation flow. Add checkbox to opt-out of auto-breakdown. Call breakdown API after goal creation.",
+      "files_to_modify": [
+        "/components/goals/CreateGoalDialog.tsx",
+        "/app/api/goals/route.ts"
+      ],
+      "prd_reference": "product-development/current-feature/goal-visualization-PRD.md - Section 3.2 (User Flow)",
+      "notes": "",
+      "blockers": []
+    },
+    {
+      "id": 10,
+      "feature_id": "feature-1",
+      "name": "Progress Recalculation for Hierarchy",
+      "status": "not_done",
+      "priority": "critical",
+      "dependencies": [9],
+      "estimated_time": "2-3 hours",
+      "acceptance_criteria": [
+        "Parent goal completion_percentage updates when child goals complete",
+        "Recursive calculation up the hierarchy",
+        "Database trigger or function handles auto-update",
+        "Real-time updates in UI (optimistic or via refresh)",
+        "Handles partial completion correctly"
+      ],
+      "implementation_notes": "Create database function/trigger in Supabase. May need to update existing goal progress trigger.",
+      "files_to_modify": [
+        "/supabase/migrations/[timestamp]_goal_hierarchy_progress.sql (new file)"
+      ],
+      "prd_reference": "product-development/current-feature/goal-visualization-PRD.md - Section 3.3 (Database Changes)",
+      "notes": "",
+      "blockers": []
+    },
+    {
+      "id": 11,
+      "feature_id": "feature-1",
+      "name": "Testing & Bug Fixes - Goal Visualization",
+      "status": "not_done",
+      "priority": "high",
+      "dependencies": [10],
+      "estimated_time": "3-4 hours",
+      "acceptance_criteria": [
+        "Test with various goal types and durations",
+        "Test mobile responsive design",
+        "Test animations and interactions",
+        "Test error scenarios (AI failure, network issues)",
+        "Test performance with complex hierarchies",
+        "No console errors or warnings",
+        "Accessibility testing (keyboard nav, screen readers)"
+      ],
+      "implementation_notes": "Manual testing + automated tests if time permits. Fix any discovered bugs.",
+      "files_to_modify": [
+        "Various files as bugs are discovered"
+      ],
+      "prd_reference": "product-development/current-feature/goal-visualization-PRD.md - Section 4 (Success Metrics)",
+      "notes": "",
+      "blockers": []
+    },
+    {
+      "id": 12,
+      "feature_id": "feature-1",
+      "name": "Documentation & Handoff - Goal Visualization",
+      "status": "not_done",
+      "priority": "medium",
+      "dependencies": [11],
+      "estimated_time": "1-2 hours",
+      "acceptance_criteria": [
+        "Code comments added for complex logic",
+        "README or docs updated with feature description",
+        "AI prompt documented with examples",
+        "Known limitations documented",
+        "Future improvements noted"
+      ],
+      "implementation_notes": "Document in code and potentially update main README.",
+      "files_to_modify": [
+        "README.md or docs/goal-visualization.md (new file)"
+      ],
+      "prd_reference": "product-development/current-feature/goal-visualization-PRD.md - Section 9 (Next Steps)",
+      "notes": "",
+      "blockers": []
+    },
+    {
+      "id": 13,
+      "feature_id": "feature-2",
+      "name": "Create Routines Database Table",
+      "status": "not_done",
+      "priority": "critical",
+      "dependencies": [],
+      "estimated_time": "1-2 hours",
+      "acceptance_criteria": [
+        "SQL migration file created",
+        "routines table created with all required fields",
+        "Indexes added for performance (user_id, routine_type)",
+        "RLS policies created for authenticated users",
+        "TypeScript types generated and exported",
+        "Migration tested locally with Supabase"
+      ],
+      "implementation_notes": "Create migration in /supabase/migrations/. Follow existing migration patterns. Run 'npm run db:types' to generate TypeScript types.",
+      "files_to_modify": [
+        "/supabase/migrations/[timestamp]_create_routines_table.sql (new file)",
+        "/types/index.ts"
+      ],
+      "prd_reference": "product-development/current-feature/onboarding-redesign-PRD.md - Section 3.3 (New Database Table)",
+      "notes": "",
+      "blockers": []
+    },
+    {
+      "id": 14,
+      "feature_id": "feature-2",
+      "name": "Routines CRUD API Endpoints",
+      "status": "not_done",
+      "priority": "critical",
+      "dependencies": [13],
+      "estimated_time": "3-4 hours",
+      "acceptance_criteria": [
+        "GET /api/routines - List user's routines with filters",
+        "POST /api/routines - Create new routine",
+        "GET /api/routines/[id] - Get single routine",
+        "PUT /api/routines/[id] - Update routine",
+        "DELETE /api/routines/[id] - Delete routine",
+        "Proper authentication with Clerk",
+        "Validation for routine fields (steps, times)",
+        "Error handling and status codes",
+        "Completion stats calculated correctly"
+      ],
+      "implementation_notes": "Follow existing API patterns. Validate routine steps structure. Handle time validation.",
+      "files_to_modify": [
+        "/app/api/routines/route.ts (new file)",
+        "/app/api/routines/[id]/route.ts (new file)"
+      ],
+      "prd_reference": "product-development/current-feature/onboarding-redesign-PRD.md - Section 3.3 (API Endpoints)",
+      "notes": "",
+      "blockers": []
+    },
+    {
+      "id": 15,
+      "feature_id": "feature-2",
+      "name": "AI Routine Generation Prompts",
+      "status": "not_done",
+      "priority": "critical",
+      "dependencies": [],
+      "estimated_time": "3-4 hours",
+      "acceptance_criteria": [
+        "Morning routine generation prompt created",
+        "Evening routine generation prompt created",
+        "Prompts consider user's schedule (wake/work/sleep times)",
+        "Prompts adapt to goal type (career, health, etc.)",
+        "Prompts incorporate user's desired habits",
+        "Generated routines are realistic and actionable",
+        "Proper duration allocation between steps",
+        "Tested with various user profiles"
+      ],
+      "implementation_notes": "Add to /lib/ai/prompts.ts. Test with diverse scenarios. Ensure output structure matches routines.steps JSONB format.",
+      "files_to_modify": [
+        "/lib/ai/prompts.ts"
+      ],
+      "prd_reference": "product-development/current-feature/onboarding-redesign-PRD.md - Section 5 (Routine Builder Details)",
+      "notes": "",
+      "blockers": []
+    },
+    {
+      "id": 16,
+      "feature_id": "feature-2",
+      "name": "Quick Mode Form UI",
+      "status": "not_done",
+      "priority": "high",
+      "dependencies": [],
+      "estimated_time": "4-5 hours",
+      "acceptance_criteria": [
+        "Single-page form with all essential fields",
+        "Primary goal input (title, why, target date)",
+        "Typical day structure (wake/work/sleep times)",
+        "Anti-vision optional textarea",
+        "Daily habits multi-select (exercise, reading, meditation, etc.)",
+        "Form validation with React Hook Form",
+        "Clear visual hierarchy and spacing",
+        "Mobile responsive design",
+        "Submit triggers loading state"
+      ],
+      "implementation_notes": "Create /components/onboarding/QuickModeForm.tsx. Use existing UI components (Input, Textarea, Select). Follow design system.",
+      "files_to_modify": [
+        "/components/onboarding/QuickModeForm.tsx (new file)"
+      ],
+      "prd_reference": "product-development/current-feature/onboarding-redesign-PRD.md - Section 3.2 (Mode 1: Quick Mode)",
+      "notes": "",
+      "blockers": []
+    },
+    {
+      "id": 17,
+      "feature_id": "feature-2",
+      "name": "Quick Mode Processing API",
+      "status": "not_done",
+      "priority": "critical",
+      "dependencies": [14, 15, 16],
+      "estimated_time": "4-5 hours",
+      "acceptance_criteria": [
+        "POST /api/ai/onboarding/quick endpoint created",
+        "Validates form data",
+        "Creates primary goal with AI-generated breakdown (if long-term)",
+        "Creates separate goals for each selected habit",
+        "Generates morning routine via AI",
+        "Generates evening routine via AI",
+        "Creates initial tasks for first week",
+        "Updates user.onboarding_completed = true",
+        "Updates user.onboarding_data JSONB",
+        "Returns structured result with goals and routines",
+        "Error handling with meaningful messages"
+      ],
+      "implementation_notes": "Use transaction for atomic operations. Parallel AI calls where possible. Handle partial failures gracefully.",
+      "files_to_modify": [
+        "/app/api/ai/onboarding/quick/route.ts (new file)"
+      ],
+      "prd_reference": "product-development/current-feature/onboarding-redesign-PRD.md - Section 3.2 (Mode 1: Quick Mode)",
+      "notes": "",
+      "blockers": []
+    },
+    {
+      "id": 18,
+      "feature_id": "feature-2",
+      "name": "Quick Mode Review Screen",
+      "status": "not_done",
+      "priority": "high",
+      "dependencies": [17],
+      "estimated_time": "3-4 hours",
+      "acceptance_criteria": [
+        "Shows generated primary goal with breakdown",
+        "Lists created habit goals",
+        "Displays suggested morning routine (steps with durations)",
+        "Displays suggested evening routine (steps with durations)",
+        "User can accept all, edit, or skip routines",
+        "Edit opens inline editor for routine steps",
+        "Accept button activates routines and redirects to dashboard",
+        "Clear visual design with sections"
+      ],
+      "implementation_notes": "Create /components/onboarding/QuickModeReview.tsx. Allow inline editing with drag-to-reorder steps.",
+      "files_to_modify": [
+        "/components/onboarding/QuickModeReview.tsx (new file)"
+      ],
+      "prd_reference": "product-development/current-feature/onboarding-redesign-PRD.md - Section 3.2 (Mode 1: Quick Mode)",
+      "notes": "",
+      "blockers": []
+    },
+    {
+      "id": 19,
+      "feature_id": "feature-2",
+      "name": "Deep Dive Conversation State Management",
+      "status": "not_done",
+      "priority": "high",
+      "dependencies": [],
+      "estimated_time": "2-3 hours",
+      "acceptance_criteria": [
+        "Zustand store created for conversation state",
+        "State includes: phase, currentQuestion, canSkip, answers, transcript, progress",
+        "State persisted to localStorage",
+        "Can resume conversation after page refresh",
+        "Clear state on completion or reset",
+        "Type-safe with TypeScript"
+      ],
+      "implementation_notes": "Create /lib/stores/onboarding-store.ts. Use Zustand persist middleware. Define ConversationPhase and ConversationState types.",
+      "files_to_modify": [
+        "/lib/stores/onboarding-store.ts (new file)"
+      ],
+      "prd_reference": "product-development/current-feature/onboarding-redesign-PRD.md - Section 3.3 (State Management)",
+      "notes": "",
+      "blockers": []
+    },
+    {
+      "id": 20,
+      "feature_id": "feature-2",
+      "name": "Deep Dive Conversational UI",
+      "status": "not_done",
+      "priority": "high",
+      "dependencies": [19],
+      "estimated_time": "5-6 hours",
+      "acceptance_criteria": [
+        "Chat-like interface with message bubbles",
+        "AI messages on left, user messages on right",
+        "Typing indicator while AI is thinking",
+        "Text input for user responses",
+        "Skip button visible when canSkip=true",
+        "Progress bar showing completion percentage",
+        "Smooth auto-scroll to latest message",
+        "Mobile-optimized chat UI",
+        "Accessible (keyboard input, ARIA labels)"
+      ],
+      "implementation_notes": "Create /components/onboarding/DeepDiveChat.tsx. Use Framer Motion for message animations. Follow chat UI best practices.",
+      "files_to_modify": [
+        "/components/onboarding/DeepDiveChat.tsx (new file)"
+      ],
+      "prd_reference": "product-development/current-feature/onboarding-redesign-PRD.md - Section 3.2 (Mode 2: Deep Dive Mode)",
+      "notes": "",
+      "blockers": []
+    },
+    {
+      "id": 21,
+      "feature_id": "feature-2",
+      "name": "Deep Dive Conversation Flow API",
+      "status": "not_done",
+      "priority": "critical",
+      "dependencies": [19, 20],
+      "estimated_time": "5-6 hours",
+      "acceptance_criteria": [
+        "POST /api/ai/onboarding/deep-dive/next endpoint created",
+        "Accepts: current_phase, user_answer, conversation_history",
+        "AI determines if answer is sufficient or needs clarification",
+        "Progresses to next phase when appropriate",
+        "Returns: next_question, can_skip, progress_percentage",
+        "Handles skip requests gracefully",
+        "Phases: current_state → anti_vision → vision_habits → routines → review",
+        "Conversation feels natural and supportive",
+        "Error handling for AI failures"
+      ],
+      "implementation_notes": "Use Claude Sonnet for nuanced conversation. Implement state machine for phase transitions. Stream responses if possible.",
+      "files_to_modify": [
+        "/app/api/ai/onboarding/deep-dive/next/route.ts (new file)"
+      ],
+      "prd_reference": "product-development/current-feature/onboarding-redesign-PRD.md - Section 3.2 (Mode 2: Deep Dive Mode)",
+      "notes": "",
+      "blockers": []
+    },
+    {
+      "id": 22,
+      "feature_id": "feature-2",
+      "name": "Deep Dive Completion Processing",
+      "status": "not_done",
+      "priority": "critical",
+      "dependencies": [14, 15, 21],
+      "estimated_time": "5-6 hours",
+      "acceptance_criteria": [
+        "POST /api/ai/onboarding/deep-dive/complete endpoint created",
+        "Analyzes full conversation transcript",
+        "Extracts: primary goal, success criteria, anti-vision, habits, routine preferences",
+        "Creates primary goal with breakdown (if applicable)",
+        "Creates habit goals",
+        "Generates morning and evening routines",
+        "Creates initial tasks for first week",
+        "Updates user.onboarding_completed and onboarding_data",
+        "Returns complete onboarding result",
+        "Handles ambiguous or incomplete answers gracefully"
+      ],
+      "implementation_notes": "Use Claude Sonnet with structured extraction. Transaction-based database operations. Parallel processing where possible.",
+      "files_to_modify": [
+        "/app/api/ai/onboarding/deep-dive/complete/route.ts (new file)"
+      ],
+      "prd_reference": "product-development/current-feature/onboarding-redesign-PRD.md - Section 3.2 (Mode 2: Deep Dive Mode)",
+      "notes": "",
+      "blockers": []
+    },
+    {
+      "id": 23,
+      "feature_id": "feature-2",
+      "name": "Deep Dive Review & Finalize Screen",
+      "status": "not_done",
+      "priority": "high",
+      "dependencies": [22],
+      "estimated_time": "3-4 hours",
+      "acceptance_criteria": [
+        "Shows summary of extracted information",
+        "Displays generated goals and breakdown",
+        "Shows suggested routines with edit capability",
+        "Regenerate option if user unhappy with results",
+        "Edit option for each section",
+        "Finalize button activates everything and redirects",
+        "Clear visual sections with good UX"
+      ],
+      "implementation_notes": "Create /components/onboarding/DeepDiveReview.tsx. Similar to Quick Mode review but with more detail.",
+      "files_to_modify": [
+        "/components/onboarding/DeepDiveReview.tsx (new file)"
+      ],
+      "prd_reference": "product-development/current-feature/onboarding-redesign-PRD.md - Section 3.2 (Mode 2: Deep Dive Mode)",
+      "notes": "",
+      "blockers": []
+    },
+    {
+      "id": 24,
+      "feature_id": "feature-2",
+      "name": "Onboarding Mode Selection Page",
+      "status": "not_done",
+      "priority": "high",
+      "dependencies": [18, 23],
+      "estimated_time": "2-3 hours",
+      "acceptance_criteria": [
+        "Landing page with two clear options",
+        "Quick Mode card: '2-3 minutes, get started fast'",
+        "Deep Dive card: '10-15 minutes, personalized guidance'",
+        "Visual indicators of what each includes",
+        "Can switch modes mid-flow (with confirmation)",
+        "Responsive design",
+        "Matches app design system"
+      ],
+      "implementation_notes": "Update /app/onboarding/page.tsx to show mode selection. Create route state for selected mode.",
+      "files_to_modify": [
+        "/app/onboarding/page.tsx"
+      ],
+      "prd_reference": "product-development/current-feature/onboarding-redesign-PRD.md - Section 3.4 (Onboarding Entry Point)",
+      "notes": "",
+      "blockers": []
+    },
+    {
+      "id": 25,
+      "feature_id": "feature-2",
+      "name": "Routine Execution Integration",
+      "status": "not_done",
+      "priority": "high",
+      "dependencies": [14],
+      "estimated_time": "4-5 hours",
+      "acceptance_criteria": [
+        "Active routines create recurring time_blocks",
+        "Each routine step can link to recurring task",
+        "Daily check-in includes 'Did you complete your routine?' prompt",
+        "Track routine completion in routines.total_completions",
+        "Calculate completion_rate over time",
+        "Update last_completed_at on completion",
+        "Display routine checklist on dashboard or separate page"
+      ],
+      "implementation_notes": "Integrate with existing time_blocks table. Create helper functions for routine execution tracking.",
+      "files_to_modify": [
+        "/lib/db/routines-helpers.ts (new file)",
+        "/app/api/routines/[id]/complete/route.ts (new file)",
+        "/components/routines/RoutineChecklist.tsx (new file)"
+      ],
+      "prd_reference": "product-development/current-feature/onboarding-redesign-PRD.md - Section 5 (Routine Execution)",
+      "notes": "",
+      "blockers": []
+    },
+    {
+      "id": 26,
+      "feature_id": "feature-2",
+      "name": "Routines Management Page",
+      "status": "not_done",
+      "priority": "medium",
+      "dependencies": [14, 25],
+      "estimated_time": "4-5 hours",
+      "acceptance_criteria": [
+        "Page at /routines displays all user routines",
+        "Tabs for Morning / Evening / Custom routines",
+        "Each routine shows steps, duration, completion rate",
+        "Edit routine (drag-to-reorder steps, adjust durations)",
+        "Delete routine with confirmation",
+        "Toggle routine active/inactive",
+        "Create new custom routine",
+        "Completion stats visualization (chart or calendar)",
+        "Responsive design"
+      ],
+      "implementation_notes": "Create /app/routines/page.tsx. Use drag-and-drop library (dnd-kit). Show completion trends.",
+      "files_to_modify": [
+        "/app/routines/page.tsx (new file)",
+        "/components/routines/RoutineCard.tsx (new file)",
+        "/components/routines/RoutineEditor.tsx (new file)",
+        "/components/sidebar.tsx (add routines link)"
+      ],
+      "prd_reference": "product-development/current-feature/onboarding-redesign-PRD.md - Section 5 (Routine Builder Details)",
+      "notes": "",
+      "blockers": []
+    },
+    {
+      "id": 27,
+      "feature_id": "feature-2",
+      "name": "Update User Profile Schema",
+      "status": "not_done",
+      "priority": "medium",
+      "dependencies": [],
+      "estimated_time": "1 hour",
+      "acceptance_criteria": [
+        "users.onboarding_data JSONB structure documented",
+        "TypeScript interface created for OnboardingData",
+        "Includes all fields: mode, primary_goal, anti_vision, daily_structure, habits, routines, conversation_transcript",
+        "Migration or type update completed"
+      ],
+      "implementation_notes": "Document structure in types/index.ts. May need migration if adding new fields to users table.",
+      "files_to_modify": [
+        "/types/index.ts",
+        "/supabase/migrations/[timestamp]_update_onboarding_data.sql (if needed)"
+      ],
+      "prd_reference": "product-development/current-feature/onboarding-redesign-PRD.md - Section 3.3 (Updated onboarding_data JSONB Structure)",
+      "notes": "",
+      "blockers": []
+    },
+    {
+      "id": 28,
+      "feature_id": "feature-2",
+      "name": "Multi-Goal Dashboard Integration",
+      "status": "not_done",
+      "priority": "medium",
+      "dependencies": [24],
+      "estimated_time": "3-4 hours",
+      "acceptance_criteria": [
+        "Dashboard shows primary goal prominently",
+        "Separate section for supporting habits (smaller cards)",
+        "Routine completion shown in daily stats",
+        "Clear visual hierarchy (primary vs habits)",
+        "All goal types work with existing analytics"
+      ],
+      "implementation_notes": "Update /app/dashboard/page.tsx. Distinguish primary goal from habits using goal metadata or type.",
+      "files_to_modify": [
+        "/app/dashboard/page.tsx",
+        "/components/dashboard/GoalProgressCards.tsx"
+      ],
+      "prd_reference": "product-development/current-feature/onboarding-redesign-PRD.md - Section 6 (User Stories - Story 3)",
+      "notes": "",
+      "blockers": []
+    },
+    {
+      "id": 29,
+      "feature_id": "feature-2",
+      "name": "Testing & Bug Fixes - Onboarding Redesign",
+      "status": "not_done",
+      "priority": "high",
+      "dependencies": [24, 25, 26, 28],
+      "estimated_time": "5-6 hours",
+      "acceptance_criteria": [
+        "Test both Quick Mode and Deep Dive flows end-to-end",
+        "Test with various user inputs (complete, incomplete, skip)",
+        "Test routine generation for different goal types",
+        "Test mobile responsive design thoroughly",
+        "Test error scenarios (AI failure, network issues)",
+        "Test routine execution and tracking",
+        "Test multi-goal dashboard display",
+        "No console errors or warnings",
+        "Accessibility testing",
+        "Performance testing (AI response times)"
+      ],
+      "implementation_notes": "Manual testing + automated tests if time permits. Document bugs and fix systematically.",
+      "files_to_modify": [
+        "Various files as bugs are discovered"
+      ],
+      "prd_reference": "product-development/current-feature/onboarding-redesign-PRD.md - Section 4 (Success Metrics)",
+      "notes": "",
+      "blockers": []
+    },
+    {
+      "id": 30,
+      "feature_id": "feature-2",
+      "name": "Documentation & Migration Guide - Onboarding",
+      "status": "not_done",
+      "priority": "medium",
+      "dependencies": [29],
+      "estimated_time": "2-3 hours",
+      "acceptance_criteria": [
+        "Code comments added for complex logic",
+        "AI prompts documented with examples",
+        "Migration guide for existing users",
+        "Feature documentation in README or docs",
+        "Known limitations documented",
+        "Future improvements noted (v2 features)",
+        "Onboarding instructions for new developers"
+      ],
+      "implementation_notes": "Create docs/onboarding-redesign.md. Document migration path for existing users.",
+      "files_to_modify": [
+        "docs/onboarding-redesign.md (new file)",
+        "README.md"
+      ],
+      "prd_reference": "product-development/current-feature/onboarding-redesign-PRD.md - Section 10 (Implementation Phases)",
+      "notes": "",
+      "blockers": []
+    }
+  ],
+  "milestones": [
+    {
+      "name": "Feature 1: AI & Backend Complete",
+      "feature_id": "feature-1",
+      "tasks": [1, 2, 3],
+      "status": "not_done",
+      "estimated_completion": "TBD"
+    },
+    {
+      "name": "Feature 1: Core Visualization Complete",
+      "feature_id": "feature-1",
+      "tasks": [4, 5, 6],
+      "status": "not_done",
+      "estimated_completion": "TBD"
+    },
+    {
+      "name": "Feature 1: Integration Complete",
+      "feature_id": "feature-1",
+      "tasks": [7, 8, 9, 10],
+      "status": "not_done",
+      "estimated_completion": "TBD"
+    },
+    {
+      "name": "Feature 1: Production Ready",
+      "feature_id": "feature-1",
+      "tasks": [11, 12],
+      "status": "not_done",
+      "estimated_completion": "TBD"
+    },
+    {
+      "name": "Feature 2: Database & API Foundation",
+      "feature_id": "feature-2",
+      "tasks": [13, 14, 15, 27],
+      "status": "not_done",
+      "estimated_completion": "TBD"
+    },
+    {
+      "name": "Feature 2: Quick Mode Complete",
+      "feature_id": "feature-2",
+      "tasks": [16, 17, 18],
+      "status": "not_done",
+      "estimated_completion": "TBD"
+    },
+    {
+      "name": "Feature 2: Deep Dive Complete",
+      "feature_id": "feature-2",
+      "tasks": [19, 20, 21, 22, 23],
+      "status": "not_done",
+      "estimated_completion": "TBD"
+    },
+    {
+      "name": "Feature 2: Routines System Complete",
+      "feature_id": "feature-2",
+      "tasks": [25, 26],
+      "status": "not_done",
+      "estimated_completion": "TBD"
+    },
+    {
+      "name": "Feature 2: Full Integration & Polish",
+      "feature_id": "feature-2",
+      "tasks": [24, 28, 29, 30],
+      "status": "not_done",
+      "estimated_completion": "TBD"
+    }
+  ],
+  "metadata": {
+    "last_updated": "2025-11-20",
+    "created_date": "2025-11-20",
+    "notes": "Master progress tracker for both Goal Visualization and Onboarding Redesign features. Tasks are numbered sequentially 1-30. Feature 1 (Goal Visualization) = tasks 1-12. Feature 2 (Onboarding Redesign) = tasks 13-30.",
+    "version": "2.0.0",
+    "ai_agent_instructions": {
+      "getting_started": [
+        "1. READ the PRD files first to understand complete feature scope",
+        "2. Review this master tracker to see all tasks and dependencies",
+        "3. Start with Feature 1 (simpler) or Feature 2 (can work in parallel)",
+        "4. Find first task with status='not_done' and all dependencies='done'",
+        "5. Update task status to 'in_progress' when starting",
+        "6. Complete ALL acceptance criteria before marking 'done'",
+        "7. Add detailed implementation notes when done",
+        "8. Update blockers immediately if stuck"
+      ],
+      "parallel_development_opportunities": [
+        "Feature 1 and Feature 2 can be developed completely in parallel",
+        "Within Feature 2: Quick Mode (tasks 16-18) and Deep Dive (tasks 19-23) can be parallel after foundation (tasks 13-15, 27)",
+        "Task 15 (AI prompts) can be developed parallel to task 14 (API)",
+        "Tasks 25-26 (Routines execution) can start once task 14 is done"
+      ],
+      "status_values": ["not_done", "in_progress", "done", "blocked"],
+      "completion_tracking": "Update completion_percentage based on done tasks / total tasks * 100. Update feature-level completion as well.",
+      "important_notes": [
+        "Each task has prd_reference pointing to relevant PRD section",
+        "Feature 1 is simpler and can be completed first",
+        "Feature 2 is more complex with conversational AI",
+        "Test thoroughly - both features involve AI generation",
+        "Document AI prompts extensively",
+        "Handle errors gracefully (AI failures, network issues)",
+        "Mobile responsive design is critical for both features"
+      ]
+    },
+    "technical_context": {
+      "tech_stack": "Next.js 14, TypeScript, Supabase, Anthropic Claude, Zustand, React Hook Form, Framer Motion, Radix UI, TailwindCSS",
+      "existing_codebase": "/home/luka/projectTODO/todoapp",
+      "key_directories": [
+        "/app/api/ - API routes",
+        "/components/ - React components",
+        "/lib/ai/ - AI prompts and helpers",
+        "/lib/db/ - Database helpers",
+        "/supabase/migrations/ - Database migrations",
+        "/types/ - TypeScript type definitions"
+      ],
+      "database_tables": {
+        "existing": ["users", "goals", "tasks", "milestones", "time_blocks", "backlog_items", "daily_reflections", "energy_logs", "weekly_summaries"],
+        "new": ["routines (Feature 2)"],
+        "modified": ["users.onboarding_data JSONB structure"]
+      },
+      "ai_models_used": [
+        "Claude Sonnet 4 - Complex reasoning, conversation, analysis",
+        "Claude Haiku 3.5 - Simple/fast operations"
+      ]
+    },
+    "estimated_total_time": "90-110 hours (both features combined)",
+    "recommended_implementation_strategy": {
+      "option_1_sequential": [
+        "1. Complete Feature 1 (Goal Visualization) first - 30-35 hours",
+        "2. Then complete Feature 2 (Onboarding Redesign) - 60-75 hours",
+        "Advantage: Simpler to manage, less context switching",
+        "Total time: Same (90-110 hours)"
+      ],
+      "option_2_parallel": [
+        "1. Two agents/developers work simultaneously",
+        "2. Agent A: Feature 1 (tasks 1-12)",
+        "3. Agent B: Feature 2 (tasks 13-30)",
+        "4. Coordinate on shared files (/lib/ai/prompts.ts, dashboard integration)",
+        "Advantage: Faster completion (half the calendar time)",
+        "Total time: 60-75 hours (calendar time)"
+      ],
+      "option_3_foundation_first": [
+        "1. Complete foundation tasks for both features (tasks 1-3, 13-15, 27)",
+        "2. Then parallel development of UI/UX (tasks 4-12 and 16-30)",
+        "Advantage: Shared understanding of AI prompts and database",
+        "Total time: Similar to sequential"
+      ]
+    },
+    "risk_assessment": {
+      "high_risk_tasks": [
+        "Task 1: AI prompt quality critical for entire Feature 1",
+        "Task 15: AI prompt quality critical for routine generation",
+        "Task 21: Conversational AI flow complexity",
+        "Task 22: Complex extraction from conversation transcript",
+        "Task 10: Database trigger for hierarchical progress"
+      ],
+      "mitigation_strategies": [
+        "Extensive testing of AI prompts with diverse inputs",
+        "Fallback mechanisms for AI failures",
+        "Clear error messages to users",
+        "Database transactions for atomic operations",
+        "Performance testing with complex data"
+      ]
+    }
+  }
+}

@@ -1,0 +1,530 @@
+{
+  "project": {
+    "name": "Improved Onboarding Flow with Routines",
+    "version": "1.0.0",
+    "current_task": 0,
+    "total_tasks": 18,
+    "completion_percentage": 0,
+    "prd_file": "product-development/current-feature/onboarding-redesign-PRD.md"
+  },
+  "tasks": [
+    {
+      "id": 1,
+      "name": "Create Routines Database Table",
+      "status": "not_done",
+      "priority": "critical",
+      "dependencies": [],
+      "estimated_time": "1-2 hours",
+      "acceptance_criteria": [
+        "SQL migration file created",
+        "routines table created with all required fields",
+        "Indexes added for performance (user_id, routine_type)",
+        "RLS policies created for authenticated users",
+        "TypeScript types generated and exported",
+        "Migration tested locally with Supabase"
+      ],
+      "implementation_notes": "Create migration in /supabase/migrations/. Follow existing migration patterns. Run 'npm run db:types' to generate TypeScript types.",
+      "files_to_modify": [
+        "/supabase/migrations/[timestamp]_create_routines_table.sql (new file)",
+        "/types/index.ts"
+      ],
+      "notes": "",
+      "blockers": []
+    },
+    {
+      "id": 2,
+      "name": "Routines CRUD API Endpoints",
+      "status": "not_done",
+      "priority": "critical",
+      "dependencies": [1],
+      "estimated_time": "3-4 hours",
+      "acceptance_criteria": [
+        "GET /api/routines - List user's routines with filters",
+        "POST /api/routines - Create new routine",
+        "GET /api/routines/[id] - Get single routine",
+        "PUT /api/routines/[id] - Update routine",
+        "DELETE /api/routines/[id] - Delete routine",
+        "Proper authentication with Clerk",
+        "Validation for routine fields (steps, times)",
+        "Error handling and status codes",
+        "Completion stats calculated correctly"
+      ],
+      "implementation_notes": "Follow existing API patterns. Validate routine steps structure. Handle time validation.",
+      "files_to_modify": [
+        "/app/api/routines/route.ts (new file)",
+        "/app/api/routines/[id]/route.ts (new file)"
+      ],
+      "notes": "",
+      "blockers": []
+    },
+    {
+      "id": 3,
+      "name": "AI Routine Generation Prompts",
+      "status": "not_done",
+      "priority": "critical",
+      "dependencies": [],
+      "estimated_time": "3-4 hours",
+      "acceptance_criteria": [
+        "Morning routine generation prompt created",
+        "Evening routine generation prompt created",
+        "Prompts consider user's schedule (wake/work/sleep times)",
+        "Prompts adapt to goal type (career, health, etc.)",
+        "Prompts incorporate user's desired habits",
+        "Generated routines are realistic and actionable",
+        "Proper duration allocation between steps",
+        "Tested with various user profiles"
+      ],
+      "implementation_notes": "Add to /lib/ai/prompts.ts. Test with diverse scenarios. Ensure output structure matches routines.steps JSONB format.",
+      "files_to_modify": [
+        "/lib/ai/prompts.ts"
+      ],
+      "notes": "",
+      "blockers": []
+    },
+    {
+      "id": 4,
+      "name": "Quick Mode Form UI",
+      "status": "not_done",
+      "priority": "high",
+      "dependencies": [],
+      "estimated_time": "4-5 hours",
+      "acceptance_criteria": [
+        "Single-page form with all essential fields",
+        "Primary goal input (title, why, target date)",
+        "Typical day structure (wake/work/sleep times)",
+        "Anti-vision optional textarea",
+        "Daily habits multi-select (exercise, reading, meditation, etc.)",
+        "Form validation with React Hook Form",
+        "Clear visual hierarchy and spacing",
+        "Mobile responsive design",
+        "Submit triggers loading state"
+      ],
+      "implementation_notes": "Create /components/onboarding/QuickModeForm.tsx. Use existing UI components (Input, Textarea, Select). Follow design system.",
+      "files_to_modify": [
+        "/components/onboarding/QuickModeForm.tsx (new file)"
+      ],
+      "notes": "",
+      "blockers": []
+    },
+    {
+      "id": 5,
+      "name": "Quick Mode Processing API",
+      "status": "not_done",
+      "priority": "critical",
+      "dependencies": [2, 3, 4],
+      "estimated_time": "4-5 hours",
+      "acceptance_criteria": [
+        "POST /api/ai/onboarding/quick endpoint created",
+        "Validates form data",
+        "Creates primary goal with AI-generated breakdown (if long-term)",
+        "Creates separate goals for each selected habit",
+        "Generates morning routine via AI",
+        "Generates evening routine via AI",
+        "Creates initial tasks for first week",
+        "Updates user.onboarding_completed = true",
+        "Updates user.onboarding_data JSONB",
+        "Returns structured result with goals and routines",
+        "Error handling with meaningful messages"
+      ],
+      "implementation_notes": "Use transaction for atomic operations. Parallel AI calls where possible. Handle partial failures gracefully.",
+      "files_to_modify": [
+        "/app/api/ai/onboarding/quick/route.ts (new file)"
+      ],
+      "notes": "",
+      "blockers": []
+    },
+    {
+      "id": 6,
+      "name": "Quick Mode Review Screen",
+      "status": "not_done",
+      "priority": "high",
+      "dependencies": [5],
+      "estimated_time": "3-4 hours",
+      "acceptance_criteria": [
+        "Shows generated primary goal with breakdown",
+        "Lists created habit goals",
+        "Displays suggested morning routine (steps with durations)",
+        "Displays suggested evening routine (steps with durations)",
+        "User can accept all, edit, or skip routines",
+        "Edit opens inline editor for routine steps",
+        "Accept button activates routines and redirects to dashboard",
+        "Clear visual design with sections"
+      ],
+      "implementation_notes": "Create /components/onboarding/QuickModeReview.tsx. Allow inline editing with drag-to-reorder steps.",
+      "files_to_modify": [
+        "/components/onboarding/QuickModeReview.tsx (new file)"
+      ],
+      "notes": "",
+      "blockers": []
+    },
+    {
+      "id": 7,
+      "name": "Deep Dive Conversation State Management",
+      "status": "not_done",
+      "priority": "high",
+      "dependencies": [],
+      "estimated_time": "2-3 hours",
+      "acceptance_criteria": [
+        "Zustand store created for conversation state",
+        "State includes: phase, currentQuestion, canSkip, answers, transcript, progress",
+        "State persisted to localStorage",
+        "Can resume conversation after page refresh",
+        "Clear state on completion or reset",
+        "Type-safe with TypeScript"
+      ],
+      "implementation_notes": "Create /lib/stores/onboarding-store.ts. Use Zustand persist middleware. Define ConversationPhase and ConversationState types.",
+      "files_to_modify": [
+        "/lib/stores/onboarding-store.ts (new file)"
+      ],
+      "notes": "",
+      "blockers": []
+    },
+    {
+      "id": 8,
+      "name": "Deep Dive Conversational UI",
+      "status": "not_done",
+      "priority": "high",
+      "dependencies": [7],
+      "estimated_time": "5-6 hours",
+      "acceptance_criteria": [
+        "Chat-like interface with message bubbles",
+        "AI messages on left, user messages on right",
+        "Typing indicator while AI is thinking",
+        "Text input for user responses",
+        "Skip button visible when canSkip=true",
+        "Progress bar showing completion percentage",
+        "Smooth auto-scroll to latest message",
+        "Mobile-optimized chat UI",
+        "Accessible (keyboard input, ARIA labels)"
+      ],
+      "implementation_notes": "Create /components/onboarding/DeepDiveChat.tsx. Use Framer Motion for message animations. Follow chat UI best practices.",
+      "files_to_modify": [
+        "/components/onboarding/DeepDiveChat.tsx (new file)"
+      ],
+      "notes": "",
+      "blockers": []
+    },
+    {
+      "id": 9,
+      "name": "Deep Dive Conversation Flow API",
+      "status": "not_done",
+      "priority": "critical",
+      "dependencies": [7, 8],
+      "estimated_time": "5-6 hours",
+      "acceptance_criteria": [
+        "POST /api/ai/onboarding/deep-dive/next endpoint created",
+        "Accepts: current_phase, user_answer, conversation_history",
+        "AI determines if answer is sufficient or needs clarification",
+        "Progresses to next phase when appropriate",
+        "Returns: next_question, can_skip, progress_percentage",
+        "Handles skip requests gracefully",
+        "Phases: current_state → anti_vision → vision_habits → routines → review",
+        "Conversation feels natural and supportive",
+        "Error handling for AI failures"
+      ],
+      "implementation_notes": "Use Claude Sonnet for nuanced conversation. Implement state machine for phase transitions. Stream responses if possible.",
+      "files_to_modify": [
+        "/app/api/ai/onboarding/deep-dive/next/route.ts (new file)"
+      ],
+      "notes": "",
+      "blockers": []
+    },
+    {
+      "id": 10,
+      "name": "Deep Dive Completion Processing",
+      "status": "not_done",
+      "priority": "critical",
+      "dependencies": [2, 3, 9],
+      "estimated_time": "5-6 hours",
+      "acceptance_criteria": [
+        "POST /api/ai/onboarding/deep-dive/complete endpoint created",
+        "Analyzes full conversation transcript",
+        "Extracts: primary goal, success criteria, anti-vision, habits, routine preferences",
+        "Creates primary goal with breakdown (if applicable)",
+        "Creates habit goals",
+        "Generates morning and evening routines",
+        "Creates initial tasks for first week",
+        "Updates user.onboarding_completed and onboarding_data",
+        "Returns complete onboarding result",
+        "Handles ambiguous or incomplete answers gracefully"
+      ],
+      "implementation_notes": "Use Claude Sonnet with structured extraction. Transaction-based database operations. Parallel processing where possible.",
+      "files_to_modify": [
+        "/app/api/ai/onboarding/deep-dive/complete/route.ts (new file)"
+      ],
+      "notes": "",
+      "blockers": []
+    },
+    {
+      "id": 11,
+      "name": "Deep Dive Review & Finalize Screen",
+      "status": "not_done",
+      "priority": "high",
+      "dependencies": [10],
+      "estimated_time": "3-4 hours",
+      "acceptance_criteria": [
+        "Shows summary of extracted information",
+        "Displays generated goals and breakdown",
+        "Shows suggested routines with edit capability",
+        "Regenerate option if user unhappy with results",
+        "Edit option for each section",
+        "Finalize button activates everything and redirects",
+        "Clear visual sections with good UX"
+      ],
+      "implementation_notes": "Create /components/onboarding/DeepDiveReview.tsx. Similar to Quick Mode review but with more detail.",
+      "files_to_modify": [
+        "/components/onboarding/DeepDiveReview.tsx (new file)"
+      ],
+      "notes": "",
+      "blockers": []
+    },
+    {
+      "id": 12,
+      "name": "Onboarding Mode Selection Page",
+      "status": "not_done",
+      "priority": "high",
+      "dependencies": [6, 11],
+      "estimated_time": "2-3 hours",
+      "acceptance_criteria": [
+        "Landing page with two clear options",
+        "Quick Mode card: '2-3 minutes, get started fast'",
+        "Deep Dive card: '10-15 minutes, personalized guidance'",
+        "Visual indicators of what each includes",
+        "Can switch modes mid-flow (with confirmation)",
+        "Responsive design",
+        "Matches app design system"
+      ],
+      "implementation_notes": "Update /app/onboarding/page.tsx to show mode selection. Create route state for selected mode.",
+      "files_to_modify": [
+        "/app/onboarding/page.tsx"
+      ],
+      "notes": "",
+      "blockers": []
+    },
+    {
+      "id": 13,
+      "name": "Routine Execution Integration",
+      "status": "not_done",
+      "priority": "high",
+      "dependencies": [2],
+      "estimated_time": "4-5 hours",
+      "acceptance_criteria": [
+        "Active routines create recurring time_blocks",
+        "Each routine step can link to recurring task",
+        "Daily check-in includes 'Did you complete your routine?' prompt",
+        "Track routine completion in routines.total_completions",
+        "Calculate completion_rate over time",
+        "Update last_completed_at on completion",
+        "Display routine checklist on dashboard or separate page"
+      ],
+      "implementation_notes": "Integrate with existing time_blocks table. Create helper functions for routine execution tracking.",
+      "files_to_modify": [
+        "/lib/db/routines-helpers.ts (new file)",
+        "/app/api/routines/[id]/complete/route.ts (new file)",
+        "/components/routines/RoutineChecklist.tsx (new file)"
+      ],
+      "notes": "",
+      "blockers": []
+    },
+    {
+      "id": 14,
+      "name": "Routines Management Page",
+      "status": "not_done",
+      "priority": "medium",
+      "dependencies": [2, 13],
+      "estimated_time": "4-5 hours",
+      "acceptance_criteria": [
+        "Page at /routines displays all user routines",
+        "Tabs for Morning / Evening / Custom routines",
+        "Each routine shows steps, duration, completion rate",
+        "Edit routine (drag-to-reorder steps, adjust durations)",
+        "Delete routine with confirmation",
+        "Toggle routine active/inactive",
+        "Create new custom routine",
+        "Completion stats visualization (chart or calendar)",
+        "Responsive design"
+      ],
+      "implementation_notes": "Create /app/routines/page.tsx. Use drag-and-drop library (dnd-kit). Show completion trends.",
+      "files_to_modify": [
+        "/app/routines/page.tsx (new file)",
+        "/components/routines/RoutineCard.tsx (new file)",
+        "/components/routines/RoutineEditor.tsx (new file)",
+        "/components/sidebar.tsx (add routines link)"
+      ],
+      "notes": "",
+      "blockers": []
+    },
+    {
+      "id": 15,
+      "name": "Update User Profile Schema",
+      "status": "not_done",
+      "priority": "medium",
+      "dependencies": [],
+      "estimated_time": "1 hour",
+      "acceptance_criteria": [
+        "users.onboarding_data JSONB structure documented",
+        "TypeScript interface created for OnboardingData",
+        "Includes all fields: mode, primary_goal, anti_vision, daily_structure, habits, routines, conversation_transcript",
+        "Migration or type update completed"
+      ],
+      "implementation_notes": "Document structure in types/index.ts. May need migration if adding new fields to users table.",
+      "files_to_modify": [
+        "/types/index.ts",
+        "/supabase/migrations/[timestamp]_update_onboarding_data.sql (if needed)"
+      ],
+      "notes": "",
+      "blockers": []
+    },
+    {
+      "id": 16,
+      "name": "Multi-Goal Dashboard Integration",
+      "status": "not_done",
+      "priority": "medium",
+      "dependencies": [12],
+      "estimated_time": "3-4 hours",
+      "acceptance_criteria": [
+        "Dashboard shows primary goal prominently",
+        "Separate section for supporting habits (smaller cards)",
+        "Routine completion shown in daily stats",
+        "Clear visual hierarchy (primary vs habits)",
+        "All goal types work with existing analytics"
+      ],
+      "implementation_notes": "Update /app/dashboard/page.tsx. Distinguish primary goal from habits using goal metadata or type.",
+      "files_to_modify": [
+        "/app/dashboard/page.tsx",
+        "/components/dashboard/GoalProgressCards.tsx"
+      ],
+      "notes": "",
+      "blockers": []
+    },
+    {
+      "id": 17,
+      "name": "Testing & Bug Fixes",
+      "status": "not_done",
+      "priority": "high",
+      "dependencies": [12, 13, 14, 16],
+      "estimated_time": "5-6 hours",
+      "acceptance_criteria": [
+        "Test both Quick Mode and Deep Dive flows end-to-end",
+        "Test with various user inputs (complete, incomplete, skip)",
+        "Test routine generation for different goal types",
+        "Test mobile responsive design thoroughly",
+        "Test error scenarios (AI failure, network issues)",
+        "Test routine execution and tracking",
+        "Test multi-goal dashboard display",
+        "No console errors or warnings",
+        "Accessibility testing",
+        "Performance testing (AI response times)"
+      ],
+      "implementation_notes": "Manual testing + automated tests if time permits. Document bugs and fix systematically.",
+      "files_to_modify": [
+        "Various files as bugs are discovered"
+      ],
+      "notes": "",
+      "blockers": []
+    },
+    {
+      "id": 18,
+      "name": "Documentation & Migration Guide",
+      "status": "not_done",
+      "priority": "medium",
+      "dependencies": [17],
+      "estimated_time": "2-3 hours",
+      "acceptance_criteria": [
+        "Code comments added for complex logic",
+        "AI prompts documented with examples",
+        "Migration guide for existing users",
+        "Feature documentation in README or docs",
+        "Known limitations documented",
+        "Future improvements noted (v2 features)",
+        "Onboarding instructions for new developers"
+      ],
+      "implementation_notes": "Create docs/onboarding-redesign.md. Document migration path for existing users.",
+      "files_to_modify": [
+        "docs/onboarding-redesign.md (new file)",
+        "README.md"
+      ],
+      "notes": "",
+      "blockers": []
+    }
+  ],
+  "milestones": [
+    {
+      "name": "Database & API Foundation",
+      "tasks": [1, 2, 3, 15],
+      "status": "not_done"
+    },
+    {
+      "name": "Quick Mode Complete",
+      "tasks": [4, 5, 6],
+      "status": "not_done"
+    },
+    {
+      "name": "Deep Dive Complete",
+      "tasks": [7, 8, 9, 10, 11],
+      "status": "not_done"
+    },
+    {
+      "name": "Routines System Complete",
+      "tasks": [13, 14],
+      "status": "not_done"
+    },
+    {
+      "name": "Full Integration & Polish",
+      "tasks": [12, 16, 17, 18],
+      "status": "not_done"
+    }
+  ],
+  "metadata": {
+    "last_updated": "2025-11-20",
+    "created_date": "2025-11-20",
+    "notes": "Feature implementation tracker for Improved Onboarding Flow with Routines. This is a more complex feature with conversational AI and new database structures.",
+    "version": "1.0.0",
+    "ai_agent_instructions": {
+      "next_task_logic": "Find the first task with status 'not_done' where all dependencies are 'done'",
+      "status_values": ["not_done", "in_progress", "done", "blocked"],
+      "completion_tracking": "Update completion_percentage based on done tasks / total tasks * 100",
+      "important_notes": [
+        "Read the PRD file before starting implementation",
+        "This feature involves conversational AI - test prompts thoroughly",
+        "New database table required - run migrations carefully",
+        "Quick Mode and Deep Dive can be developed in parallel after foundation tasks",
+        "Update task status to 'in_progress' when starting",
+        "Mark 'done' only when all acceptance criteria are met",
+        "Add detailed notes for each completed task",
+        "Document any blockers immediately",
+        "Test edge cases (skip, incomplete answers, AI failures)"
+      ],
+      "parallel_development": [
+        "Tasks 4-6 (Quick Mode) can be developed independently from tasks 7-11 (Deep Dive)",
+        "Tasks 13-14 (Routines execution) can start once task 2 (API) is done",
+        "Consider splitting work between multiple agents if available"
+      ]
+    },
+    "technical_context": {
+      "tech_stack": "Next.js 14, TypeScript, Supabase, Anthropic Claude, Zustand, React Hook Form, Framer Motion, Radix UI, TailwindCSS",
+      "key_files": [
+        "/lib/ai/prompts.ts - AI prompts for routines and conversation",
+        "/lib/stores/onboarding-store.ts - Conversation state management",
+        "/app/api/ai/onboarding/ - Onboarding API routes",
+        "/app/api/routines/ - Routines CRUD API",
+        "/components/onboarding/ - Onboarding UI components",
+        "/supabase/migrations/ - Database migrations"
+      ],
+      "new_database_tables": [
+        "routines - new table for morning/evening/custom routines"
+      ],
+      "updated_database_tables": [
+        "users - onboarding_data JSONB field structure expanded"
+      ]
+    },
+    "estimated_total_time": "60-75 hours",
+    "recommended_implementation_order": [
+      "Phase 1: Foundation (tasks 1, 2, 3, 15) - ~8-10 hours",
+      "Phase 2: Quick Mode (tasks 4, 5, 6) - ~11-14 hours",
+      "Phase 3: Deep Dive (tasks 7, 8, 9, 10, 11) - ~20-25 hours",
+      "Phase 4: Routines (tasks 13, 14) - ~8-10 hours",
+      "Phase 5: Integration & Polish (tasks 12, 16, 17, 18) - ~12-16 hours"
+    ]
+  }
+}
